@@ -15,6 +15,10 @@ namespace GameTesting
 
         float time;
 
+        float MarioX;
+        float MarioY;
+        Texture2D Mario;
+
         private GraphicsDeviceManager _graphics;
         private SpriteBatch spriteBatch;
 
@@ -77,7 +81,7 @@ namespace GameTesting
             if(MarioY >= 90)
             {
                 Debug.WriteLine("below ground");
-            }
+        }
         }
 
         protected override void Draw(GameTime gameTime)
@@ -112,10 +116,12 @@ namespace GameTesting
         public void gravity(float Mass)
         {
             if(gravity_Allow = true)
-            {
-                const double g = 9.18;
+        {
+
+            const double g = 9.18;
             const float p = 1.204f;
             const double Cd = 1;
+            float Mass = 80f;
             float Area = 1f;
             double Y;
 
@@ -143,7 +149,7 @@ namespace GameTesting
 
             return false;
         }
-
+            
         public void apply_Collision()
         {
             if(is_TouchingGround())
