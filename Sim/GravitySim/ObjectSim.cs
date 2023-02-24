@@ -12,7 +12,7 @@ public class ObjSimulation : Game
     Object[] objects;
 
 
-    float lossCollideAmount = 0.01f;
+    bool haveSun = false;
     
     public void StRunSimulation()
     {
@@ -21,14 +21,25 @@ public class ObjSimulation : Game
         for (int i = 0; i < objects.Length; i++)
         {
             objects[i] = new Object();
-            objects[i].mass = new Random().Next(6,12);
+            if(i == 0 && haveSun)
+            {
+                objects[i].mass = 100;
+                int X = 390;
+                int Y = 230;
+                objects[i].pos = new Vector2(X, Y);
+            }
+            else
+            {
+                objects[i].mass = new Random().Next(6, 12);
+                int randomX = new Random().Next(0, 780);
+                int randomY = new Random().Next(0, 460);
+                objects[i].pos = new Vector2(randomX, randomY);
+            }
             //780. 460
-            int randomX = new Random().Next(0,780);
-            int randomY = new Random().Next(0,460);
-            objects[i].pos = new Vector2(randomX, randomY);
-            int randomXS = new Random().Next(0,10);
-            int randomYS = new Random().Next(0,10);
+            int randomXS = new Random().Next(10,40);
+            int randomYS = new Random().Next(10,40);
             objects[i].startDir = new Vector2(randomXS, randomYS);
+            objects[i].start();
         }
     }
 
@@ -36,10 +47,19 @@ public class ObjSimulation : Game
     {
         for (int i = 0; i < objects.Length; i++)
         {
-            Vector2 acceleration = CalculateAcceleration(objects[i].pos, objects[i]);
-            objects[i].UpdateDir(acceleration);
-            objects[i].UpdatePos();
-            objects[i].UpdateColl(acceleration);
+            if(i == 0 && haveSun)
+            {
+                Vector2 acceleration = CalculateAcceleration(objects[i].pos, objects[i]);
+                objects[i].UpdateDir(acceleration);
+                objects[i].UpdateColl(acceleration);
+            }
+            else
+            {
+                Vector2 acceleration = CalculateAcceleration(objects[i].pos, objects[i]);
+                objects[i].UpdateDir(acceleration);
+                objects[i].UpdatePos();
+                objects[i].UpdateColl(acceleration);
+            }
         }
     }
 
@@ -66,12 +86,6 @@ public class ObjSimulation : Game
                 float dst = Vector2.Distance(objects[i].pos, point); //(float)Math.Sqrt(Vector2.Dot(objects[i].pos, point));
                 Vector2 forceDir = Vector2.Normalize(objects[i].pos - point);
                 acceleration += forceDir * 7f * objects[i].mass / dst;
-            }
-            Console.WriteLine(acceleration);
-            //loss of speed check
-            if(objects[i].pos.X > 780 || objects[i].pos.X < 0 || objects[i].pos.Y > 460 || objects[i].pos.Y < 0)
-            {
-                acceleration *= lossCollideAmount;
             }
         }
 

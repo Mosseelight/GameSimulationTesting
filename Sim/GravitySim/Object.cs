@@ -12,6 +12,7 @@ public class Object : Game
     public Vector2 startDir {get; set;}
 
     private GameTime time = new GameTime();
+    private float lossCollideAmount = 0.95f;
 
     public void start()
     {
@@ -32,7 +33,10 @@ public class Object : Game
     {
         if(pos.X > 780 || pos.X < 0 || pos.Y > 460 || pos.Y < 0)
         {
-            curDir *= -1;
+            curDir = new Vector2(curDir.X * -1f, curDir.Y * -1f);
+            Console.WriteLine(curDir);
+            curDir *= lossCollideAmount;
+            Console.WriteLine(curDir + " Loss");
         }
     }
 
