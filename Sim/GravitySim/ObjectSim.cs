@@ -13,6 +13,7 @@ public class ObjSimulation : Game
 
 
     float lossCollideAmount = 0.01f;
+    
     public void StRunSimulation()
     {
         objects = new Object[numObjs];
