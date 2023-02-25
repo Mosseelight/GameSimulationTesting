@@ -8,7 +8,7 @@ using System.Formats.Asn1;
 public class ObjSimulation : Game
 {
 
-    int numObjs = 3;
+    int numObjs = 150;
     Object[] objects;
 
 
@@ -23,16 +23,16 @@ public class ObjSimulation : Game
             objects[i] = new Object();
             if(i == 0 && haveSun)
             {
-                objects[i].mass = 100;
-                int X = 390;
-                int Y = 230;
+                objects[i].mass = 20;
+                int X = 900;
+                int Y = 500;
                 objects[i].pos = new Vector2(X, Y);
             }
             else
             {
                 objects[i].mass = new Random().Next(6, 12);
-                int randomX = new Random().Next(0, 780);
-                int randomY = new Random().Next(0, 460);
+                int randomX = new Random().Next(0, 1900);
+                int randomY = new Random().Next(0, 1000);
                 objects[i].pos = new Vector2(randomX, randomY);
             }
             //780. 460
@@ -60,6 +60,15 @@ public class ObjSimulation : Game
                 objects[i].UpdatePos();
                 objects[i].UpdateColl(acceleration);
             }
+
+            for (int b = 0; b < objects.Length; b++)
+            {
+                if(b != i && Vector2.Distance(objects[i].pos, objects[b].pos) < 10)
+                {
+                    objects[b].curDir *= -1.15f;             
+                }
+            }
+            
         }
     }
 
@@ -85,7 +94,7 @@ public class ObjSimulation : Game
             if (objects[i] != ignore) {
                 float dst = Vector2.Distance(objects[i].pos, point); //(float)Math.Sqrt(Vector2.Dot(objects[i].pos, point));
                 Vector2 forceDir = Vector2.Normalize(objects[i].pos - point);
-                acceleration += forceDir * 7f * objects[i].mass / dst;
+                acceleration += forceDir * 20f * objects[i].mass / dst;
             }
         }
 

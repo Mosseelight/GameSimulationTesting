@@ -31,12 +31,10 @@ public class Object : Game
 
     public void UpdateColl(Vector2 acceleration)
     {
-        if(pos.X > 780 || pos.X < 0 || pos.Y > 460 || pos.Y < 0)
+        if(pos.X > 1900 || pos.X < 0 || pos.Y > 1000 || pos.Y < 0)
         {
             curDir = new Vector2(curDir.X * -1f, curDir.Y * -1f);
-            Console.WriteLine(curDir);
             curDir *= lossCollideAmount;
-            Console.WriteLine(curDir + " Loss");
         }
     }
 

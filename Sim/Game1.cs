@@ -27,6 +27,9 @@ namespace GameTesting
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+            _graphics.PreferredBackBufferWidth = 1920;
+            _graphics.PreferredBackBufferHeight = 1080;
+            //_graphics.IsFullScreen = true;
         }
 
         protected override void Initialize()
@@ -34,8 +37,7 @@ namespace GameTesting
             // TODO: Add your initialization logic here
 
             objSim.StRunSimulation();
-            _graphics.PreferredBackBufferWidth = 1280;
-            _graphics.PreferredBackBufferHeight = 720;
+
             base.Initialize();
         }
 
