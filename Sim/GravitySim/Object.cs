@@ -11,9 +11,6 @@ public class Object : Game
     public Vector2 curDir {get; set;}
     public Vector2 startDir {get; set;}
 
-    private GameTime time = new GameTime();
-    private float lossCollideAmount = 0.95f;
-
     public void start()
     {
         curDir = startDir;
@@ -29,12 +26,27 @@ public class Object : Game
         pos += curDir;
     }
 
-    public void UpdateColl(Vector2 acceleration)
+    public void UpdateColl()
     {
         if(pos.X > 1900 || pos.X < 0 || pos.Y > 1000 || pos.Y < 0)
         {
-            curDir = new Vector2(curDir.X * -1f, curDir.Y * -1f);
-            curDir *= lossCollideAmount;
+            if(pos.X > 1900)
+            {
+                pos = new Vector2(1900,pos.Y);
+            }
+            if(pos.X < 00)
+            {
+                pos = new Vector2(0,pos.Y);
+            }
+            if(pos.Y > 1000)
+            {
+                pos = new Vector2(pos.X,1000);
+            }
+            if(pos.Y < 0)
+            {
+                pos = new Vector2(pos.X,0);
+            }
+            curDir = new Vector2(curDir.X * -0.7f, curDir.Y * -0.7f);
         }
     }
 

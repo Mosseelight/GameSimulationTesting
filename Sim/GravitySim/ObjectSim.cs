@@ -8,11 +8,11 @@ using System.Formats.Asn1;
 public class ObjSimulation : Game
 {
 
-    int numObjs = 150;
+    int numObjs = 20;
     Object[] objects;
 
 
-    bool haveSun = false;
+    bool haveSun = true;
     
     public void StRunSimulation()
     {
@@ -51,21 +51,21 @@ public class ObjSimulation : Game
             {
                 Vector2 acceleration = CalculateAcceleration(objects[i].pos, objects[i]);
                 objects[i].UpdateDir(acceleration);
-                objects[i].UpdateColl(acceleration);
+                objects[i].UpdateColl();
             }
             else
             {
                 Vector2 acceleration = CalculateAcceleration(objects[i].pos, objects[i]);
                 objects[i].UpdateDir(acceleration);
                 objects[i].UpdatePos();
-                objects[i].UpdateColl(acceleration);
+                objects[i].UpdateColl();
             }
 
             for (int b = 0; b < objects.Length; b++)
             {
                 if(b != i && Vector2.Distance(objects[i].pos, objects[b].pos) < 10)
                 {
-                    objects[b].curDir *= -1.15f;             
+                    objects[b].curDir *= -0.5f;             
                 }
             }
             
@@ -94,7 +94,7 @@ public class ObjSimulation : Game
             if (objects[i] != ignore) {
                 float dst = Vector2.Distance(objects[i].pos, point); //(float)Math.Sqrt(Vector2.Dot(objects[i].pos, point));
                 Vector2 forceDir = Vector2.Normalize(objects[i].pos - point);
-                acceleration += forceDir * 20f * objects[i].mass / dst;
+                acceleration += forceDir * 7f * objects[i].mass / dst;
             }
         }
 
