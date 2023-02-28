@@ -4,26 +4,34 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Formats.Asn1;
+using System.IO;
 
 public class ObjSimulation : Game
 {
 
     Object[] objects;
+    Saver saver = new Saver();
+    bool checkforoverlap = false;
 
 
     //settings
-    int numObjs = 20;
-    float gravity = 2f;
-    float collsionPushFactor = -1.15f;
+    int numObjs = 40;
+    float gravity = 7f;
+    float collsionPushFactor = -0.1f;
     bool haveSun = false;
     bool randomPos = true;
-    int posXChoose1 = 939;
-    int posYChoose1 = 489;
-    int posXChoose2 = 941;
-    int posYChoose2 = 491;
+    int posXChoose = 950;
+    int posYChoose = 500;
+    int posTolerence = 50;
+    float minCollideDist = 10f;
+    float minSeperationDist = 0.5f;
+    float maxSeperationDist = 2000f;
+    float overlapCorrectionDist = 1f;
     
     public void StRunSimulation()
     {
+        //Console.WriteLine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\ObjectSimSettings");
+        saver.CreateFolder();
         objects = new Object[numObjs];
         //give objects settings
         for (int i = 0; i < objects.Length; i++)
@@ -41,13 +49,14 @@ public class ObjSimulation : Game
                 objects[i].mass = new Random().Next(6, 12);
                 float posX;
                 float posY;
-                posX = new Random().Next(posXChoose1, posXChoose2);
-                posY = new Random().Next(posYChoose1, posYChoose2);
+                posX = new Random().Next(posXChoose - posTolerence, posXChoose + posTolerence);
+                posY = new Random().Next(posYChoose - posTolerence, posYChoose + posTolerence);
                 if(randomPos)
                 {
                     posX = new Random().Next(0, 1900);
                     posY = new Random().Next(0, 1000);
                 }
+
                 objects[i].pos = new Vector2(posX, posY);
             }
             int randomXS = new Random().Next(10,40);
@@ -61,6 +70,17 @@ public class ObjSimulation : Game
     {
         for (int i = 0; i < objects.Length; i++)
         {
+            if(!checkforoverlap)
+            {
+                for(int b = 0; b < objects.Length; b++)
+                {
+                    if(i != b && objects[b].pos == objects[i].pos)
+                    {
+                        objects[i].pos += new Vector2(overlapCorrectionDist, overlapCorrectionDist);
+                    }
+                }
+                checkforoverlap = true;
+            }
             if(i == 0 && haveSun)
             {
                 Vector2 acceleration = CalculateAcceleration(objects[i].pos, objects[i]);
@@ -77,7 +97,9 @@ public class ObjSimulation : Game
 
             for (int b = 0; b < objects.Length; b++)
             {
-                if(b != i && Vector2.Distance(objects[i].pos, objects[b].pos) < 10)
+                //b != i checks if its self is the same as its self so it does not give a dist
+                //of 0
+                if(b != i && Vector2.Distance(objects[i].pos, objects[b].pos) < minCollideDist)
                 {
                     objects[b].curDir *= collsionPushFactor;             
                 }
@@ -108,7 +130,7 @@ public class ObjSimulation : Game
             if (objects[i] != ignore) {
                 float dst = Vector2.Distance(objects[i].pos, point); //(float)Math.Sqrt(Vector2.Dot(objects[i].pos, point));
                 Vector2 forceDir = Vector2.Normalize(objects[i].pos - point);
-                acceleration += forceDir * gravity * objects[i].mass / dst;
+                acceleration += forceDir * gravity * objects[i].mass / Math.Clamp(dst, minSeperationDist, maxSeperationDist);
             }
         }
 
