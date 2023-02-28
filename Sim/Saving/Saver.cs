@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.IO;
@@ -6,7 +7,10 @@ using System.IO;
 public class Saver
 {
     static string appPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-    string objectSimPath = appPath + @"\ObjectSimSettings";
+    static string objectSimPath = appPath + @"\ObjectSimSettings";
+
+    //hardcoded object simulation settings
+    string normalSettingOBJ = objectSimPath + @"\Normal.json";
 
 
     public void CreateFolder()
@@ -19,7 +23,22 @@ public class Saver
 
     public void SaveSimSettings()
     {
+        DataToSave dataToSave = new DataToSave();
+        JsonSerializerOptions options = new JsonSerializerOptions();
+        options.WriteIndented = true;
 
+        dataToSave.objectSimSettings = SaverDataToSet.objectSimSettingsSet;
+        Console.WriteLine(SaverDataToSet.objectSimSettingsSet);
+
+        string jsonText = JsonSerializer.Serialize(dataToSave.objectSimSettings, options);
+        File.WriteAllText(normalSettingOBJ, jsonText);
+        Console.WriteLine(jsonText + " Write");
+    }
+
+    public void ReadSimSettings()
+    {
+        string jsonText = File.ReadAllText(normalSettingOBJ);
+        Console.WriteLine(jsonText + " Read");
     }
 
 }
@@ -27,5 +46,5 @@ public class Saver
 
 [Serializable]public class DataToSave
 {
-    ObjSimulation.ObjectSimSettings objectSimSettings = new ObjSimulation.ObjectSimSettings();
+    public ObjSimulation.ObjectSimSettings objectSimSettings = new ObjSimulation.ObjectSimSettings();
 }

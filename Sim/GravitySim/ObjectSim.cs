@@ -15,9 +15,9 @@ public class ObjSimulation : Game
 
 
     //settings
-    int numObjs = 40;
+    int numObjs = 3;
     float gravity = 7f;
-    float collsionPushFactor = -0.1f;
+    float collsionPushFactor = -0.8f;
     bool haveSun = false;
     bool randomPos = true;
     int posXChoose = 950;
@@ -30,24 +30,37 @@ public class ObjSimulation : Game
 
     public class ObjectSimSettings
     {
-        int numObjs;
-        float gravity;
-        float collsionPushFactor;
-        bool haveSun;
-        bool randomPos;
-        int posXChoose;
-        int posYChoose;
-        int posTolerence;
-        float minCollideDist;
-        float minSeperationDist;
-        float maxSeperationDist;
-        float overlapCorrectionDist;
+        public int numObjs {get; set;}
+        public float gravity {get; set;}
+        public float collsionPushFactor {get; set;}
+        public bool haveSun {get; set;}
+        public bool randomPos {get; set;}
+        public int posXChoose {get; set;}
+        public int posYChoose {get; set;}
+        public int posTolerence {get; set;}
+        public float minCollideDist {get; set;}
+        public float minSeperationDist {get; set;}
+        public float maxSeperationDist {get; set;}
+        public float overlapCorrectionDist {get; set;}
     }
     
     public void StRunSimulation()
     {
         //Console.WriteLine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\ObjectSimSettings");
         saver.CreateFolder();
+        SaverDataToSet.objectSimSettingsSet.numObjs = numObjs;
+        SaverDataToSet.objectSimSettingsSet.gravity = gravity;
+        SaverDataToSet.objectSimSettingsSet.collsionPushFactor = collsionPushFactor;
+        SaverDataToSet.objectSimSettingsSet.haveSun = haveSun;
+        SaverDataToSet.objectSimSettingsSet.randomPos = randomPos;
+        SaverDataToSet.objectSimSettingsSet.posXChoose = posXChoose;
+        SaverDataToSet.objectSimSettingsSet.posYChoose = posYChoose;
+        SaverDataToSet.objectSimSettingsSet.posTolerence = posTolerence;
+        SaverDataToSet.objectSimSettingsSet.minCollideDist = minCollideDist;
+        SaverDataToSet.objectSimSettingsSet.minSeperationDist = minSeperationDist;
+        SaverDataToSet.objectSimSettingsSet.maxSeperationDist = maxSeperationDist;
+        SaverDataToSet.objectSimSettingsSet.overlapCorrectionDist = overlapCorrectionDist;
+        saver.SaveSimSettings();
         objects = new Object[numObjs];
         //give objects settings
         for (int i = 0; i < objects.Length; i++)
