@@ -1,4 +1,4 @@
-Explosion
+Explosion (Can be broken)
     Objects: 20
     Gravity: 2
     CollsionPushFactor: -1.15
@@ -6,3 +6,64 @@ Explosion
     RandomPos: false
     PosX: 950
     PosY: 500
+    Tolerence: 50
+    MinCollideDistance: 10
+    MinSeperationDistance: 0.5
+    MaxSeperationDistance: 2000
+    OverlapCorrectionDistance: 1
+
+Normal 
+    Objects: 3
+    Gravity: 7
+    CollsionPushFactor -0.8
+    Sun: false
+    RandomPos: true
+    PosX: null
+    PosY: null
+    Tolerence: null
+    MinCollideDistance: 10
+    MinSeperationDistance: 0.5
+    MaxSeperationDistance: 2000
+    OverlapCorrectionDistance: 1
+
+Sun
+    Objects: 2
+    Gravity: 3
+    CollsionPushFactor -0.8
+    Sun: True
+    RandomPos: true
+    PosX: null
+    PosY: null
+    Tolerence: null
+    MinCollideDistance: 10
+    MinSeperationDistance: 0.5
+    MaxSeperationDistance: 2000
+    OverlapCorrectionDistance: 1
+
+Fun To Watch
+    Objects: 20
+    Gravity: 7
+    CollsionPushFactor -1.15
+    Sun: false
+    RandomPos: true
+    PosX: null
+    PosY: null
+    Tolerence: null
+    MinCollideDistance: 10
+    MinSeperationDistance: 0.5
+    MaxSeperationDistance: 2000
+    OverlapCorrectionDistance: 1
+
+Bugs
+    Objects: 40
+    Gravity: 7
+    CollsionPushFactor -0.1
+    Sun: false
+    RandomPos: true
+    PosX: null
+    PosY: null
+    Tolerence: null
+    MinCollideDistance: 10
+    MinSeperationDistance: 0.5
+    MaxSeperationDistance: 2000
+    OverlapCorrectionDistance: 1
