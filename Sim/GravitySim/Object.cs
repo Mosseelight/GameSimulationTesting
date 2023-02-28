@@ -10,6 +10,7 @@ public class Object : Game
     public Vector2 pos {get; set;}
     public Vector2 curDir {get; set;}
     public Vector2 startDir {get; set;}
+    public bool enabled {get; set;}
 
     public void start()
     {
