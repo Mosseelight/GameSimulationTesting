@@ -65,7 +65,7 @@ namespace GameTesting
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Red);
+            GraphicsDevice.Clear(Color.DarkCyan);
 
             // TODO: Add your drawing code here
 
