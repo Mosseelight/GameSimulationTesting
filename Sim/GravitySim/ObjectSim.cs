@@ -27,6 +27,22 @@ public class ObjSimulation : Game
     float minSeperationDist = 0.5f;
     float maxSeperationDist = 2000f;
     float overlapCorrectionDist = 1f;
+
+    public class ObjectSimSettings
+    {
+        int numObjs;
+        float gravity;
+        float collsionPushFactor;
+        bool haveSun;
+        bool randomPos;
+        int posXChoose;
+        int posYChoose;
+        int posTolerence;
+        float minCollideDist;
+        float minSeperationDist;
+        float maxSeperationDist;
+        float overlapCorrectionDist;
+    }
     
     public void StRunSimulation()
     {

@@ -17,4 +17,15 @@ public class Saver
         }
     }
 
+    public void SaveSimSettings()
+    {
+
+    }
+
+}
+
+
+[Serializable]public class DataToSave
+{
+    ObjSimulation.ObjectSimSettings objectSimSettings = new ObjSimulation.ObjectSimSettings();
 }
