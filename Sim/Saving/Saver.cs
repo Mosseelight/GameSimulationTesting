@@ -11,6 +11,9 @@ public class Saver
 
     //hardcoded object simulation settings
     string normalSettingOBJ = objectSimPath + @"\Normal.json";
+    string sunSettingOBJ = objectSimPath + @"\Sun.json";
+    string funSettingOBJ = objectSimPath + @"\Fun.json";
+    string bugsSettingOBJ = objectSimPath + @"\Bugs.json";
 
 
     public void CreateFolder()
@@ -31,7 +34,7 @@ public class Saver
         Console.WriteLine(SaverDataToSet.objectSimSettingsSet);
 
         string jsonText = JsonSerializer.Serialize(dataToSave.objectSimSettings, options);
-        File.WriteAllText(normalSettingOBJ, jsonText);
+        File.WriteAllText(bugsSettingOBJ, jsonText);
         Console.WriteLine(jsonText + " Write");
     }
 

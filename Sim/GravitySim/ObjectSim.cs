@@ -15,9 +15,9 @@ public class ObjSimulation : Game
 
 
     //settings
-    int numObjs = 3;
+    int numObjs = 40;
     float gravity = 7f;
-    float collsionPushFactor = -0.8f;
+    float collsionPushFactor = -0.1f;
     bool haveSun = false;
     bool randomPos = true;
     int posXChoose = 950;
@@ -46,7 +46,6 @@ public class ObjSimulation : Game
     
     public void StRunSimulation()
     {
-        //Console.WriteLine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\ObjectSimSettings");
         saver.CreateFolder();
         SaverDataToSet.objectSimSettingsSet.numObjs = numObjs;
         SaverDataToSet.objectSimSettingsSet.gravity = gravity;
@@ -61,6 +60,7 @@ public class ObjSimulation : Game
         SaverDataToSet.objectSimSettingsSet.maxSeperationDist = maxSeperationDist;
         SaverDataToSet.objectSimSettingsSet.overlapCorrectionDist = overlapCorrectionDist;
         saver.SaveSimSettings();
+        saver.ReadSimSettings();
         objects = new Object[numObjs];
         //give objects settings
         for (int i = 0; i < objects.Length; i++)
