@@ -16,6 +16,8 @@ namespace GameTesting
 
         private GraphicsDeviceManager _graphics;
         private SpriteBatch spriteBatch;
+        private SpriteFont spriteFont;
+        Vector2 fontPos;
 
         //simulation vars
         ObjSimulation objSim = new ObjSimulation();
@@ -48,6 +50,8 @@ namespace GameTesting
             // TODO: use this.Content to load your game content here
 
             circle = Content.Load<Texture2D>("circle");
+            Content.Load<SpriteFont>("Arial");
+            fontPos = new Vector2(_graphics.GraphicsDevice.Viewport.Width / 2, _graphics.GraphicsDevice.Viewport.Height / 2);
         }
 
         protected override void Update(GameTime gameTime)
@@ -57,6 +61,12 @@ namespace GameTesting
 
             // TODO: Add your update logic here
             objSim.UpRunSimulation();
+
+            if(Keyboard.GetState().IsKeyDown(Keys.S))
+            {
+                Saver saver = new Saver();
+                saver.SaveSimSettings();
+            }
 
 
             base.Update(gameTime);
@@ -69,7 +79,7 @@ namespace GameTesting
 
             // TODO: Add your drawing code here
 
-            objSim.DrawSim(circle, spriteBatch, _graphics);
+            objSim.DrawSim(circle, spriteBatch, _graphics, spriteFont);
 
 
             base.Draw(gameTime);

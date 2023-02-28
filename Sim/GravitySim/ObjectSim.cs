@@ -59,7 +59,6 @@ public class ObjSimulation : Game
         SaverDataToSet.objectSimSettingsSet.minSeperationDist = minSeperationDist;
         SaverDataToSet.objectSimSettingsSet.maxSeperationDist = maxSeperationDist;
         SaverDataToSet.objectSimSettingsSet.overlapCorrectionDist = overlapCorrectionDist;
-        saver.SaveSimSettings();
         saver.ReadSimSettings();
         objects = new Object[numObjs];
         //give objects settings
@@ -137,11 +136,12 @@ public class ObjSimulation : Game
         }
     }
 
-    public void DrawSim(Texture2D circle, SpriteBatch spriteBatch, GraphicsDeviceManager graphics)
+    public void DrawSim(Texture2D circle, SpriteBatch spriteBatch, GraphicsDeviceManager graphics, SpriteFont font)
     {
         for (int i = 0; i < objects.Length; i++)
         {
             spriteBatch.Begin();
+            spriteBatch.DrawString(font, "Gravity " + gravity, new Vector2(0,1000), Color.Black);
             spriteBatch.Draw(circle, objects[i].pos, Color.White);
             spriteBatch.End();
         }
