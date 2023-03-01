@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Formats.Asn1;
@@ -99,7 +100,7 @@ public class ObjSimulation : Game
 
     public void UpRunSimulation()
     {
-        for (int i = 0; i < objects.Length; i++)
+        Parallel.For(0, objects.Length, i =>
         {
             if(!checkforoverlap)
             {
@@ -136,7 +137,7 @@ public class ObjSimulation : Game
                 }
             }
             
-        }
+        });
     }
 
     public void DrawSim(Texture2D circle, SpriteBatch spriteBatch, GraphicsDeviceManager graphics, SpriteFont font)
