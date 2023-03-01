@@ -18,7 +18,7 @@ public class ObjSimulation : Game
 
 
     //settings
-    int numObjs = 4;
+    int numObjs = 250;
     float gravity = 7f;
     float collsionPushFactor = -0.1f;
     bool haveSun = false;
