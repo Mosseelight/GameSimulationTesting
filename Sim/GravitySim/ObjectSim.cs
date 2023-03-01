@@ -150,18 +150,21 @@ namespace GameTesting
             for (int i = 0; i < objects.Length; i++)
             {
                 spriteBatch.Begin();
-                spriteBatch.DrawString(font, "Gravity: " + gravity, new Vector2(textMiddlePos.X + 40, 1000), Color.Black, 0, textMiddlePos, 1.5f, SpriteEffects.None, 0.5f);
+                spriteBatch.DrawString(font, "Gravity: " + gravity.ToString("N03"), new Vector2(textMiddlePos.X + 40, 1000), Color.Black, 0, textMiddlePos, 1.5f, SpriteEffects.None, 0.5f);
                 spriteBatch.Draw(circle, objects[i].pos, Color.White);
                 spriteBatch.End();
             }
         }
 
         public void HandleInput()
-        {
-            
-            if (Keyboard.GetState().IsKeyDown(Keys.G))
+        {   
+            if (Keyboard.GetState().IsKeyUp(Keys.G))
             {
-                gravity++;
+                gravity += 0.005f;
+            }
+            if (Keyboard.GetState().IsKeyUp(Keys.H))
+            {
+                gravity -= 0.005f;
             }
         }
 
