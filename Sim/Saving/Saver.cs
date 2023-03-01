@@ -14,6 +14,7 @@ public class Saver
     string sunSettingOBJ = objectSimPath + @"\Sun.json";
     string funSettingOBJ = objectSimPath + @"\Fun.json";
     string bugsSettingOBJ = objectSimPath + @"\Bugs.json";
+    string testingSettingOBJ = objectSimPath + @"\Testing.json";
 
 
     public void CreateFolder()
@@ -31,17 +32,14 @@ public class Saver
         options.WriteIndented = true;
 
         dataToSave.objectSimSettings = SaverDataToSet.objectSimSettingsSet;
-        Console.WriteLine(SaverDataToSet.objectSimSettingsSet);
 
         string jsonText = JsonSerializer.Serialize(dataToSave.objectSimSettings, options);
-        File.WriteAllText(bugsSettingOBJ, jsonText);
-        Console.WriteLine(jsonText + " Write");
+        File.WriteAllText(testingSettingOBJ, jsonText);
     }
 
     public void ReadSimSettings()
     {
-        string jsonText = File.ReadAllText(normalSettingOBJ);
-        Console.WriteLine(jsonText + " Read");
+        string jsonText = File.ReadAllText(testingSettingOBJ);
     }
 
 }

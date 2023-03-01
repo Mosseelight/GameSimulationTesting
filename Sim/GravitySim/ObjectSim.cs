@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -15,7 +16,7 @@ public class ObjSimulation : Game
 
 
     //settings
-    int numObjs = 40;
+    int numObjs = 4;
     float gravity = 7f;
     float collsionPushFactor = -0.1f;
     bool haveSun = false;
@@ -59,6 +60,7 @@ public class ObjSimulation : Game
         SaverDataToSet.objectSimSettingsSet.minSeperationDist = minSeperationDist;
         SaverDataToSet.objectSimSettingsSet.maxSeperationDist = maxSeperationDist;
         SaverDataToSet.objectSimSettingsSet.overlapCorrectionDist = overlapCorrectionDist;
+        saver.SaveSimSettings();
         saver.ReadSimSettings();
         objects = new Object[numObjs];
         //give objects settings
@@ -138,13 +140,23 @@ public class ObjSimulation : Game
 
     public void DrawSim(Texture2D circle, SpriteBatch spriteBatch, GraphicsDeviceManager graphics, SpriteFont font)
     {
+        Vector2 textMiddlePos = font.MeasureString("Gravity " + gravity) / 2;
         for (int i = 0; i < objects.Length; i++)
         {
             spriteBatch.Begin();
-            spriteBatch.DrawString(font, "Gravity " + gravity, new Vector2(0,1000), Color.Black);
+            spriteBatch.DrawString(font, "Gravity: " + gravity, new Vector2(textMiddlePos.X + 40, 1000), Color.Black, 0, textMiddlePos, 1.5f, SpriteEffects.None, 0.5f);
             spriteBatch.Draw(circle, objects[i].pos, Color.White);
             spriteBatch.End();
         }
+    }
+
+    public void HandleInput()
+    {
+        if(Keyboard.GetState().IsKeyDown(Keys.G))
+        {
+            gravity++;
+        }
+        Console.WriteLine(gravity);
     }
 
     public Vector2 CalculateAcceleration(Vector2 point, Object ignore = null)

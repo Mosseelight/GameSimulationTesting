@@ -16,8 +16,7 @@ namespace GameTesting
 
         private GraphicsDeviceManager _graphics;
         private SpriteBatch spriteBatch;
-        private SpriteFont spriteFont;
-        Vector2 fontPos;
+        private SpriteFont font;
 
         //simulation vars
         ObjSimulation objSim = new ObjSimulation();
@@ -50,23 +49,21 @@ namespace GameTesting
             // TODO: use this.Content to load your game content here
 
             circle = Content.Load<Texture2D>("circle");
-            Content.Load<SpriteFont>("Arial");
-            fontPos = new Vector2(_graphics.GraphicsDevice.Viewport.Width / 2, _graphics.GraphicsDevice.Viewport.Height / 2);
+            font = Content.Load<SpriteFont>("Arial");
         }
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                Exit();
-
             // TODO: Add your update logic here
-            objSim.UpRunSimulation();
-
-            if(Keyboard.GetState().IsKeyDown(Keys.S))
+            if (Keyboard.GetState().IsKeyDown(Keys.S))
             {
+                Console.WriteLine("test");
                 Saver saver = new Saver();
                 saver.SaveSimSettings();
+                Console.WriteLine("Saved!");
             }
+            objSim.HandleInput();
+            objSim.UpRunSimulation();
 
 
             base.Update(gameTime);
@@ -79,7 +76,7 @@ namespace GameTesting
 
             // TODO: Add your drawing code here
 
-            objSim.DrawSim(circle, spriteBatch, _graphics, spriteFont);
+            objSim.DrawSim(circle, spriteBatch, _graphics, font);
 
 
             base.Draw(gameTime);
