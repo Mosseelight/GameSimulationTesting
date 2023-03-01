@@ -4,48 +4,52 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.IO;
 
-public class Saver
+namespace GameTesting
 {
-    static string appPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-    static string objectSimPath = appPath + @"\ObjectSimSettings";
 
-    //hardcoded object simulation settings
-    string normalSettingOBJ = objectSimPath + @"\Normal.json";
-    string sunSettingOBJ = objectSimPath + @"\Sun.json";
-    string funSettingOBJ = objectSimPath + @"\Fun.json";
-    string bugsSettingOBJ = objectSimPath + @"\Bugs.json";
-    string testingSettingOBJ = objectSimPath + @"\Testing.json";
-
-
-    public void CreateFolder()
+    public class Saver
     {
-        if(!Directory.Exists(objectSimPath))
+        static string appPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+        static string objectSimPath = appPath + @"\ObjectSimSettings";
+
+        //hardcoded object simulation settings
+        string normalSettingOBJ = objectSimPath + @"\Normal.json";
+        string sunSettingOBJ = objectSimPath + @"\Sun.json";
+        string funSettingOBJ = objectSimPath + @"\Fun.json";
+        string bugsSettingOBJ = objectSimPath + @"\Bugs.json";
+        string testingSettingOBJ = objectSimPath + @"\Testing.json";
+
+
+        public void CreateFolder()
         {
-            Directory.CreateDirectory(objectSimPath);
+            if(!Directory.Exists(objectSimPath))
+            {
+                Directory.CreateDirectory(objectSimPath);
+            }
         }
+
+        public void SaveSimSettings()
+        {
+            DataToSave dataToSave = new DataToSave();
+            JsonSerializerOptions options = new JsonSerializerOptions();
+            options.WriteIndented = true;
+
+            dataToSave.objectSimSettings = SaverDataToSet.objectSimSettingsSet;
+
+            string jsonText = JsonSerializer.Serialize(dataToSave.objectSimSettings, options);
+            File.WriteAllText(testingSettingOBJ, jsonText);
+        }
+
+        public void ReadSimSettings()
+        {
+            string jsonText = File.ReadAllText(testingSettingOBJ);
+        }
+
     }
 
-    public void SaveSimSettings()
+
+    [Serializable]public class DataToSave
     {
-        DataToSave dataToSave = new DataToSave();
-        JsonSerializerOptions options = new JsonSerializerOptions();
-        options.WriteIndented = true;
-
-        dataToSave.objectSimSettings = SaverDataToSet.objectSimSettingsSet;
-
-        string jsonText = JsonSerializer.Serialize(dataToSave.objectSimSettings, options);
-        File.WriteAllText(testingSettingOBJ, jsonText);
+        public ObjSimulation.ObjectSimSettings objectSimSettings = new ObjSimulation.ObjectSimSettings();
     }
-
-    public void ReadSimSettings()
-    {
-        string jsonText = File.ReadAllText(testingSettingOBJ);
-    }
-
-}
-
-
-[Serializable]public class DataToSave
-{
-    public ObjSimulation.ObjectSimSettings objectSimSettings = new ObjSimulation.ObjectSimSettings();
 }

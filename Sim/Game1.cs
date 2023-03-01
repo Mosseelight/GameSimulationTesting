@@ -36,8 +36,8 @@ namespace GameTesting
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
             objSim.StRunSimulation();
+            objSim.SimApplySettings();
 
             base.Initialize();
         }
@@ -48,13 +48,18 @@ namespace GameTesting
 
             // TODO: use this.Content to load your game content here
 
-            circle = Content.Load<Texture2D>("circle");
-            font = Content.Load<SpriteFont>("Arial");
+            circle = this.Content.Load<Texture2D>("circle");
+            font = this.Content.Load<SpriteFont>("Arial");
         }
 
         protected override void Update(GameTime gameTime)
         {
             // TODO: Add your update logic here
+            if (Keyboard.GetState().IsKeyDown(Keys.W)) { Console.WriteLine("W"); }
+            if (Keyboard.GetState().IsKeyDown(Keys.S)) { Console.WriteLine("S"); }
+            if (Keyboard.GetState().IsKeyDown(Keys.A)) { Console.WriteLine("A"); }
+            if (Keyboard.GetState().IsKeyDown(Keys.D)) { Console.WriteLine("D"); }
+
             if (Keyboard.GetState().IsKeyDown(Keys.S))
             {
                 Console.WriteLine("test");
@@ -63,11 +68,10 @@ namespace GameTesting
                 Console.WriteLine("Saved!");
             }
             objSim.HandleInput();
-            objSim.UpRunSimulation();
-
 
             base.Update(gameTime);
             time = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            objSim.UpRunSimulation();
         }
 
         protected override void Draw(GameTime gameTime)
