@@ -11,7 +11,7 @@ using System.IO;
 namespace GameTesting
 {
 
-    public class ObjSimulation : Game
+    public class ObjSimulation
     {
         Object[] objects;
         Saver saver = new Saver();
