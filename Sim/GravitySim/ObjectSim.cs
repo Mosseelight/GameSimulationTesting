@@ -16,7 +16,7 @@ namespace GameTesting
         Object[] objects;
         Saver saver = new Saver();
         bool checkforoverlap = false;
-        System.Random random = new System.Random();
+        Random random = new Random();
 
         //settings
         int numObjs = 25;
@@ -78,7 +78,7 @@ namespace GameTesting
                     objects[i].mass = 100;
                     int X = 900;
                     int Y = 500;
-                    objects[i].pos = new Microsoft.Xna.Framework.Vector2(X, Y);
+                    objects[i].pos = new Vector2(X, Y);
                 }
                 else
                 {
@@ -93,11 +93,11 @@ namespace GameTesting
                         posY = random.Next(0, 1000);
                     }
 
-                    objects[i].pos = new Microsoft.Xna.Framework.Vector2(posX, posY);
+                    objects[i].pos = new Vector2(posX, posY);
                 }
                 int randomXS = random.Next(10, 40);
                 int randomYS = random.Next(10, 40);
-                objects[i].startDir = new Microsoft.Xna.Framework.Vector2(randomXS, randomYS);
+                objects[i].startDir = new Vector2(randomXS, randomYS);
                 objects[i].start();
             }
         }
@@ -112,20 +112,20 @@ namespace GameTesting
                     {
                         if (i != b && objects[b].pos == objects[i].pos)
                         {
-                            objects[i].pos += new Microsoft.Xna.Framework.Vector2(overlapCorrectionDist, overlapCorrectionDist);
+                            objects[i].pos += new Vector2(overlapCorrectionDist, overlapCorrectionDist);
                         }
                     }
                     checkforoverlap = true;
                 }
                 if (i == 0 && haveSun)
                 {
-                    Microsoft.Xna.Framework.Vector2 acceleration = CalculateAcceleration(objects[i].pos, objects[i]);
+                    Vector2 acceleration = CalculateAcceleration(objects[i].pos, objects[i]);
                     objects[i].UpdateDir(acceleration);
                     objects[i].UpdateColl();
                 }
                 else
                 {
-                    Microsoft.Xna.Framework.Vector2 acceleration = CalculateAcceleration(objects[i].pos, objects[i]);
+                    Vector2 acceleration = CalculateAcceleration(objects[i].pos, objects[i]);
                     objects[i].UpdateDir(acceleration);
                     objects[i].UpdatePos();
                     objects[i].UpdateColl();
@@ -135,7 +135,7 @@ namespace GameTesting
                 {
                     //b != i checks if its self is the same as its self so it does not give a dist
                     //of 0
-                    if (b != i && Microsoft.Xna.Framework.Vector2.Distance(objects[i].pos, objects[b].pos) < minCollideDist)
+                    if (b != i && Vector2.Distance(objects[i].pos, objects[b].pos) < minCollideDist)
                     {
                         objects[b].curDir *= collsionPushFactor;
                     }
@@ -144,30 +144,31 @@ namespace GameTesting
             });
         }
 
-        public void DrawSim(Microsoft.Xna.Framework.Graphics.Texture2D circle, SpriteBatch spriteBatch, GraphicsDeviceManager graphics, SpriteFont font)
+        public void DrawSim(Texture2D circle, SpriteBatch spriteBatch, GraphicsDeviceManager graphics, SpriteFont font)
         {
-            Microsoft.Xna.Framework.Vector2 textMiddlePos = font.MeasureString("Gravity " + gravity) / 2;
+            Vector2 textMiddlePos = font.MeasureString("Gravity " + gravity) / 2;
             for (int i = 0; i < objects.Length; i++)
             {
                 spriteBatch.Begin();
-                spriteBatch.DrawString(font, "Gravity: " + gravity, new Microsoft.Xna.Framework.Vector2(textMiddlePos.X + 40, 1000), Microsoft.Xna.Framework.Color.Black, 0, textMiddlePos, 1.5f, SpriteEffects.None, 0.5f);
-                spriteBatch.Draw(circle, objects[i].pos, Microsoft.Xna.Framework.Color.White);
+                spriteBatch.DrawString(font, "Gravity: " + gravity, new Vector2(textMiddlePos.X + 40, 1000), Color.Black, 0, textMiddlePos, 1.5f, SpriteEffects.None, 0.5f);
+                spriteBatch.Draw(circle, objects[i].pos, Color.White);
                 spriteBatch.End();
             }
         }
 
         public void HandleInput()
         {
+            
             if (Keyboard.GetState().IsKeyDown(Keys.G))
             {
                 gravity++;
             }
         }
 
-        public Microsoft.Xna.Framework.Vector2 CalculateAcceleration(Microsoft.Xna.Framework.Vector2 point, Object ignore = null)
+        public Vector2 CalculateAcceleration(Vector2 point, Object ignore = null)
         {
 
-            Microsoft.Xna.Framework.Vector2 acceleration = Microsoft.Xna.Framework.Vector2.Zero;
+            Vector2 acceleration = Vector2.Zero;
             for (int i = 0; i < objects.Length; i++)
             {
                 //very important if statement to check if the object is the same as its self
@@ -175,8 +176,8 @@ namespace GameTesting
                 //to itself is always 0
                 if (objects[i] != ignore)
                 {
-                    float dst = Microsoft.Xna.Framework.Vector2.Distance(objects[i].pos, point); //(float)Math.Sqrt(Microsoft.Xna.Framework.Vector2.Dot(objects[i].pos, point));
-                    Microsoft.Xna.Framework.Vector2 forceDir = Microsoft.Xna.Framework.Vector2.Normalize(objects[i].pos - point);
+                    float dst = Vector2.Distance(objects[i].pos, point); //(float)Math.Sqrt(Vector2.Dot(objects[i].pos, point));
+                    Vector2 forceDir = Vector2.Normalize(objects[i].pos - point);
                     acceleration += forceDir * gravity * objects[i].mass / Math.Clamp(dst, minSeperationDist, maxSeperationDist);
                 }
             }
