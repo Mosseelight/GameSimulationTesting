@@ -55,10 +55,6 @@ namespace GameTesting
         protected override void Update(GameTime gameTime)
         {
             // TODO: Add your update logic here
-            if (Keyboard.GetState().IsKeyDown(Keys.W)) { Console.WriteLine("W"); }
-            if (Keyboard.GetState().IsKeyDown(Keys.S)) { Console.WriteLine("S"); }
-            if (Keyboard.GetState().IsKeyDown(Keys.A)) { Console.WriteLine("A"); }
-            if (Keyboard.GetState().IsKeyDown(Keys.D)) { Console.WriteLine("D"); }
 
             if (Keyboard.GetState().IsKeyDown(Keys.S))
             {

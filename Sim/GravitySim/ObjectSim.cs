@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Formats.Asn1;
 using System.IO;
-using UnityEngine;
 
 namespace GameTesting
 {
@@ -18,7 +17,6 @@ namespace GameTesting
         Saver saver = new Saver();
         bool checkforoverlap = false;
         System.Random random = new System.Random();
-
 
         //settings
         int numObjs = 25;
