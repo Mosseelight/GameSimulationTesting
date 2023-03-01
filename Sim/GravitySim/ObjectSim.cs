@@ -13,6 +13,7 @@ public class ObjSimulation : Game
     Object[] objects;
     Saver saver = new Saver();
     bool checkforoverlap = false;
+    Random random = new Random();
 
 
     //settings
@@ -79,18 +80,18 @@ public class ObjSimulation : Game
                 objects[i].mass = new Random().Next(6, 12);
                 float posX;
                 float posY;
-                posX = new Random().Next(posXChoose - posTolerence, posXChoose + posTolerence);
-                posY = new Random().Next(posYChoose - posTolerence, posYChoose + posTolerence);
+                posX = random.Next(posXChoose - posTolerence, posXChoose + posTolerence);
+                posY = random.Next(posYChoose - posTolerence, posYChoose + posTolerence);
                 if(randomPos)
                 {
-                    posX = new Random().Next(0, 1900);
-                    posY = new Random().Next(0, 1000);
+                    posX = random.Next(0, 1900);
+                    posY = random.Next(0, 1000);
                 }
 
                 objects[i].pos = new Vector2(posX, posY);
             }
-            int randomXS = new Random().Next(10,40);
-            int randomYS = new Random().Next(10,40);
+            int randomXS = random.Next(10,40);
+            int randomYS = random.Next(10,40);
             objects[i].startDir = new Vector2(randomXS, randomYS);
             objects[i].start();
         }
