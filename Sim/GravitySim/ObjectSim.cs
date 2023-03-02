@@ -14,7 +14,7 @@ namespace GameTesting
     public class ObjSimulation
     {
         Object[] objects;
-        List<Object> aftObjectsList = new List<Object>();
+        List<Object> objectsList = new List<Object>();
         Saver saver = new Saver();
         bool checkforoverlap = false;
         Random random = new Random();
@@ -71,10 +71,10 @@ namespace GameTesting
 
         public void SimApplySettings()
         {
-            objects = new Object[numObjs];
-            for (int i = 0; i < objects.Length; i++)
+            for (int i = 0; i < numObjs; i++)
             {
-                objects[i] = new Object();
+                objectsList.Add(new Object());
+                objects = objectsList.ToArray();
                 if (i == 0 && haveSun)
                 {
                     objects[i].mass = 100;
@@ -142,10 +142,13 @@ namespace GameTesting
                     {
                         objects[b].enabled = false;
                         objects[i].enabled = false;
-                        aftObjectsList.Add(new Object());
-                        aftObjectsList[aftObjectsCount].mass = objects[b].mass + objects[i].mass;
-                        aftObjectsList[aftObjectsCount].curDir = objects[b].curDir - objects[i].curDir;
-                        aftObjectsList[aftObjectsCount].pos = Vector2.Lerp(objects[b].pos, objects[i].pos, 0.5f);
+                        objectsList.Add(new Object());
+                        objects = objectsList.ToArray();
+                        objects[aftObjectsCount + numObjs].enabled = true;
+                        objects[aftObjectsCount + numObjs].mass = objects[b].mass + objects[i].mass;
+                        objects[aftObjectsCount + numObjs].curDir = objects[b].curDir - objects[i].curDir;
+                        objects[aftObjectsCount + numObjs].pos = Vector2.Lerp(objects[b].pos, objects[i].pos, 0.5f);
+                        Console.WriteLine(objects[aftObjectsCount + numObjs].mass);
                         aftObjectsCount++;
                     }
                 }
