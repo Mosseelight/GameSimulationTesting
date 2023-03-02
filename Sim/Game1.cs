@@ -55,13 +55,6 @@ namespace GameTesting
         protected override void Update(GameTime gameTime)
         {
             // TODO: Add your update logic here
-
-            if (Keyboard.GetState().IsKeyUp(Keys.S))
-            {
-                Saver saver = new Saver();
-                saver.SaveSimSettings();
-                Console.WriteLine("Saved");
-            }
             objSim.HandleInput();
 
             base.Update(gameTime);

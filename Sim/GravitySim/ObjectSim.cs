@@ -14,9 +14,11 @@ namespace GameTesting
     public class ObjSimulation
     {
         Object[] objects;
+        List<Object> aftObjectsList = new List<Object>();
         Saver saver = new Saver();
         bool checkforoverlap = false;
         Random random = new Random();
+        int aftObjectsCount = 0;
 
         //settings
         int numObjs = 25;
@@ -98,6 +100,7 @@ namespace GameTesting
                 int randomXS = random.Next(10, 40);
                 int randomYS = random.Next(10, 40);
                 objects[i].startDir = new Vector2(randomXS, randomYS);
+                objects[i].enabled = true;
                 objects[i].start();
             }
         }
@@ -123,7 +126,7 @@ namespace GameTesting
                     objects[i].UpdateDir(acceleration);
                     objects[i].UpdateColl();
                 }
-                else
+                else if (objects[i].enabled)
                 {
                     Vector2 acceleration = CalculateAcceleration(objects[i].pos, objects[i]);
                     objects[i].UpdateDir(acceleration);
@@ -135,9 +138,15 @@ namespace GameTesting
                 {
                     //b != i checks if its self is the same as its self so it does not give a dist
                     //of 0
-                    if (b != i && Vector2.Distance(objects[i].pos, objects[b].pos) < minCollideDist)
+                    if (b != i && Vector2.Distance(objects[i].pos, objects[b].pos) < minCollideDist && objects[b].enabled && objects[i].enabled)
                     {
-                        objects[b].curDir *= collsionPushFactor;
+                        objects[b].enabled = false;
+                        objects[i].enabled = false;
+                        aftObjectsList.Add(new Object());
+                        aftObjectsList[aftObjectsCount].mass = objects[b].mass + objects[i].mass;
+                        aftObjectsList[aftObjectsCount].curDir = objects[b].curDir - objects[i].curDir;
+                        aftObjectsList[aftObjectsCount].pos = Vector2.Lerp(objects[b].pos, objects[i].pos, 0.5f);
+                        aftObjectsCount++;
                     }
                 }
 
@@ -149,11 +158,14 @@ namespace GameTesting
             Vector2 textMiddlePos = font.MeasureString("Gravity " + gravity) / 2;
             for (int i = 0; i < objects.Length; i++)
             {
-                spriteBatch.Begin();
-                spriteBatch.DrawString(font, "Gravity: " + gravity.ToString("N03"), new Vector2(textMiddlePos.X + 40, 1000), Color.Black, 0, textMiddlePos, 1.5f, SpriteEffects.None, 0.5f);
-                spriteBatch.DrawString(font, "CollPushFactor: " + collsionPushFactor.ToString("N03"), new Vector2(textMiddlePos.X + 40, 970), Color.Black, 0, textMiddlePos, 1.5f, SpriteEffects.None, 0.5f);
-                spriteBatch.Draw(circle, objects[i].pos, Color.White);
-                spriteBatch.End();
+                if(objects[i].enabled)
+                {
+                    spriteBatch.Begin();
+                    spriteBatch.DrawString(font, "Gravity: " + gravity.ToString("N03"), new Vector2(textMiddlePos.X + 40, 1000), Color.Black, 0, textMiddlePos, 1.5f, SpriteEffects.None, 0.5f);
+                    spriteBatch.DrawString(font, "CollPushFactor: " + collsionPushFactor.ToString("N03"), new Vector2(textMiddlePos.X + 40, 970), Color.Black, 0, textMiddlePos, 1.5f, SpriteEffects.None, 0.5f);
+                    spriteBatch.Draw(circle, objects[i].pos, Color.White);
+                    spriteBatch.End();
+                }
             }
         }
 
@@ -175,6 +187,24 @@ namespace GameTesting
             {
                 collsionPushFactor -= 0.005f;
             }
+            if (Keyboard.GetState().IsKeyDown(Keys.S))
+            {
+                Saver saver = new Saver();
+                SaverDataToSet.objectSimSettingsSet.numObjs = numObjs;
+                SaverDataToSet.objectSimSettingsSet.gravity = gravity;
+                SaverDataToSet.objectSimSettingsSet.collsionPushFactor = collsionPushFactor;
+                SaverDataToSet.objectSimSettingsSet.haveSun = haveSun;
+                SaverDataToSet.objectSimSettingsSet.randomPos = randomPos;
+                SaverDataToSet.objectSimSettingsSet.posXChoose = posXChoose;
+                SaverDataToSet.objectSimSettingsSet.posYChoose = posYChoose;
+                SaverDataToSet.objectSimSettingsSet.posTolerence = posTolerence;
+                SaverDataToSet.objectSimSettingsSet.minCollideDist = minCollideDist;
+                SaverDataToSet.objectSimSettingsSet.minSeperationDist = minSeperationDist;
+                SaverDataToSet.objectSimSettingsSet.maxSeperationDist = maxSeperationDist;
+                SaverDataToSet.objectSimSettingsSet.overlapCorrectionDist = overlapCorrectionDist;
+                saver.SaveSimSettings();
+                Console.WriteLine("Saved");
+            }
         }
 
         public Vector2 CalculateAcceleration(Vector2 point, Object ignore = null)
@@ -186,7 +216,7 @@ namespace GameTesting
                 //very important if statement to check if the object is the same as its self
                 //beacuse then that messes up the dist cal as you cannot divide 0 the dist
                 //to itself is always 0
-                if (objects[i] != ignore)
+                if (objects[i] != ignore && objects[i].enabled)
                 {
                     float dst = Vector2.Distance(objects[i].pos, point); //(float)Math.Sqrt(Vector2.Dot(objects[i].pos, point));
                     Vector2 forceDir = Vector2.Normalize(objects[i].pos - point);
