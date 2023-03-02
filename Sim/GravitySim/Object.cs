@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 
-public class Object : Game
+public class Object
 {
 
     public float mass {get; set;}
