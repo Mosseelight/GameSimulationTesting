@@ -151,6 +151,7 @@ namespace GameTesting
             {
                 spriteBatch.Begin();
                 spriteBatch.DrawString(font, "Gravity: " + gravity.ToString("N03"), new Vector2(textMiddlePos.X + 40, 1000), Color.Black, 0, textMiddlePos, 1.5f, SpriteEffects.None, 0.5f);
+                spriteBatch.DrawString(font, "CollPushFactor: " + collsionPushFactor.ToString("N03"), new Vector2(textMiddlePos.X + 40, 970), Color.Black, 0, textMiddlePos, 1.5f, SpriteEffects.None, 0.5f);
                 spriteBatch.Draw(circle, objects[i].pos, Color.White);
                 spriteBatch.End();
             }
@@ -165,6 +166,14 @@ namespace GameTesting
             if (Keyboard.GetState().IsKeyUp(Keys.H))
             {
                 gravity -= 0.005f;
+            }
+            if (Keyboard.GetState().IsKeyUp(Keys.O))
+            {
+                collsionPushFactor += 0.005f;
+            }
+            if (Keyboard.GetState().IsKeyUp(Keys.L))
+            {
+                collsionPushFactor -= 0.005f;
             }
         }
 
