@@ -15,12 +15,11 @@ namespace GameTesting
         Saver saver = new Saver();
         bool checkforoverlap = false;
         Random random = new Random();
-        int aftObjectsCount = 0;
         bool spawnKeyPressed = false;
 
         //settings
         int numObjs = 2;
-        float gravity = 1.5f;
+        float gravity = 7f;
         float collsionPushFactor = -1.15f;
         bool haveSun = false;
         bool randomPos = true;
@@ -33,7 +32,7 @@ namespace GameTesting
         float massCollideLoss = 5f;
         //increse the distance between the objects so that it would be technically farther away then it actually is for
         //a more realistic simulation rather than the object being 10 units away and zipping away
-        float distScaleFactor = 100;
+        float distScaleFactor = 50;
 
         public class ObjectSimSettings
         {
@@ -112,7 +111,9 @@ namespace GameTesting
 
         public void UpRunSimulation()
         {
-            for(int i = 0; i < objectsList.Count; i++)
+            Console.WriteLine(objectsList.Count + " List");
+            Console.WriteLine(objects.Length + " Array");
+            for(int i = 0; i < objects.Length; i++)
             {
                 if (i == 0 && haveSun)
                 {
@@ -128,23 +129,25 @@ namespace GameTesting
                     objects[i].UpdateColl();
                 }
 
-                for (int b = 0; b < objectsList.Count; b++)
+                for (int b = 0; b < objects.Length; b++)
                 {
                     //b != i checks if its self is the same as its self so it does not give a dist
                     //of 0
+                    Console.WriteLine(i + " i");
+                    Console.WriteLine(b + " b");
                     if (b != i && Vector2.Distance(objects[i].pos, objects[b].pos) < minCollideDist && objects[b].enabled && objects[i].enabled && !objects[i].isSun && !objects[b].isSun)
                     {
-                        objectsList.Add(new Object());
-                        objects = objectsList.ToArray();
-                        objects[aftObjectsCount + numObjs].enabled = true;
-                        objects[aftObjectsCount + numObjs].mass = objects[b].mass + objects[i].mass - massCollideLoss;
-                        objects[aftObjectsCount + numObjs].curDir = objects[b].curDir - objects[i].curDir;
-                        objects[aftObjectsCount + numObjs].pos = Vector2.Lerp(objects[b].pos, objects[i].pos, 0.5f);
+                        float tempMass = objects[b].mass + objects[i].mass - massCollideLoss;
+                        Vector2 tempCurDir = objects[b].curDir - objects[i].curDir;
+                        Vector2 tempPos = Vector2.Lerp(objects[b].pos, objects[i].pos, 0.5f);
                         objectsList.Remove(objects[b]);
                         objectsList.Remove(objects[i]);
-                        aftObjectsCount--;
-                        aftObjectsCount--;
-                        aftObjectsCount++;
+                        objectsList.Add(new Object());
+                        objects = objectsList.ToArray();
+                        objects[objects.Length - 1].enabled = true;
+                        objects[objects.Length - 1].mass = tempMass;
+                        objects[objects.Length - 1].curDir = tempCurDir;
+                        objects[objects.Length - 1].pos = tempPos;
                     }
                 }
 
@@ -156,7 +159,7 @@ namespace GameTesting
         {
             for(int x = 0; x < overlapAmountCheck; x++)
             {
-                for(int i = 0; i < objectsList.Count; i++)
+                for(int i = 0; i < objects.Length; i++)
                 {
                     if (!checkforoverlap)
                     {
@@ -176,7 +179,7 @@ namespace GameTesting
         public void DrawSim(Texture2D circle, SpriteBatch spriteBatch, GraphicsDeviceManager graphics, SpriteFont font)
         {
             Vector2 textMiddlePos = font.MeasureString("Gravity " + gravity) / 2;
-            for (int i = 0; i < objectsList.Count; i++)
+            for (int i = 0; i < objects.Length; i++)
             {
                 if(objects[i].enabled)
                 {
@@ -231,11 +234,10 @@ namespace GameTesting
                 spawnKeyPressed = true;
                 objectsList.Add(new Object());
                 objects = objectsList.ToArray();
-                objects[aftObjectsCount + numObjs].enabled = true;
-                objects[aftObjectsCount + numObjs].mass = random.Next(6, 12);
-                objects[aftObjectsCount + numObjs].curDir = new Vector2(random.Next(-10,10),random.Next(-10,10));
-                objects[aftObjectsCount + numObjs].pos = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
-                aftObjectsCount++;
+                objects[objects.Length - 1].enabled = true;
+                objects[objects.Length - 1].mass = random.Next(6, 12);
+                objects[objects.Length - 1].curDir = new Vector2(random.Next(-10,10),random.Next(-10,10));
+                objects[objects.Length - 1].pos = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
             }
             if(Keyboard.GetState().IsKeyUp(Keys.Q))
             {
@@ -247,7 +249,7 @@ namespace GameTesting
         {
 
             Vector2 acceleration = Vector2.Zero;
-            for (int i = 0; i < objectsList.Count; i++)
+            for (int i = 0; i < objects.Length; i++)
             {
                 //very important if statement to check if the object is the same as its self
                 //beacuse then that messes up the dist cal as you cannot divide 0 the dist
