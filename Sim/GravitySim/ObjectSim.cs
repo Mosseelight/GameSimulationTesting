@@ -18,7 +18,7 @@ namespace GameTesting
         int aftObjectsCount = 0;
 
         //settings
-        int numObjs = 200;
+        int numObjs = 500;
         float gravity = 1.5f;
         float collsionPushFactor = -0.5f;
         bool haveSun = false;
@@ -30,6 +30,7 @@ namespace GameTesting
         float minSeperationDist = 0.5f;
         float maxSeperationDist = 2000f;
         float overlapCorrectionDist = 1f;
+        int overlapAmountCheck = 1;
 
         public class ObjectSimSettings
         {
@@ -100,23 +101,13 @@ namespace GameTesting
                 objects[i].enabled = true;
                 objects[i].start();
             }
+            CheckOverlapSpawning();
         }
 
         public void UpRunSimulation()
         {
             for(int i = 0; i < objectsList.Count; i++)
             {
-                if (!checkforoverlap)
-                {
-                    for (int b = 0; b < objects.Length; b++)
-                    {
-                        if (i != b && objects[b].pos == objects[i].pos)
-                        {
-                            objects[i].pos += new Vector2(overlapCorrectionDist, overlapCorrectionDist);
-                        }
-                    }
-                    checkforoverlap = true;
-                }
                 if (i == 0 && haveSun)
                 {
                     Vector2 acceleration = CalculateAcceleration(objects[i].pos, objects[i]);
@@ -150,6 +141,29 @@ namespace GameTesting
                 }
 
             }
+        }
+
+        //check when the objects are spawned that they are not spawning on top of each other
+        private void CheckOverlapSpawning()
+        {
+            for(int x = 0; x < overlapAmountCheck; x++)
+            {
+                for(int i = 0; i < objectsList.Count; i++)
+                {
+                    if (!checkforoverlap)
+                    {
+                        for (int b = 0; b < objects.Length; b++)
+                        {
+                            if (i != b && objects[b].pos == objects[i].pos)
+                            {
+                                objects[i].pos += new Vector2(overlapCorrectionDist, overlapCorrectionDist);
+                                Console.WriteLine("Fixed an overlap " + (b + i + x - 3));
+                            }
+                        }
+                    }
+                }
+            }
+            checkforoverlap = true;
         }
 
         public void DrawSim(Texture2D circle, SpriteBatch spriteBatch, GraphicsDeviceManager graphics, SpriteFont font)
