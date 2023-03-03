@@ -18,8 +18,8 @@ namespace GameTesting
         int aftObjectsCount = 0;
 
         //settings
-        int numObjs = 500;
-        float gravity = 1.5f;
+        int numObjs = 100;
+        float gravity = 0f;
         float collsionPushFactor = -1.15f;
         bool haveSun = false;
         bool randomPos = true;
@@ -32,7 +32,7 @@ namespace GameTesting
         float massCollideLoss = 5f;
         //increse the distance between the objects so that it would be technically farther away then it actually is for
         //a more realistic simulation rather than the object being 10 units away and zipping away
-        float distScaleFactor = 10;
+        float distScaleFactor = 100;
 
         public class ObjectSimSettings
         {
@@ -79,7 +79,8 @@ namespace GameTesting
                 objects = objectsList.ToArray();
                 if (i == 0 && haveSun)
                 {
-                    objects[i].mass = 100;
+                    objects[i].mass = 10000;
+                    objects[i].isSun = true;
                     int X = 900;
                     int Y = 500;
                     objects[i].pos = new Vector2(X, Y);
@@ -130,7 +131,7 @@ namespace GameTesting
                 {
                     //b != i checks if its self is the same as its self so it does not give a dist
                     //of 0
-                    if (b != i && Vector2.Distance(objects[i].pos, objects[b].pos) < minCollideDist && objects[b].enabled && objects[i].enabled)
+                    if (b != i && Vector2.Distance(objects[i].pos, objects[b].pos) < minCollideDist && objects[b].enabled && objects[i].enabled && !objects[i].isSun && !objects[b].isSun)
                     {
                         objects[b].enabled = false;
                         objects[i].enabled = false;

@@ -11,6 +11,7 @@ public class Object
     public Vector2 curDir {get; set;}
     public Vector2 startDir {get; set;}
     public bool enabled {get; set;}
+    public bool isSun = false;
 
     public void start()
     {
