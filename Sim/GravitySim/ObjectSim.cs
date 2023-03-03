@@ -16,10 +16,11 @@ namespace GameTesting
         bool checkforoverlap = false;
         Random random = new Random();
         int aftObjectsCount = 0;
+        bool leftMouseKeyPressed = false;
 
         //settings
         int numObjs = 100;
-        float gravity = 0f;
+        float gravity = 1.5f;
         float collsionPushFactor = -1.15f;
         bool haveSun = false;
         bool randomPos = true;
@@ -222,6 +223,21 @@ namespace GameTesting
                 SaverDataToSet.objectSimSettingsSet.distScaleFactor = distScaleFactor;
                 saver.SaveSimSettings();
                 Console.WriteLine("Saved");
+            }
+            if(Mouse.GetState().LeftButton == ButtonState.Pressed && !leftMouseKeyPressed)
+            {
+                leftMouseKeyPressed = true;
+                objectsList.Add(new Object());
+                objects = objectsList.ToArray();
+                objects[aftObjectsCount + numObjs].enabled = true;
+                objects[aftObjectsCount + numObjs].mass = random.Next(6, 12);
+                objects[aftObjectsCount + numObjs].curDir = new Vector2(random.Next(-10,10),random.Next(-10,10));
+                objects[aftObjectsCount + numObjs].pos = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
+                aftObjectsCount++;
+            }
+            if(Mouse.GetState().LeftButton == ButtonState.Released)
+            {
+                leftMouseKeyPressed = false;
             }
         }
 
