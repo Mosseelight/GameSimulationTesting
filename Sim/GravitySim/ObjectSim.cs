@@ -2,10 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
-using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Formats.Asn1;
 using System.IO;
 
 namespace GameTesting
@@ -21,8 +18,8 @@ namespace GameTesting
         int aftObjectsCount = 0;
 
         //settings
-        int numObjs = 25;
-        float gravity = 7f;
+        int numObjs = 200;
+        float gravity = 1.5f;
         float collsionPushFactor = -0.5f;
         bool haveSun = false;
         bool randomPos = true;
@@ -84,7 +81,7 @@ namespace GameTesting
                 }
                 else
                 {
-                    objects[i].mass = random.Next(6, 12);
+                    objects[i].mass = random.Next(1, 5);
                     float posX;
                     float posY;
                     posX = random.Next(posXChoose - posTolerence, posXChoose + posTolerence);
@@ -107,7 +104,7 @@ namespace GameTesting
 
         public void UpRunSimulation()
         {
-            Parallel.For(0, objects.Length, i =>
+            for(int i = 0; i < objectsList.Count; i++)
             {
                 if (!checkforoverlap)
                 {
@@ -134,7 +131,7 @@ namespace GameTesting
                     objects[i].UpdateColl();
                 }
 
-                for (int b = 0; b < objects.Length; b++)
+                for (int b = 0; b < objectsList.Count; b++)
                 {
                     //b != i checks if its self is the same as its self so it does not give a dist
                     //of 0
@@ -148,18 +145,17 @@ namespace GameTesting
                         objects[aftObjectsCount + numObjs].mass = objects[b].mass + objects[i].mass;
                         objects[aftObjectsCount + numObjs].curDir = objects[b].curDir - objects[i].curDir;
                         objects[aftObjectsCount + numObjs].pos = Vector2.Lerp(objects[b].pos, objects[i].pos, 0.5f);
-                        Console.WriteLine(objects[aftObjectsCount + numObjs].mass);
                         aftObjectsCount++;
                     }
                 }
 
-            });
+            }
         }
 
         public void DrawSim(Texture2D circle, SpriteBatch spriteBatch, GraphicsDeviceManager graphics, SpriteFont font)
         {
             Vector2 textMiddlePos = font.MeasureString("Gravity " + gravity) / 2;
-            for (int i = 0; i < objects.Length; i++)
+            for (int i = 0; i < objectsList.Count; i++)
             {
                 if(objects[i].enabled)
                 {
@@ -214,7 +210,7 @@ namespace GameTesting
         {
 
             Vector2 acceleration = Vector2.Zero;
-            for (int i = 0; i < objects.Length; i++)
+            for (int i = 0; i < objectsList.Count; i++)
             {
                 //very important if statement to check if the object is the same as its self
                 //beacuse then that messes up the dist cal as you cannot divide 0 the dist
