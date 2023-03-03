@@ -20,17 +20,19 @@ namespace GameTesting
         //settings
         int numObjs = 500;
         float gravity = 1.5f;
-        float collsionPushFactor = -0.5f;
+        float collsionPushFactor = -1.15f;
         bool haveSun = false;
         bool randomPos = true;
         int posXChoose = 950;
         int posYChoose = 500;
         int posTolerence = 50;
         float minCollideDist = 10f;
-        float minSeperationDist = 0.5f;
-        float maxSeperationDist = 2000f;
         float overlapCorrectionDist = 1f;
         int overlapAmountCheck = 1;
+        float massCollideLoss = 5f;
+        //increse the distance between the objects so that it would be technically farther away then it actually is for
+        //a more realistic simulation rather than the object being 10 units away and zipping away
+        float distScaleFactor = 10;
 
         public class ObjectSimSettings
         {
@@ -43,9 +45,10 @@ namespace GameTesting
             public int posYChoose { get; set; }
             public int posTolerence { get; set; }
             public float minCollideDist { get; set; }
-            public float minSeperationDist { get; set; }
-            public float maxSeperationDist { get; set; }
             public float overlapCorrectionDist { get; set; }
+            public int overlapAmountCheck { get; set; }
+            public float massCollideLoss { get; set; }
+            public float distScaleFactor { get; set; }
         }
 
         public void StRunSimulation()
@@ -60,9 +63,10 @@ namespace GameTesting
             SaverDataToSet.objectSimSettingsSet.posYChoose = posYChoose;
             SaverDataToSet.objectSimSettingsSet.posTolerence = posTolerence;
             SaverDataToSet.objectSimSettingsSet.minCollideDist = minCollideDist;
-            SaverDataToSet.objectSimSettingsSet.minSeperationDist = minSeperationDist;
-            SaverDataToSet.objectSimSettingsSet.maxSeperationDist = maxSeperationDist;
             SaverDataToSet.objectSimSettingsSet.overlapCorrectionDist = overlapCorrectionDist;
+            SaverDataToSet.objectSimSettingsSet.overlapAmountCheck = overlapAmountCheck;
+            SaverDataToSet.objectSimSettingsSet.massCollideLoss = massCollideLoss;
+            SaverDataToSet.objectSimSettingsSet.distScaleFactor = distScaleFactor;
             saver.SaveSimSettings();
             saver.ReadSimSettings();
         }
@@ -82,7 +86,7 @@ namespace GameTesting
                 }
                 else
                 {
-                    objects[i].mass = random.Next(1, 5);
+                    objects[i].mass = random.Next(6, 12);
                     float posX;
                     float posY;
                     posX = random.Next(posXChoose - posTolerence, posXChoose + posTolerence);
@@ -133,7 +137,7 @@ namespace GameTesting
                         objectsList.Add(new Object());
                         objects = objectsList.ToArray();
                         objects[aftObjectsCount + numObjs].enabled = true;
-                        objects[aftObjectsCount + numObjs].mass = objects[b].mass + objects[i].mass;
+                        objects[aftObjectsCount + numObjs].mass = objects[b].mass + objects[i].mass - massCollideLoss;
                         objects[aftObjectsCount + numObjs].curDir = objects[b].curDir - objects[i].curDir;
                         objects[aftObjectsCount + numObjs].pos = Vector2.Lerp(objects[b].pos, objects[i].pos, 0.5f);
                         aftObjectsCount++;
@@ -157,7 +161,6 @@ namespace GameTesting
                             if (i != b && objects[b].pos == objects[i].pos)
                             {
                                 objects[i].pos += new Vector2(overlapCorrectionDist, overlapCorrectionDist);
-                                Console.WriteLine("Fixed an overlap " + (b + i + x - 3));
                             }
                         }
                     }
@@ -212,9 +215,10 @@ namespace GameTesting
                 SaverDataToSet.objectSimSettingsSet.posYChoose = posYChoose;
                 SaverDataToSet.objectSimSettingsSet.posTolerence = posTolerence;
                 SaverDataToSet.objectSimSettingsSet.minCollideDist = minCollideDist;
-                SaverDataToSet.objectSimSettingsSet.minSeperationDist = minSeperationDist;
-                SaverDataToSet.objectSimSettingsSet.maxSeperationDist = maxSeperationDist;
                 SaverDataToSet.objectSimSettingsSet.overlapCorrectionDist = overlapCorrectionDist;
+                SaverDataToSet.objectSimSettingsSet.overlapAmountCheck = overlapAmountCheck;
+                SaverDataToSet.objectSimSettingsSet.massCollideLoss = massCollideLoss;
+                SaverDataToSet.objectSimSettingsSet.distScaleFactor = distScaleFactor;
                 saver.SaveSimSettings();
                 Console.WriteLine("Saved");
             }
@@ -233,7 +237,7 @@ namespace GameTesting
                 {
                     float dst = Vector2.Distance(objects[i].pos, point); //(float)Math.Sqrt(Vector2.Dot(objects[i].pos, point));
                     Vector2 forceDir = Vector2.Normalize(objects[i].pos - point);
-                    acceleration += forceDir * gravity * objects[i].mass / Math.Clamp(dst, minSeperationDist, maxSeperationDist);
+                    acceleration += forceDir * gravity * objects[i].mass / (dst * distScaleFactor);
                 }
             }
 
