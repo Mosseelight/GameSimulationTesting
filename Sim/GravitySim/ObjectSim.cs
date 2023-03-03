@@ -16,10 +16,10 @@ namespace GameTesting
         bool checkforoverlap = false;
         Random random = new Random();
         int aftObjectsCount = 0;
-        bool leftMouseKeyPressed = false;
+        bool spawnKeyPressed = false;
 
         //settings
-        int numObjs = 100;
+        int numObjs = 2;
         float gravity = 1.5f;
         float collsionPushFactor = -1.15f;
         bool haveSun = false;
@@ -134,14 +134,16 @@ namespace GameTesting
                     //of 0
                     if (b != i && Vector2.Distance(objects[i].pos, objects[b].pos) < minCollideDist && objects[b].enabled && objects[i].enabled && !objects[i].isSun && !objects[b].isSun)
                     {
-                        objects[b].enabled = false;
-                        objects[i].enabled = false;
                         objectsList.Add(new Object());
                         objects = objectsList.ToArray();
                         objects[aftObjectsCount + numObjs].enabled = true;
                         objects[aftObjectsCount + numObjs].mass = objects[b].mass + objects[i].mass - massCollideLoss;
                         objects[aftObjectsCount + numObjs].curDir = objects[b].curDir - objects[i].curDir;
                         objects[aftObjectsCount + numObjs].pos = Vector2.Lerp(objects[b].pos, objects[i].pos, 0.5f);
+                        objectsList.Remove(objects[b]);
+                        objectsList.Remove(objects[i]);
+                        aftObjectsCount--;
+                        aftObjectsCount--;
                         aftObjectsCount++;
                     }
                 }
@@ -224,9 +226,9 @@ namespace GameTesting
                 saver.SaveSimSettings();
                 Console.WriteLine("Saved");
             }
-            if(Mouse.GetState().LeftButton == ButtonState.Pressed && !leftMouseKeyPressed)
+            if(Keyboard.GetState().IsKeyDown(Keys.Q) && !spawnKeyPressed)
             {
-                leftMouseKeyPressed = true;
+                spawnKeyPressed = true;
                 objectsList.Add(new Object());
                 objects = objectsList.ToArray();
                 objects[aftObjectsCount + numObjs].enabled = true;
@@ -235,9 +237,9 @@ namespace GameTesting
                 objects[aftObjectsCount + numObjs].pos = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
                 aftObjectsCount++;
             }
-            if(Mouse.GetState().LeftButton == ButtonState.Released)
+            if(Keyboard.GetState().IsKeyUp(Keys.Q))
             {
-                leftMouseKeyPressed = false;
+                spawnKeyPressed = false;
             }
         }
 
