@@ -20,6 +20,7 @@ namespace GameTesting
 
         //simulation vars
         ObjSimulation objSim = new ObjSimulation();
+        VectorFieldSim vectorField = new VectorFieldSim();
 
         Texture2D circle;
 
@@ -36,9 +37,8 @@ namespace GameTesting
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            objSim.StRunSimulation();
-            objSim.SimApplySettings();
-            VectorFieldSim vectorField = new VectorFieldSim();
+            //objSim.StRunSimulation();
+            //objSim.SimApplySettings();
             vectorField.CreateVectorField();
             base.Initialize();
         }
@@ -56,11 +56,13 @@ namespace GameTesting
         protected override void Update(GameTime gameTime)
         {
             // TODO: Add your update logic here
-            objSim.HandleInput();
+            //objSim.HandleInput();
 
             base.Update(gameTime);
             time = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            objSim.UpRunSimulation();
+            //objSim.UpRunSimulation();
+            vectorField.ApplyFieldDirection();
+
         }
 
         protected override void Draw(GameTime gameTime)
@@ -69,7 +71,8 @@ namespace GameTesting
 
             // TODO: Add your drawing code here
 
-            objSim.DrawSim(circle, spriteBatch, _graphics, font);
+            //objSim.DrawSim(circle, spriteBatch, _graphics, font);
+            vectorField.DrawSim(circle, spriteBatch, _graphics, font);
 
 
             base.Draw(gameTime);

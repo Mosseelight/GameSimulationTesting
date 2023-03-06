@@ -20,7 +20,7 @@ public class Object
 
     public void UpdateDir(Vector2 acceleration)
     {
-        curDir += acceleration;
+        curDir = acceleration;
     }
 
     public void UpdatePos()
