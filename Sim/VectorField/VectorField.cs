@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 public class VectorFieldSim
@@ -12,8 +13,8 @@ public class VectorFieldSim
     Object obj = new Object();
     int vectorFieldXLen = 10;
     int vectorFieldYLen = 10;
+    int vectorFieldScale = 10;
     int posCount;
-    float distanceCheck = 1.1f;
 
     public void CreateVectorField()
     {
@@ -23,24 +24,26 @@ public class VectorFieldSim
         {
             for (int x = 0; x < vectorFieldXLen; x++)
             {
-                vectorsPos[posCount] = new Vector2(x,y);
+                vectorsPos[posCount] = new Vector2(x * vectorFieldScale,y * vectorFieldScale);
                 vectorsDirs[posCount] = new Vector2(CalculateXValue(x),CalculateYValue(y));
-                Console.WriteLine(vectorsDirs[posCount]);
                 posCount++;
             }
         }
-        obj.startDir = new Vector2(1,1);
-        obj.start();
+        obj.pos = new Vector2(850, 500);
     }
 
     public void ApplyFieldDirection()
     {
+
+        List<float> distances = new List<float>();
         for (int i = 0; i < vectorsPos.Length; i++)
         {
-            if(Vector2.Distance(vectorsPos[i], obj.pos) < distanceCheck)
+            distances.Add(Vector2.Distance(vectorsPos[i], obj.pos));
+            if(distances.Min() == distances.Min() && distances.Count == vectorsPos.Length)
             {
+                Console.WriteLine(Vector2.Distance(vectorsPos[i], obj.pos));
                 obj.UpdateDir(vectorsDirs[i] * 0.1f);
-                Console.WriteLine(obj.curDir + " objdir");
+                distances.Clear();
             }
         }
         obj.UpdatePos();
@@ -56,7 +59,7 @@ public class VectorFieldSim
     public float CalculateXValue(float input)
     {
 
-
+        //input *= 1;
 
         return input;
     }
@@ -64,8 +67,7 @@ public class VectorFieldSim
     public float CalculateYValue(float input)
     {
 
-        
-
+        //input *= 1;
         return input;
     }
 }
