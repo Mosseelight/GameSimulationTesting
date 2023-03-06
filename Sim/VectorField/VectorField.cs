@@ -10,9 +10,10 @@ public class VectorFieldSim
         
     Vector2[] vectorsDirs;
     Vector2[] vectorsPos;
+    Vector2 screenMiddle = new Vector2(950,500);
     Object obj = new Object();
-    int vectorFieldXLen = 10;
-    int vectorFieldYLen = 10;
+    int vectorFieldXLen = 500;
+    int vectorFieldYLen = 500;
     int vectorFieldScale = 10;
     int posCount;
 
@@ -25,28 +26,32 @@ public class VectorFieldSim
             for (int x = 0; x < vectorFieldXLen; x++)
             {
                 vectorsPos[posCount] = new Vector2(x * vectorFieldScale,y * vectorFieldScale);
-                vectorsDirs[posCount] = new Vector2(CalculateXValue(x),CalculateYValue(y));
+                vectorsDirs[posCount] = CalculateVectorValue(new Vector2(x,y));
                 posCount++;
             }
         }
-        obj.pos = new Vector2(850, 500);
+        obj.pos = new Vector2(new Random().Next(0,1900), new Random().Next(0,1000));
     }
 
     public void ApplyFieldDirection()
     {
 
         List<float> distances = new List<float>();
+        float minDist;
+        minDist = 0;
         for (int i = 0; i < vectorsPos.Length; i++)
         {
             distances.Add(Vector2.Distance(vectorsPos[i], obj.pos));
-            if(distances.Min() == distances.Min() && distances.Count == vectorsPos.Length)
+            if(distances.Count == vectorsPos.Length)
             {
-                Console.WriteLine(Vector2.Distance(vectorsPos[i], obj.pos));
-                obj.UpdateDir(vectorsDirs[i] * 0.1f);
-                distances.Clear();
+                minDist = distances.Min();
             }
         }
+        int index = distances.IndexOf(minDist);
+        obj.UpdateDir(Vector2.Normalize(vectorsDirs[index]));
+        Console.WriteLine(obj.curDir);
         obj.UpdatePos();
+        distances.Clear();
     }
 
     public void DrawSim(Texture2D circle, SpriteBatch spriteBatch, GraphicsDeviceManager graphics, SpriteFont font)
@@ -56,19 +61,10 @@ public class VectorFieldSim
         spriteBatch.End();
     }
 
-    public float CalculateXValue(float input)
+    public Vector2 CalculateVectorValue(Vector2 pos)
     {
-
-        //input *= 1;
-
-        return input;
-    }
-
-    public float CalculateYValue(float input)
-    {
-
-        //input *= 1;
-        return input;
+        pos *= -1;
+        return pos;
     }
 }
 
