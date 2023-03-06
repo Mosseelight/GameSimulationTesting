@@ -23,6 +23,7 @@ namespace GameTesting
         VectorFieldSim vectorField = new VectorFieldSim();
 
         Texture2D circle;
+        Viewport viewport;
 
         public Game1()
         {
@@ -41,6 +42,7 @@ namespace GameTesting
             //objSim.SimApplySettings();
             vectorField.CreateVectorField();
             base.Initialize();
+            
         }
 
         protected override void LoadContent()
