@@ -111,8 +111,6 @@ namespace GameTesting
 
         public void UpRunSimulation()
         {
-            Console.WriteLine(objectsList.Count + " List");
-            Console.WriteLine(objects.Length + " Array");
             for(int i = 0; i < objects.Length; i++)
             {
                 if (i == 0 && haveSun)
@@ -133,8 +131,6 @@ namespace GameTesting
                 {
                     //b != i checks if its self is the same as its self so it does not give a dist
                     //of 0
-                    Console.WriteLine(i + " i");
-                    Console.WriteLine(b + " b");
                     if (b != i && Vector2.Distance(objects[i].pos, objects[b].pos) < minCollideDist && objects[b].enabled && objects[i].enabled && !objects[i].isSun && !objects[b].isSun)
                     {
                         float tempMass = objects[b].mass + objects[i].mass - massCollideLoss;

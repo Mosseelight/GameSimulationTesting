@@ -38,7 +38,8 @@ namespace GameTesting
             // TODO: Add your initialization logic here
             objSim.StRunSimulation();
             objSim.SimApplySettings();
-
+            VectorFieldSim vectorField = new VectorFieldSim();
+            vectorField.CreateVectorField();
             base.Initialize();
         }
 
