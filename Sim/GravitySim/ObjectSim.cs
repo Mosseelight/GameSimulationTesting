@@ -54,20 +54,6 @@ namespace GameTesting
         public void StRunSimulation()
         {
             saver.CreateFolder();
-            SaverDataToSet.objectSimSettingsSet.numObjs = numObjs;
-            SaverDataToSet.objectSimSettingsSet.gravity = gravity;
-            SaverDataToSet.objectSimSettingsSet.collsionPushFactor = collsionPushFactor;
-            SaverDataToSet.objectSimSettingsSet.haveSun = haveSun;
-            SaverDataToSet.objectSimSettingsSet.randomPos = randomPos;
-            SaverDataToSet.objectSimSettingsSet.posXChoose = posXChoose;
-            SaverDataToSet.objectSimSettingsSet.posYChoose = posYChoose;
-            SaverDataToSet.objectSimSettingsSet.posTolerence = posTolerence;
-            SaverDataToSet.objectSimSettingsSet.minCollideDist = minCollideDist;
-            SaverDataToSet.objectSimSettingsSet.overlapCorrectionDist = overlapCorrectionDist;
-            SaverDataToSet.objectSimSettingsSet.overlapAmountCheck = overlapAmountCheck;
-            SaverDataToSet.objectSimSettingsSet.massCollideLoss = massCollideLoss;
-            SaverDataToSet.objectSimSettingsSet.distScaleFactor = distScaleFactor;
-            saver.SaveSimSettings();
             saver.ReadSimSettings();
         }
 
