@@ -13,7 +13,7 @@ public class VectorFieldSim
     Vector2 screenMiddle = new Vector2(950,500);
     Object obj = new Object();
     int vectorFieldXLen = 45;
-    int vectorFieldYLen = 15;
+    int vectorFieldYLen = 18;
     float vectorFieldScale = 60f;
     int posCount;
 
@@ -60,9 +60,7 @@ public class VectorFieldSim
         for (int i = 0; i < vectorsPos.Length; i++)
         {
             Vector2 origin = new Vector2(arrow.Width / 2f, arrow.Height / 2f);
-            float angle = (float)Math.Atan2(vectorsPos[i].Y, vectorsPos[i].X);
-            angle *= 180f / (float)Math.PI;
-            Console.WriteLine(angle);
+            float angle = (float)Math.Atan(vectorsPos[i].Y / vectorsPos[i].X);
             spriteBatch.Draw(arrow, vectorsPos[i], null, Color.White, angle, origin, Vector2.One, SpriteEffects.None, 0f);
         }
         spriteBatch.Draw(circle, obj.pos, Color.White);
