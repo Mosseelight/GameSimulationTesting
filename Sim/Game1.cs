@@ -23,6 +23,7 @@ namespace GameTesting
         VectorFieldSim vectorField = new VectorFieldSim();
 
         Texture2D circle;
+        Texture2D arrow;
         Viewport viewport;
 
         public Game1()
@@ -52,6 +53,7 @@ namespace GameTesting
             // TODO: use this.Content to load your game content here
 
             circle = this.Content.Load<Texture2D>("circle");
+            arrow = this.Content.Load<Texture2D>("arrow");
             font = this.Content.Load<SpriteFont>("Arial");
         }
 
@@ -74,7 +76,7 @@ namespace GameTesting
             // TODO: Add your drawing code here
 
             //objSim.DrawSim(circle, spriteBatch, _graphics, font);
-            vectorField.DrawSim(circle, spriteBatch, _graphics, font);
+            vectorField.DrawSim(circle, arrow, spriteBatch, _graphics, font);
 
 
             base.Draw(gameTime);
