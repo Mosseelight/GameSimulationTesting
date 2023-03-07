@@ -26,7 +26,7 @@ public class VectorFieldSim
             for (int x = 0; x < vectorFieldXLen; x++)
             {
                 vectorsPos[posCount] = new Vector2(x * vectorFieldScale,y * vectorFieldScale);
-                vectorsDirs[posCount] = CalculateVectorValue(new Vector2(x,y));
+                vectorsDirs[posCount] = CalculateVectorValue(x,y);
                 posCount++;
             }
         }
@@ -49,7 +49,6 @@ public class VectorFieldSim
         }
         int index = distances.IndexOf(minDist);
         obj.UpdateDir(Vector2.Normalize(vectorsDirs[index]));
-        Console.WriteLine(obj.curDir);
         obj.UpdatePos();
         distances.Clear();
     }
@@ -67,9 +66,10 @@ public class VectorFieldSim
         spriteBatch.End();
     }
 
-    public Vector2 CalculateVectorValue(Vector2 pos)
+    public Vector2 CalculateVectorValue(float x, float y)
     {
-        Vector2 result = new Vector2(pos.Y*pos.Y, pos.X*pos.X);
+
+        Vector2 result = new Vector2(x-y * 50, y-x * 50);
         return result;
     }
 }
