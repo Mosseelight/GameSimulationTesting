@@ -12,22 +12,46 @@ public class VectorFieldSim
     Vector2[] vectorsPos;
     Vector2 screenMiddle = new Vector2(950,500);
     Object obj = new Object();
-    int vectorFieldXLen = 45;
+    int vectorFieldXLen = 18;
+    float vectorFieldXLenOffset = 400f;
     int vectorFieldYLen = 18;
+    float vectorFieldYLenOffset = 0f;
     float vectorFieldScale = 60f;
+    int vectorFieldXLenDir;
+    int vectorFieldYLenDir;
     int posCount;
+    int dirCount;
 
     public void CreateVectorField()
     {
+        if(vectorFieldXLen % 2 == 1)
+        {
+            vectorFieldXLen++;
+        }
+        if(vectorFieldYLen % 2 == 1)
+        {
+            vectorFieldYLen++;
+        }
+        vectorFieldXLenDir = vectorFieldXLen / 2;
+        vectorFieldYLenDir = vectorFieldYLen / 2;
         vectorsDirs = new Vector2[vectorFieldXLen * vectorFieldYLen];
         vectorsPos = new Vector2[vectorFieldXLen * vectorFieldYLen];
+        //Position for drawing the vector fields
         for (int y = 0; y < vectorFieldYLen; y++)
         {
             for (int x = 0; x < vectorFieldXLen; x++)
             {
-                vectorsPos[posCount] = new Vector2(x * vectorFieldScale,y * vectorFieldScale);
-                vectorsDirs[posCount] = CalculateVectorValue(x,y);
+                vectorsPos[posCount] = new Vector2(x * vectorFieldScale + vectorFieldXLenOffset, y * vectorFieldScale + vectorFieldYLenOffset);
                 posCount++;
+            }
+        }
+        //directions the vector field goes
+        for (int y = -vectorFieldYLenDir; y < vectorFieldYLenDir; y++)
+        {
+            for (int x = -vectorFieldXLenDir; x < vectorFieldXLenDir; x++)
+            {
+                vectorsDirs[dirCount] = CalculateVectorValue(x,y);
+                dirCount++;
             }
         }
         obj.pos = new Vector2(new Random().Next(0,1900), new Random().Next(0,1000));
@@ -50,6 +74,7 @@ public class VectorFieldSim
         int index = distances.IndexOf(minDist);
         obj.UpdateDir(Vector2.Normalize(vectorsDirs[index]));
         obj.UpdatePos();
+        Console.WriteLine(obj.pos);
         distances.Clear();
     }
 
@@ -69,7 +94,7 @@ public class VectorFieldSim
     public Vector2 CalculateVectorValue(float x, float y)
     {
 
-        Vector2 result = new Vector2(x-y * 50, y-x * 50);
+        Vector2 result = new Vector2(x-y * 500, y+x * 500);
         return result;
     }
 }
