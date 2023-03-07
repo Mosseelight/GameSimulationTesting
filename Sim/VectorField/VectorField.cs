@@ -21,6 +21,7 @@ public class VectorFieldSim
     int vectorFieldYLenDir;
     int posCount;
     int dirCount;
+    float speed = 4;
 
     public void CreateVectorField()
     {
@@ -72,7 +73,7 @@ public class VectorFieldSim
             }
         }
         int index = distances.IndexOf(minDist);
-        obj.UpdateDir(Vector2.Normalize(vectorsDirs[index]));
+        obj.UpdateDir(Vector2.Normalize(vectorsDirs[index]) * speed);
         obj.UpdatePos();
         Console.WriteLine(obj.pos);
         distances.Clear();
