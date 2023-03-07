@@ -11,7 +11,8 @@ public class VectorFieldSim
     Vector2[] vectorsDirs;
     Vector2[] vectorsPos;
     Vector2 screenMiddle = new Vector2(950,500);
-    Object obj = new Object();
+    List<Object> objects = new List<Object>();
+    bool spawnKeyPressed = false;
     //18, 18, 60 is a good number
     //if vectorlen changes keep the change to x = y and divide the scale if increse to len and multiply scale if decrese to len
     int vectorFieldXLen = 36;
@@ -57,47 +58,64 @@ public class VectorFieldSim
                 dirCount++;
             }
         }
-        obj.pos = new Vector2(new Random().Next(0,1900), new Random().Next(0,1000));
+        objects.Add(new Object());
+        objects[0].pos = new Vector2(new Random().Next(0,1900), new Random().Next(0,1000));
     }
 
     public void ApplyFieldDirection()
     {
-
-        List<float> distances = new List<float>();
-        float minDist;
-        minDist = 0;
-        for (int i = 0; i < vectorsPos.Length; i++)
+        for (int b = 0; b < objects.Count; b++)
         {
-            distances.Add(Vector2.Distance(vectorsPos[i], obj.pos));
-            if(distances.Count == vectorsPos.Length)
+            List<float> distances = new List<float>();
+            float minDist;
+            minDist = 0;
+            for (int i = 0; i < vectorsPos.Length; i++)
             {
-                minDist = distances.Min();
+                distances.Add(Vector2.Distance(vectorsPos[i], objects[b].pos));
+                if(distances.Count == vectorsPos.Length)
+                {
+                    minDist = distances.Min();
+                }
             }
+            int index = distances.IndexOf(minDist);
+            objects[b].UpdateDir(Vector2.Normalize(vectorsDirs[index]) * speed);
+            objects[b].UpdatePos();
+            distances.Clear();
+            HandleInput();
         }
-        int index = distances.IndexOf(minDist);
-        obj.UpdateDir(Vector2.Normalize(vectorsDirs[index]) * speed);
-        obj.UpdatePos();
-        Console.WriteLine(obj.pos);
-        distances.Clear();
+    }
+
+
+    public void HandleInput()
+    {
+        if(Keyboard.GetState().IsKeyDown(Keys.Q) && !spawnKeyPressed)
+        {
+            spawnKeyPressed = true;
+            objects.Add(new Object());
+            objects[objects.Count - 1].enabled = true;
+            objects[objects.Count - 1].pos = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
+        }
     }
 
     public void DrawSim(Texture2D circle, Texture2D arrow, SpriteBatch spriteBatch, GraphicsDeviceManager graphics, SpriteFont font)
     {
-        spriteBatch.Begin();
-        for (int i = 0; i < vectorsPos.Length; i++)
+        for (int b = 0; b < objects.Count; b++)
         {
-            Vector2 origin = new Vector2(arrow.Width / 2f, arrow.Height / 2f);
-            float angle = (float)Math.Atan2(vectorsDirs[i].Y, vectorsDirs[i].X);
-            spriteBatch.Draw(arrow, vectorsPos[i], null, Color.White, angle, origin, Vector2.One, SpriteEffects.None, 0f);
+            spriteBatch.Begin();
+            for (int i = 0; i < vectorsPos.Length; i++)
+            {
+                Vector2 origin = new Vector2(arrow.Width / 2f, arrow.Height / 2f);
+                float angle = (float)Math.Atan2(vectorsDirs[i].Y, vectorsDirs[i].X);
+                spriteBatch.Draw(arrow, vectorsPos[i], null, Color.White, angle, origin, Vector2.One, SpriteEffects.None, 0f);
+            }
+            spriteBatch.Draw(circle, objects[b].pos, Color.White);
+            spriteBatch.End();
         }
-        spriteBatch.Draw(circle, obj.pos, Color.White);
-        spriteBatch.End();
     }
 
     public Vector2 CalculateVectorValue(float x, float y)
     {
-
-        Vector2 result = new Vector2(x-y * 500, y+x * 500);
+        Vector2 result = new Vector2(-x + new Random().Next(-1000,1000),-y + new Random().Next(-1000,1000));
         return result;
     }
 }
