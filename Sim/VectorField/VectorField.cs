@@ -12,11 +12,13 @@ public class VectorFieldSim
     Vector2[] vectorsPos;
     Vector2 screenMiddle = new Vector2(950,500);
     Object obj = new Object();
-    int vectorFieldXLen = 18;
+    //18, 18, 60 is a good number
+    //if vectorlen changes keep the change to x = y and divide the scale if increse to len and multiply scale if decrese to len
+    int vectorFieldXLen = 36;
     float vectorFieldXLenOffset = 400f;
-    int vectorFieldYLen = 18;
+    int vectorFieldYLen = 36;
     float vectorFieldYLenOffset = 0f;
-    float vectorFieldScale = 60f;
+    float vectorFieldScale = 30f;
     int vectorFieldXLenDir;
     int vectorFieldYLenDir;
     int posCount;
