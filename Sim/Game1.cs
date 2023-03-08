@@ -61,6 +61,7 @@ namespace GameTesting
         {
             // TODO: Add your update logic here
             //objSim.HandleInput();
+            vectorField.HandleInput();
 
             base.Update(gameTime);
             time = (float)gameTime.ElapsedGameTime.TotalSeconds;

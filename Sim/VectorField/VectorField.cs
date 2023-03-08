@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -81,7 +82,6 @@ public class VectorFieldSim
             objects[b].UpdateDir(Vector2.Normalize(vectorsDirs[index]) * speed);
             objects[b].UpdatePos();
             distances.Clear();
-            HandleInput();
         }
     }
 
@@ -91,6 +91,16 @@ public class VectorFieldSim
         if(Keyboard.GetState().IsKeyDown(Keys.Q) && !spawnKeyPressed)
         {
             spawnKeyPressed = true;
+            objects.Add(new Object());
+            objects[objects.Count - 1].enabled = true;
+            objects[objects.Count - 1].pos = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
+        }
+        if(Keyboard.GetState().IsKeyUp(Keys.Q))
+        {
+            spawnKeyPressed = false;
+        }
+        if(Keyboard.GetState().IsKeyDown(Keys.W))
+        {
             objects.Add(new Object());
             objects[objects.Count - 1].enabled = true;
             objects[objects.Count - 1].pos = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
@@ -115,7 +125,7 @@ public class VectorFieldSim
 
     public Vector2 CalculateVectorValue(float x, float y)
     {
-        Vector2 result = new Vector2(-x + new Random().Next(-1000,1000),-y + new Random().Next(-1000,1000));
+        Vector2 result = new Vector2(x-y * 500, y+x * 500);
         return result;
     }
 }
