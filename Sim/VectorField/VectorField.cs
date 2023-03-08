@@ -65,7 +65,7 @@ public class VectorFieldSim
 
     public void ApplyFieldDirection()
     {
-        for (int b = 0; b < objects.Count; b++)
+        Parallel.For (0, objects.Count, b =>
         {
             List<float> distances = new List<float>();
             float minDist;
@@ -82,7 +82,7 @@ public class VectorFieldSim
             objects[b].UpdateDir(Vector2.Normalize(vectorsDirs[index]) * speed);
             objects[b].UpdatePos();
             distances.Clear();
-        }
+        });
     }
 
 
