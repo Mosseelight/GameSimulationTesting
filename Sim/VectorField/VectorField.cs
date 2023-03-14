@@ -86,6 +86,40 @@ public class VectorFieldSim
     }
 
 
+    //is needed because if the object goes out of the screen space and then it will still be calculating the distance to each vector
+    //which I could fix using a quad tree, but it is easier to just to remove the object from the list
+    public void CheckBounds()
+    {
+        //needed so the sim does not crash beacuse of index issues
+        if(objects.Count != 1)
+        {
+            for (int i = 0; i < objects.Count; i++)
+            {
+                //object is past left screen 
+                if(objects[i].pos.X < 0)
+                {
+                    objects.Remove(objects[i]);
+                }
+                //object is past right screen 
+                if(objects[i].pos.X > 1900)
+                {
+                    objects.Remove(objects[i]);
+                }
+                //object is above top screen 
+                if(objects[i].pos.Y < 0)
+                {
+                    objects.Remove(objects[i]);
+                }
+                //object is below bottom screen
+                if(objects[i].pos.Y > 1000)
+                {
+                    objects.Remove(objects[i]);
+                }
+            }
+        }
+    }
+
+
     public void HandleInput()
     {
         if(Keyboard.GetState().IsKeyDown(Keys.Q) && !spawnKeyPressed)
@@ -121,11 +155,12 @@ public class VectorFieldSim
             spriteBatch.Draw(circle, objects[b].pos, Color.White);
             spriteBatch.End();
         }
+        CheckBounds();
     }
 
     public Vector2 CalculateVectorValue(float x, float y)
     {
-        Vector2 result = new Vector2(x-y * 500, y+x * 500);
+        Vector2 result = new Vector2(1/x, 1/y);
         return result;
     }
 }
