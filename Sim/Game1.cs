@@ -21,6 +21,7 @@ namespace GameTesting
         //simulation vars
         ObjSimulation objSim = new ObjSimulation();
         VectorFieldSim vectorField = new VectorFieldSim();
+        NeuralNetworkHandler neuralNetwork = new NeuralNetworkHandler();
 
         Texture2D circle;
         Texture2D arrow;
@@ -53,6 +54,7 @@ namespace GameTesting
             {
                 vectorField.CreateVectorField();
             }
+            neuralNetwork.InitNeuralNetwork();
             base.Initialize();
             
         }
