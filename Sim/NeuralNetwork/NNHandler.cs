@@ -4,7 +4,7 @@ public class NeuralNetworkHandler
 {
 
     int inputLayerAmount = 2;
-    int hiddenLayerAmount = 3;
+    int hiddenLayerAmount = 10;
     int outputLayerAmount = 1;
 
 
@@ -58,8 +58,10 @@ public class NeuralNetworkHandler
             for (int i = 0; i < inputLayerAmount; i++)
             {  
                 weightSum += CalculateOutput(inputLayers[i], inHidWeights[i], 0);
+                Console.WriteLine("Input Node " + i + ": " + inputLayers[i] + " | Hidden Node: " + h);
             }
             weightSum = CalculateSigmoid(weightSum);
+            Console.WriteLine("Hidden Node " + h + " Value: " + weightSum);
             hiddenLayers[h] = weightSum;
         }
 
@@ -70,8 +72,10 @@ public class NeuralNetworkHandler
             for (int h = 0; h < hiddenLayerAmount; h++)
             {  
                 weightSum += CalculateOutput(hiddenLayers[h], hidOutWeights[h], 0);
+                Console.WriteLine("Hidden Node " + h + ": " + hiddenLayers[h] + " | Output Node: " + o);
             }
             weightSum = CalculateSigmoid(weightSum);
+            Console.WriteLine("Output Node " + o + " Value: " + weightSum);
             outputLayers[o] = weightSum;
         }
 
