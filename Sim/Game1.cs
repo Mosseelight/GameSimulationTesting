@@ -26,6 +26,11 @@ namespace GameTesting
         Texture2D arrow;
         Viewport viewport;
 
+
+        //game switching
+        bool runGravitySim = false;
+        bool runVectorFieldSim = false;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -39,9 +44,15 @@ namespace GameTesting
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            //objSim.StRunSimulation();
-            //objSim.SimApplySettings();
-            vectorField.CreateVectorField();
+            if(runGravitySim)
+            {
+                objSim.StRunSimulation();
+                objSim.SimApplySettings();
+            }
+            if(runVectorFieldSim)
+            {
+                vectorField.CreateVectorField();
+            }
             base.Initialize();
             
         }
@@ -60,13 +71,19 @@ namespace GameTesting
         protected override void Update(GameTime gameTime)
         {
             // TODO: Add your update logic here
-            //objSim.HandleInput();
-            vectorField.HandleInput();
+            if(runGravitySim)
+            {
+                objSim.HandleInput();
+                objSim.UpRunSimulation();
+            }
+            if(runVectorFieldSim)
+            {
+                vectorField.HandleInput();
+                vectorField.ApplyFieldDirection();
+            }
 
             base.Update(gameTime);
             time = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            //objSim.UpRunSimulation();
-            vectorField.ApplyFieldDirection();
 
         }
 
@@ -75,9 +92,14 @@ namespace GameTesting
             GraphicsDevice.Clear(Color.DarkCyan);
 
             // TODO: Add your drawing code here
-
-            //objSim.DrawSim(circle, spriteBatch, _graphics, font);
-            vectorField.DrawSim(circle, arrow, spriteBatch, _graphics, font);
+            if(runGravitySim)
+            {
+                objSim.DrawSim(circle, spriteBatch, _graphics, font);
+            }
+            if(runVectorFieldSim)
+            {
+                vectorField.DrawSim(circle, arrow, spriteBatch, _graphics, font);
+            }
 
 
             base.Draw(gameTime);
