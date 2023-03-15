@@ -25,6 +25,7 @@ namespace GameTesting
 
         Texture2D circle;
         Texture2D arrow;
+        Texture2D pixel;
         Viewport viewport;
 
 
@@ -60,6 +61,7 @@ namespace GameTesting
             circle = this.Content.Load<Texture2D>("circle");
             arrow = this.Content.Load<Texture2D>("arrow");
             font = this.Content.Load<SpriteFont>("Arial");
+            pixel = this.Content.Load<Texture2D>("pixel");
         }
 
         protected override void Update(GameTime gameTime)
@@ -86,7 +88,8 @@ namespace GameTesting
                 {
                     runNerualNetworkSim = true;
                     Initializer = true;
-                    neuralNetwork.InitNeuralNetwork();
+                    neuralNetwork.InitNeuralNetwork(_graphics);
+                    neuralNetwork.RunNerualNetwork();
                     Console.WriteLine("pressed 3");
                 }
             }
@@ -120,6 +123,10 @@ namespace GameTesting
             if(runVectorFieldSim)
             {
                 vectorField.DrawSim(circle, arrow, spriteBatch, _graphics, font);
+            }
+            if(runNerualNetworkSim)
+            {
+                neuralNetwork.DrawPixels(pixel, spriteBatch, _graphics);
             }
 
 

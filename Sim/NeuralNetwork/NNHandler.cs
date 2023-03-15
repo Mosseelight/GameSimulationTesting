@@ -1,10 +1,12 @@
 using System;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 public class NeuralNetworkHandler
 {
 
     int inputLayerAmount = 2;
-    int hiddenLayerAmount = 10;
+    int hiddenLayerAmount = 3;
     int outputLayerAmount = 1;
 
 
@@ -19,7 +21,13 @@ public class NeuralNetworkHandler
 
     const float euler = 2.71828f;
 
-    public void InitNeuralNetwork()
+    int visualX;
+    int visualScaleX = 10;
+    int visualY;
+    int visualScaleY = 10;
+    Color[] colors;
+
+    public void InitNeuralNetwork(GraphicsDeviceManager graphics)
     {
         inputLayers = new float[inputLayerAmount];
         hiddenLayers = new float[hiddenLayerAmount];
@@ -27,12 +35,16 @@ public class NeuralNetworkHandler
         inHidWeights = new float[inputLayerAmount * hiddenLayerAmount];
         hidOutWeights = new float[hiddenLayerAmount * outputLayerAmount];
 
+        visualX = graphics.PreferredBackBufferWidth / visualScaleX;
+        visualY = graphics.PreferredBackBufferHeight / visualScaleY;
+        colors = new Color[visualX * visualY];
+
         //calculate the weights connecting input to hidden layer
         for (int i = 0; i < inputLayerAmount; i++)
         {
             for (int h = 0; h < hiddenLayerAmount; h++)
             {
-                inHidWeights[h + hiddenLayerAmount * i] = 0.5f;
+                inHidWeights[h + hiddenLayerAmount * i] = new Random().NextSingle();
             }
         }
 
@@ -41,44 +53,48 @@ public class NeuralNetworkHandler
         {
             for (int w = 0; w < outputLayerAmount; w++)
             {
-                hidOutWeights[w + outputLayerAmount * h] = 0.5f;
+                hidOutWeights[w + outputLayerAmount * h] = new Random().NextSingle();
             }
         }
 
-        //-------TESTING------- give input layer a value
-        for (int i = 0; i < inputLayerAmount; i++)
-        {
-            inputLayers[i] = 1;
-        }
+    }
 
-        //calculate the value for the hidden layer
-        for (int h = 0; h < hiddenLayerAmount; h++)
+    public void RunNerualNetwork()
+    {
+        for (int x = 0; x < visualX; x++)
         {
-            float weightSum = 0;
-            for (int i = 0; i < inputLayerAmount; i++)
-            {  
-                weightSum += CalculateOutput(inputLayers[i], inHidWeights[i], 0);
-                Console.WriteLine("Input Node " + i + ": " + inputLayers[i] + " | Hidden Node: " + h);
+            for (int y = 0; y < visualY; y++)
+            {
+                inputLayers[0] = x;
+                inputLayers[1] = y;
+
+                //calculate the value for the hidden layer
+                for (int h = 0; h < hiddenLayerAmount; h++)
+                {
+                    float weightSum = 0;
+                    for (int i = 0; i < inputLayerAmount; i++)
+                    {  
+                        weightSum += CalculateOutput(inputLayers[i], inHidWeights[i], 0f);
+                    }
+                    weightSum = CalculateSigmoid(weightSum);
+                    hiddenLayers[h] = weightSum;
+                }
+
+                //calculate the value for the output layer
+                for (int o = 0; o < outputLayerAmount; o++)
+                {
+                    float weightSum = 0;
+                    for (int h = 0; h < hiddenLayerAmount; h++)
+                    {  
+                        weightSum += CalculateOutput(hiddenLayers[h], hidOutWeights[h], 0f);
+                    }
+                    weightSum = CalculateSigmoid(weightSum);
+                    outputLayers[o] = weightSum;
+                }
+                outputLayers[0] *= 255;
+                colors[y + visualY * x] = new Color((int)outputLayers[0],(int)outputLayers[0],(int)outputLayers[0]);
             }
-            weightSum = CalculateSigmoid(weightSum);
-            Console.WriteLine("Hidden Node " + h + " Value: " + weightSum);
-            hiddenLayers[h] = weightSum;
         }
-
-        //calculate the value for the output layer
-        for (int o = 0; o < outputLayerAmount; o++)
-        {
-            float weightSum = 0;
-            for (int h = 0; h < hiddenLayerAmount; h++)
-            {  
-                weightSum += CalculateOutput(hiddenLayers[h], hidOutWeights[h], 0);
-                Console.WriteLine("Hidden Node " + h + ": " + hiddenLayers[h] + " | Output Node: " + o);
-            }
-            weightSum = CalculateSigmoid(weightSum);
-            Console.WriteLine("Output Node " + o + " Value: " + weightSum);
-            outputLayers[o] = weightSum;
-        }
-
     }
 
     //input is the input node value, weight is the weight value connecting the input node to the output node
@@ -90,5 +106,18 @@ public class NeuralNetworkHandler
     public float CalculateSigmoid(float input)
     {
         return 1 / (1 + (float)Math.Exp(-input));
+    }
+
+    public void DrawPixels(Texture2D pixel, SpriteBatch spriteBatch, GraphicsDeviceManager graphics)
+    {
+        for (int x = 0; x < visualX; x++)
+        {
+            for (int y = 0; y < visualY; y++)
+            {
+                spriteBatch.Begin();
+                spriteBatch.Draw(pixel, new Vector2(x * visualScaleX,y * visualScaleY), colors[y + visualY * x]);
+                spriteBatch.End();
+            }
+        }
     }
 }
