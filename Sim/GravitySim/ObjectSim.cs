@@ -32,7 +32,7 @@ namespace GameTesting
         float massCollideLoss = 5f;
         //increse the distance between the objects so that it would be technically farther away then it actually is for
         //a more realistic simulation rather than the object being 10 units away and zipping away
-        float distScaleFactor = 50;
+        float distScaleFactor = 10;
 
         public class ObjectSimSettings
         {

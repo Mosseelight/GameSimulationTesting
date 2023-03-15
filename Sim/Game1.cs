@@ -31,6 +31,8 @@ namespace GameTesting
         //game switching
         bool runGravitySim = false;
         bool runVectorFieldSim = false;
+        bool runNerualNetworkSim = false;
+        bool Initializer = false;
 
         public Game1()
         {
@@ -45,16 +47,6 @@ namespace GameTesting
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            if(runGravitySim)
-            {
-                objSim.StRunSimulation();
-                objSim.SimApplySettings();
-            }
-            if(runVectorFieldSim)
-            {
-                vectorField.CreateVectorField();
-            }
-            neuralNetwork.InitNeuralNetwork();
             base.Initialize();
             
         }
@@ -72,6 +64,33 @@ namespace GameTesting
 
         protected override void Update(GameTime gameTime)
         {
+            //select which sim to run
+            if(!Initializer)
+            {
+                if(Keyboard.GetState().IsKeyDown(Keys.D1) && !runGravitySim)
+                {
+                    runGravitySim = true;
+                    Initializer = true;
+                    objSim.StRunSimulation();
+                    objSim.SimApplySettings();
+                    Console.WriteLine("pressed 1");
+                }
+                if(Keyboard.GetState().IsKeyDown(Keys.D2) && !runVectorFieldSim)
+                {
+                    runVectorFieldSim = true;
+                    Initializer = true;
+                    vectorField.CreateVectorField();
+                    Console.WriteLine("pressed 2");
+                }
+                if(Keyboard.GetState().IsKeyDown(Keys.D3) && !runNerualNetworkSim)
+                {
+                    runNerualNetworkSim = true;
+                    Initializer = true;
+                    neuralNetwork.InitNeuralNetwork();
+                    Console.WriteLine("pressed 3");
+                }
+            }
+
             // TODO: Add your update logic here
             if(runGravitySim)
             {
