@@ -7,17 +7,18 @@ public class NeuralNetworkHandler
 
     int inputLayerAmount = 2;
     int hiddenLayerAmount = 3;
-    int outputLayerAmount = 1;
+    int outputLayerAmount = 3;
+    float inputScaleX = 5;
+    float inputScaleY = 5;
 
 
     float[] inputLayers;
     float[] inHidWeights;
-    float[] inputBiases;
+    float inputBias;
     float[] hiddenLayers;
     float[] hidOutWeights;
-    float[] hiddenBiases;
+    float hiddenBias;
     float[] outputLayers;
-    float[] outputBiases;
 
     const float euler = 2.71828f;
 
@@ -45,6 +46,7 @@ public class NeuralNetworkHandler
             for (int h = 0; h < hiddenLayerAmount; h++)
             {
                 inHidWeights[h + hiddenLayerAmount * i] = new Random().NextSingle();
+                inputBias = -5.5f;
             }
         }
 
@@ -54,6 +56,7 @@ public class NeuralNetworkHandler
             for (int w = 0; w < outputLayerAmount; w++)
             {
                 hidOutWeights[w + outputLayerAmount * h] = new Random().NextSingle();
+                hiddenBias = -0.5f;
             }
         }
 
@@ -61,12 +64,38 @@ public class NeuralNetworkHandler
 
     public void RunNerualNetwork()
     {
+
+        //calculate the weights connecting input to hidden layer
+        for (int i = 0; i < inputLayerAmount; i++)
+        {
+            for (int h = 0; h < hiddenLayerAmount; h++)
+            {
+                inHidWeights[h + hiddenLayerAmount * i] = new Random().NextSingle();
+                inputBias = new Random().Next(-10,1);
+            }
+        }
+
+        //calculate the weights connecting hidden to output layer (hidden to hidden layer not set up yet)
+        for (int h = 0; h < hiddenLayerAmount; h++)
+        {
+            for (int w = 0; w < outputLayerAmount; w++)
+            {
+                hidOutWeights[w + outputLayerAmount * h] = new Random().NextSingle();
+                hiddenBias = new Random().Next(-10,1);
+            }
+        }
+
+
+        //for multiple layers have an index for which layer it is at
+        //and use the 2 for loops for input and output, using the index
+        //to find the amount of times the for loops have to run
+
         for (int x = 0; x < visualX; x++)
         {
             for (int y = 0; y < visualY; y++)
             {
-                inputLayers[0] = x;
-                inputLayers[1] = y;
+                inputLayers[0] = x / inputScaleX;
+                inputLayers[1] = y / inputScaleY;
 
                 //calculate the value for the hidden layer
                 for (int h = 0; h < hiddenLayerAmount; h++)
@@ -74,8 +103,10 @@ public class NeuralNetworkHandler
                     float weightSum = 0;
                     for (int i = 0; i < inputLayerAmount; i++)
                     {  
-                        weightSum += CalculateOutput(inputLayers[i], inHidWeights[i], 0f);
+                        weightSum += CalculateOutput(inputLayers[i], inHidWeights[h + hiddenLayerAmount * i]);
                     }
+                    //for bias inputs
+                    weightSum += CalculateOutput(inputBias, 0.5f);
                     weightSum = CalculateSigmoid(weightSum);
                     hiddenLayers[h] = weightSum;
                 }
@@ -86,21 +117,25 @@ public class NeuralNetworkHandler
                     float weightSum = 0;
                     for (int h = 0; h < hiddenLayerAmount; h++)
                     {  
-                        weightSum += CalculateOutput(hiddenLayers[h], hidOutWeights[h], 0f);
+                        weightSum += CalculateOutput(hiddenLayers[h], hidOutWeights[h + hiddenLayerAmount * o]);
                     }
+                    //for bias inputs
+                    weightSum += CalculateOutput(hiddenBias, 0.5f);
                     weightSum = CalculateSigmoid(weightSum);
                     outputLayers[o] = weightSum;
                 }
                 outputLayers[0] *= 255;
-                colors[y + visualY * x] = new Color((int)outputLayers[0],(int)outputLayers[0],(int)outputLayers[0]);
+                outputLayers[1] *= 255;
+                outputLayers[2] *= 255;
+                colors[y + visualY * x] = new Color((int)outputLayers[0],(int)outputLayers[1],(int)outputLayers[2]);
             }
         }
     }
 
     //input is the input node value, weight is the weight value connecting the input node to the output node
-    public float CalculateOutput(float input, float weight, float bias)
+    public float CalculateOutput(float input, float weight)
     {
-        return input * weight + bias;
+        return input * weight;
     }
 
     public float CalculateSigmoid(float input)
