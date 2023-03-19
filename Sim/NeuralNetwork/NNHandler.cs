@@ -7,7 +7,7 @@ public class NeuralNetworkHandler
 
     int inputLayerAmount = 2;
     int hiddenLayerAmount = 3;
-    int outputLayerAmount = 3;
+    int outputLayerAmount = 1;
     float inputScaleX = 5;
     float inputScaleY = 5;
 
@@ -27,6 +27,8 @@ public class NeuralNetworkHandler
     int visualY;
     int visualScaleY = 10;
     Color[] colors;
+
+    NeuralNetworkForwardPropogation neuralNetworkFP = new NeuralNetworkForwardPropogation();
 
     public void InitNeuralNetwork(GraphicsDeviceManager graphics)
     {
@@ -97,37 +99,10 @@ public class NeuralNetworkHandler
                 inputLayers[0] = x / inputScaleX;
                 inputLayers[1] = y / inputScaleY;
 
-                //calculate the value for the hidden layer
-                for (int h = 0; h < hiddenLayerAmount; h++)
-                {
-                    float weightSum = 0;
-                    for (int i = 0; i < inputLayerAmount; i++)
-                    {  
-                        weightSum += CalculateOutput(inputLayers[i], inHidWeights[h + hiddenLayerAmount * i]);
-                    }
-                    //for bias inputs
-                    weightSum += CalculateOutput(inputBias, 0.5f);
-                    weightSum = CalculateSigmoid(weightSum);
-                    hiddenLayers[h] = weightSum;
-                }
-
-                //calculate the value for the output layer
-                for (int o = 0; o < outputLayerAmount; o++)
-                {
-                    float weightSum = 0;
-                    for (int h = 0; h < hiddenLayerAmount; h++)
-                    {  
-                        weightSum += CalculateOutput(hiddenLayers[h], hidOutWeights[h + hiddenLayerAmount * o]);
-                    }
-                    //for bias inputs
-                    weightSum += CalculateOutput(hiddenBias, 0.5f);
-                    weightSum = CalculateSigmoid(weightSum);
-                    outputLayers[o] = weightSum;
-                }
+                hiddenLayers = neuralNetworkFP.CalculateOutput(inputLayerAmount, hiddenLayerAmount, inputLayers, inHidWeights, inputBias, 0.5f);
+                outputLayers = neuralNetworkFP.CalculateOutput(hiddenLayerAmount, outputLayerAmount, hiddenLayers, hidOutWeights, hiddenBias, 0.5f);
                 outputLayers[0] *= 255;
-                outputLayers[1] *= 255;
-                outputLayers[2] *= 255;
-                colors[y + visualY * x] = new Color((int)outputLayers[0],(int)outputLayers[1],(int)outputLayers[2]);
+                colors[y + visualY * x] = new Color((int)outputLayers[0],(int)outputLayers[0],(int)outputLayers[0]);
             }
         }
     }
