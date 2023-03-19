@@ -107,17 +107,6 @@ public class NeuralNetworkHandler
         }
     }
 
-    //input is the input node value, weight is the weight value connecting the input node to the output node
-    public float CalculateOutput(float input, float weight)
-    {
-        return input * weight;
-    }
-
-    public float CalculateSigmoid(float input)
-    {
-        return 1 / (1 + (float)Math.Exp(-input));
-    }
-
     public void DrawPixels(Texture2D pixel, SpriteBatch spriteBatch, GraphicsDeviceManager graphics)
     {
         for (int x = 0; x < visualX; x++)
