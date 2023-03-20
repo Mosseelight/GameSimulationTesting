@@ -30,6 +30,10 @@ namespace GameTesting
             {
                 Directory.CreateDirectory(objectSimPath);
             }
+            if(!Directory.Exists(neuralNetworkSimPath))
+            {
+                Directory.CreateDirectory(neuralNetworkSimPath);
+            }
         }
 
         public void SaveObjectSimSettings()
@@ -58,7 +62,7 @@ namespace GameTesting
             dataToSave.nerualNetworkSettings = SaverDataToSet.nerualNetworkSettings;
 
             string jsonText = JsonSerializer.Serialize(dataToSave.nerualNetworkSettings, options);
-            File.WriteAllText(nueralNetworkSettings + dataToSave.nerualNetworkSettings.saveCount, jsonText);
+            File.WriteAllText(nueralNetworkSettings + dataToSave.nerualNetworkSettings.saveCount + ".json", jsonText);
         }
 
         public void ReadNerualNetworkSimSettings()

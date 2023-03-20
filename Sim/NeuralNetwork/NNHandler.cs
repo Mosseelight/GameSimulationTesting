@@ -8,7 +8,7 @@ public class NeuralNetworkHandler
 {
 
     int inputLayerAmount = 2;
-    int hiddenLayerAmount = 3;
+    int hiddenLayerAmount = 10;
     int outputLayerAmount = 1;
     float inputScaleX = 5;
     float inputScaleY = 5;
@@ -33,6 +33,7 @@ public class NeuralNetworkHandler
 
     NeuralNetworkForwardPropogation neuralNetworkFP = new NeuralNetworkForwardPropogation();
     bool pressedQ = false;
+    bool pressedS = false;
 
     public class NerualNetworkSettings
     {
@@ -42,13 +43,10 @@ public class NeuralNetworkHandler
         public int outputLayerAmount {get; set;}
         public float inputScaleX {get; set;}
         public float inputScaleY {get; set;}
-        public float[] inputLayers {get; set;}
         public float[] inHidWeights {get; set;}
         public float inputBias {get; set;}
-        public float[] hiddenLayers {get; set;}
         public float[] hidOutWeights {get; set;}
         public float hiddenBias {get; set;}
-        public float[] outputLayers {get; set;}
     }
 
     public void InitNeuralNetwork(GraphicsDeviceManager graphics)
@@ -139,6 +137,15 @@ public class NeuralNetworkHandler
         {
             pressedQ = false;
         }
+        if (Keyboard.GetState().IsKeyDown(Keys.S) && !pressedS)
+        {
+            pressedS = true;
+            ApplySaveData();
+        }
+        if(Keyboard.GetState().IsKeyUp(Keys.S))
+        {
+            pressedS = false;
+        }
     }
 
     public void DrawPixels(Texture2D pixel, SpriteBatch spriteBatch, GraphicsDeviceManager graphics)
@@ -156,19 +163,19 @@ public class NeuralNetworkHandler
 
     public void ApplySaveData()
     {
+        Saver saver = new Saver();
+        saver.CreateFolder();
         SaverDataToSet.nerualNetworkSettings.hiddenBias = hiddenBias; 
         SaverDataToSet.nerualNetworkSettings.hiddenLayerAmount = hiddenLayerAmount;
-        SaverDataToSet.nerualNetworkSettings.hiddenLayers = hiddenLayers;
         SaverDataToSet.nerualNetworkSettings.hidOutWeights = hidOutWeights;
         SaverDataToSet.nerualNetworkSettings.inHidWeights = inHidWeights;
         SaverDataToSet.nerualNetworkSettings.inputBias = inputBias;
         SaverDataToSet.nerualNetworkSettings.inputLayerAmount = inputLayerAmount;
-        SaverDataToSet.nerualNetworkSettings.inputLayers = inputLayers;
         SaverDataToSet.nerualNetworkSettings.inputScaleX = inputScaleX;
         SaverDataToSet.nerualNetworkSettings.inputScaleY = inputScaleY;
         SaverDataToSet.nerualNetworkSettings.outputLayerAmount = outputLayerAmount;
-        SaverDataToSet.nerualNetworkSettings.outputLayers = outputLayers;
         SaverDataToSet.nerualNetworkSettings.saveCount = saveCount;
+        saver.SaveNeuralNetworkSimSettings();
     }
 }
 }
