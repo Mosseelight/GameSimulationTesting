@@ -35,6 +35,7 @@ public class NeuralNetworkHandler
     bool pressedQ = false;
     bool pressedS = false;
     bool pressedX = false;
+    bool pressedW = false;
 
     [Serializable]public class NerualNetworkSettings
     {
@@ -60,6 +61,11 @@ public class NeuralNetworkHandler
         visualY = graphics.PreferredBackBufferHeight / visualScaleY;
         colors = new Color[visualX * visualY];
 
+        RandomizeWeights();
+    }
+
+    public void RandomizeWeights()
+    {
         //calculate the weights connecting input to hidden layer
         for (int i = 0; i < inputLayerAmount; i++)
         {
@@ -79,7 +85,6 @@ public class NeuralNetworkHandler
                 hiddenBias = -0.5f;
             }
         }
-
     }
 
     public void RunNerualNetwork()
@@ -114,6 +119,7 @@ public class NeuralNetworkHandler
         {
             pressedQ = false;
         }
+        //save data
         if (Keyboard.GetState().IsKeyDown(Keys.S) && !pressedS)
         {
             pressedS = true;
@@ -124,6 +130,7 @@ public class NeuralNetworkHandler
         {
             pressedS = false;
         }
+        //load data
         if (Keyboard.GetState().IsKeyDown(Keys.X) && !pressedX)
         {
             pressedX = true;
@@ -132,6 +139,15 @@ public class NeuralNetworkHandler
         if(Keyboard.GetState().IsKeyUp(Keys.X))
         {
             pressedX = false;
+        }
+        if (Keyboard.GetState().IsKeyDown(Keys.W) && !pressedW)
+        {
+            pressedW = true;
+            RandomizeWeights();
+        }
+        if(Keyboard.GetState().IsKeyUp(Keys.W))
+        {
+            pressedW = false;
         }
     }
 
