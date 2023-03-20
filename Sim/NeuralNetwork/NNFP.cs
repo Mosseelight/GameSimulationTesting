@@ -15,7 +15,7 @@ public class NeuralNetworkForwardPropogation
                 weightSum += CalculateValue(inputValue[i], weights[weightIndex]);
             }
             weightSum += CalculateValue(bias, biasWeight);
-            weightSum = CalculateSigmoid(weightSum);
+            weightSum = CalculateArcTan(weightSum);
             weightSums[o] = weightSum;
         }
         return weightSums;
@@ -26,8 +26,13 @@ public class NeuralNetworkForwardPropogation
         return input * weight;
     }
 
+    float CalculateArcTan(float input)
+    {
+        return (float)Math.Atan(input);
+    }
+
     float CalculateSigmoid(float input)
     {
-        return 1 / (1 + (float)Math.Exp(-input));
+        return 1 / (1 + (float)Math.Exp(-input) * 5);
     }
 }

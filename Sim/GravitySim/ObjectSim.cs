@@ -54,7 +54,7 @@ namespace GameTesting
         public void StRunSimulation()
         {
             saver.CreateFolder();
-            saver.ReadSimSettings();
+            saver.ReadObjectSimSettings();
         }
 
         public void SimApplySettings()
@@ -208,7 +208,7 @@ namespace GameTesting
                 SaverDataToSet.objectSimSettingsSet.overlapAmountCheck = overlapAmountCheck;
                 SaverDataToSet.objectSimSettingsSet.massCollideLoss = massCollideLoss;
                 SaverDataToSet.objectSimSettingsSet.distScaleFactor = distScaleFactor;
-                saver.SaveSimSettings();
+                saver.SaveObjectSimSettings();
                 Console.WriteLine("Saved");
             }
             if(Keyboard.GetState().IsKeyDown(Keys.Q) && !spawnKeyPressed)

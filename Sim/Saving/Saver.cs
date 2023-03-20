@@ -11,6 +11,7 @@ namespace GameTesting
     {
         static string appPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
         static string objectSimPath = appPath + @"\ObjectSimSettings";
+        static string neuralNetworkSimPath = appPath + @"\NeuralNetworkSaves";
 
         //hardcoded object simulation settings
         string normalSettingOBJ = objectSimPath + @"\Normal.json";
@@ -18,6 +19,9 @@ namespace GameTesting
         string funSettingOBJ = objectSimPath + @"\Fun.json";
         string bugsSettingOBJ = objectSimPath + @"\Bugs.json";
         string testingSettingOBJ = objectSimPath + @"\Testing.json";
+
+
+        string nueralNetworkSettings = neuralNetworkSimPath + @"\NeuralNetworkSave";
 
 
         public void CreateFolder()
@@ -28,7 +32,7 @@ namespace GameTesting
             }
         }
 
-        public void SaveSimSettings()
+        public void SaveObjectSimSettings()
         {
             DataToSave dataToSave = new DataToSave();
             JsonSerializerOptions options = new JsonSerializerOptions();
@@ -40,9 +44,26 @@ namespace GameTesting
             File.WriteAllText(testingSettingOBJ, jsonText);
         }
 
-        public void ReadSimSettings()
+        public void ReadObjectSimSettings()
         {
             string jsonText = File.ReadAllText(testingSettingOBJ);
+        }
+
+        public void SaveNeuralNetworkSimSettings()
+        {
+            DataToSave dataToSave = new DataToSave();
+            JsonSerializerOptions options = new JsonSerializerOptions();
+            options.WriteIndented = true;
+
+            dataToSave.nerualNetworkSettings = SaverDataToSet.nerualNetworkSettings;
+
+            string jsonText = JsonSerializer.Serialize(dataToSave.nerualNetworkSettings, options);
+            File.WriteAllText(nueralNetworkSettings + dataToSave.nerualNetworkSettings.saveCount, jsonText);
+        }
+
+        public void ReadNerualNetworkSimSettings()
+        {
+            string jsonText = File.ReadAllText(nueralNetworkSettings);
         }
 
     }
@@ -51,5 +72,6 @@ namespace GameTesting
     [Serializable]public class DataToSave
     {
         public ObjSimulation.ObjectSimSettings objectSimSettings = new ObjSimulation.ObjectSimSettings();
+        public NeuralNetworkHandler.NerualNetworkSettings nerualNetworkSettings = new NeuralNetworkHandler.NerualNetworkSettings();
     }
 }

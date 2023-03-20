@@ -8,5 +8,6 @@ namespace GameTesting
 
         //Object Simulation
         public static ObjSimulation.ObjectSimSettings objectSimSettingsSet = new ObjSimulation.ObjectSimSettings();
+        public static NeuralNetworkHandler.NerualNetworkSettings nerualNetworkSettings = new NeuralNetworkHandler.NerualNetworkSettings();
     }
 }

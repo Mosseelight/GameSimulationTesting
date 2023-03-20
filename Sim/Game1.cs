@@ -89,6 +89,7 @@ namespace GameTesting
                     runNerualNetworkSim = true;
                     Initializer = true;
                     neuralNetwork.InitNeuralNetwork(_graphics);
+                    neuralNetwork.RunNerualNetwork();
                     Console.WriteLine("pressed 3");
                 }
             }
@@ -106,7 +107,7 @@ namespace GameTesting
             }
             if(runNerualNetworkSim)
             {
-                neuralNetwork.RunNerualNetwork();
+                neuralNetwork.HandleInput();
             }
 
             base.Update(gameTime);
