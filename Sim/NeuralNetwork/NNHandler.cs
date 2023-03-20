@@ -167,7 +167,6 @@ public class NeuralNetworkHandler
         saver.ReadNerualNetworkSimCount();
         saver.ReadNerualNetworkSimSettings();
         hidOutWeights = SaverDataToSet.nerualNetworkSettings.hidOutWeights;
-        Console.WriteLine(SaverDataToSet.nerualNetworkSettings.hidOutWeights);
         inHidWeights = SaverDataToSet.nerualNetworkSettings.inHidWeights;
         hiddenBias = SaverDataToSet.nerualNetworkSettings.hiddenBias;
         inputBias = SaverDataToSet.nerualNetworkSettings.inputBias;
