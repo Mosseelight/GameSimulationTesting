@@ -26,7 +26,6 @@ namespace GameTesting
         Texture2D circle;
         Texture2D arrow;
         Texture2D pixel;
-        Viewport viewport;
 
 
         //game switching
@@ -49,7 +48,6 @@ namespace GameTesting
         {
             // TODO: Add your initialization logic here
             base.Initialize();
-            
         }
 
         protected override void LoadContent()

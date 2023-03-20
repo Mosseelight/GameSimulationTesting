@@ -8,7 +8,7 @@ public class NeuralNetworkHandler
 {
 
     int inputLayerAmount = 2;
-    int hiddenLayerAmount = 10;
+    int hiddenLayerAmount = 3;
     int outputLayerAmount = 1;
     float inputScaleX = 5;
     float inputScaleY = 5;
@@ -29,28 +29,27 @@ public class NeuralNetworkHandler
     int visualY;
     int visualScaleY = 10;
     Color[] colors;
-    int saveCount = 0;
+    int saveCount = 1;
 
     NeuralNetworkForwardPropogation neuralNetworkFP = new NeuralNetworkForwardPropogation();
     bool pressedQ = false;
     bool pressedS = false;
+    bool pressedX = false;
 
-    public class NerualNetworkSettings
+    [Serializable]public class NerualNetworkSettings
     {
         public int saveCount {get; set;}
-        public int inputLayerAmount {get; set;}
-        public int hiddenLayerAmount {get; set;}
-        public int outputLayerAmount {get; set;}
-        public float inputScaleX {get; set;}
-        public float inputScaleY {get; set;}
-        public float[] inHidWeights {get; set;}
         public float inputBias {get; set;}
-        public float[] hidOutWeights {get; set;}
         public float hiddenBias {get; set;}
+        public float[] inHidWeights {get; set;}
+        public float[] hidOutWeights {get; set;}
     }
 
     public void InitNeuralNetwork(GraphicsDeviceManager graphics)
     {
+        Saver saver = new Saver();
+        saver.ReadNerualNetworkSimCount();
+        saveCount = SaverDataToSet.nerualNetworkSettings.saveCount;
         inputLayers = new float[inputLayerAmount];
         hiddenLayers = new float[hiddenLayerAmount];
         outputLayers = new float[outputLayerAmount];
@@ -85,28 +84,6 @@ public class NeuralNetworkHandler
 
     public void RunNerualNetwork()
     {
-
-        //calculate the weights connecting input to hidden layer
-        for (int i = 0; i < inputLayerAmount; i++)
-        {
-            for (int h = 0; h < hiddenLayerAmount; h++)
-            {
-                inHidWeights[h + hiddenLayerAmount * i] = new Random().NextSingle();
-                inputBias = new Random().Next(-10,1);
-            }
-        }
-
-        //calculate the weights connecting hidden to output layer (hidden to hidden layer not set up yet)
-        for (int h = 0; h < hiddenLayerAmount; h++)
-        {
-            for (int w = 0; w < outputLayerAmount; w++)
-            {
-                hidOutWeights[w + outputLayerAmount * h] = new Random().NextSingle();
-                hiddenBias = new Random().Next(-10,1);
-            }
-        }
-
-
         //for multiple layers have an index for which layer it is at
         //and use the 2 for loops for input and output, using the index
         //to find the amount of times the for loops have to run
@@ -140,11 +117,21 @@ public class NeuralNetworkHandler
         if (Keyboard.GetState().IsKeyDown(Keys.S) && !pressedS)
         {
             pressedS = true;
+            saveCount++;
             ApplySaveData();
         }
         if(Keyboard.GetState().IsKeyUp(Keys.S))
         {
             pressedS = false;
+        }
+        if (Keyboard.GetState().IsKeyDown(Keys.X) && !pressedX)
+        {
+            pressedX = true;
+            ReadSaveData();
+        }
+        if(Keyboard.GetState().IsKeyUp(Keys.X))
+        {
+            pressedX = false;
         }
     }
 
@@ -165,17 +152,27 @@ public class NeuralNetworkHandler
     {
         Saver saver = new Saver();
         saver.CreateFolder();
-        SaverDataToSet.nerualNetworkSettings.hiddenBias = hiddenBias; 
-        SaverDataToSet.nerualNetworkSettings.hiddenLayerAmount = hiddenLayerAmount;
         SaverDataToSet.nerualNetworkSettings.hidOutWeights = hidOutWeights;
         SaverDataToSet.nerualNetworkSettings.inHidWeights = inHidWeights;
+        SaverDataToSet.nerualNetworkSettings.hiddenBias = hiddenBias; 
         SaverDataToSet.nerualNetworkSettings.inputBias = inputBias;
-        SaverDataToSet.nerualNetworkSettings.inputLayerAmount = inputLayerAmount;
-        SaverDataToSet.nerualNetworkSettings.inputScaleX = inputScaleX;
-        SaverDataToSet.nerualNetworkSettings.inputScaleY = inputScaleY;
-        SaverDataToSet.nerualNetworkSettings.outputLayerAmount = outputLayerAmount;
         SaverDataToSet.nerualNetworkSettings.saveCount = saveCount;
+        saver.SaveNeuralNetworkSimCount();
         saver.SaveNeuralNetworkSimSettings();
+    }
+
+    public void ReadSaveData()
+    {
+        Saver saver = new Saver();
+        saver.ReadNerualNetworkSimCount();
+        saver.ReadNerualNetworkSimSettings();
+        hidOutWeights = SaverDataToSet.nerualNetworkSettings.hidOutWeights;
+        Console.WriteLine(SaverDataToSet.nerualNetworkSettings.hidOutWeights);
+        inHidWeights = SaverDataToSet.nerualNetworkSettings.inHidWeights;
+        hiddenBias = SaverDataToSet.nerualNetworkSettings.hiddenBias;
+        inputBias = SaverDataToSet.nerualNetworkSettings.inputBias;
+        saveCount = SaverDataToSet.nerualNetworkSettings.saveCount;
+        RunNerualNetwork();
     }
 }
 }

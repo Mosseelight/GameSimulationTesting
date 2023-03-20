@@ -34,7 +34,7 @@ namespace GameTesting
         //a more realistic simulation rather than the object being 10 units away and zipping away
         float distScaleFactor = 10;
 
-        public class ObjectSimSettings
+        [Serializable]public class ObjectSimSettings
         {
             public int numObjs { get; set; }
             public float gravity { get; set; }

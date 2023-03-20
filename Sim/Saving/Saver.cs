@@ -2,6 +2,8 @@ using System;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization;
 using System.IO;
 
 namespace GameTesting
@@ -12,13 +14,7 @@ namespace GameTesting
         static string appPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
         static string objectSimPath = appPath + @"\ObjectSimSettings";
         static string neuralNetworkSimPath = appPath + @"\NeuralNetworkSaves";
-
-        //hardcoded object simulation settings
-        string normalSettingOBJ = objectSimPath + @"\Normal.json";
-        string sunSettingOBJ = objectSimPath + @"\Sun.json";
-        string funSettingOBJ = objectSimPath + @"\Fun.json";
-        string bugsSettingOBJ = objectSimPath + @"\Bugs.json";
-        string testingSettingOBJ = objectSimPath + @"\Testing.json";
+        string testingSettingOBJ = objectSimPath + @"\ObjectSimSettings.json";
 
 
         string nueralNetworkSettings = neuralNetworkSimPath + @"\NeuralNetworkSave";
@@ -50,24 +46,58 @@ namespace GameTesting
 
         public void ReadObjectSimSettings()
         {
-            string jsonText = File.ReadAllText(testingSettingOBJ);
+            if(File.Exists(testingSettingOBJ))
+            {
+                string jsonText = File.ReadAllText(testingSettingOBJ);
+            }
         }
 
         public void SaveNeuralNetworkSimSettings()
         {
             DataToSave dataToSave = new DataToSave();
-            JsonSerializerOptions options = new JsonSerializerOptions();
-            options.WriteIndented = true;
 
             dataToSave.nerualNetworkSettings = SaverDataToSet.nerualNetworkSettings;
 
-            string jsonText = JsonSerializer.Serialize(dataToSave.nerualNetworkSettings, options);
-            File.WriteAllText(nueralNetworkSettings + dataToSave.nerualNetworkSettings.saveCount + ".json", jsonText);
+            IFormatter formatter = new BinaryFormatter();
+            Stream stream = new FileStream(nueralNetworkSettings + dataToSave.nerualNetworkSettings.saveCount + ".save", FileMode.Create, FileAccess.Write);
+            formatter.Serialize(stream, dataToSave);
+            stream.Close();
         }
 
+        public void SaveNeuralNetworkSimCount()
+        {
+            DataToSave dataToSave = new DataToSave();
+
+            dataToSave.nerualNetworkSettings.saveCount = SaverDataToSet.nerualNetworkSettings.saveCount;
+
+            IFormatter formatter = new BinaryFormatter();
+            Stream stream = new FileStream(neuralNetworkSimPath + @"\SaveFileCount.save", FileMode.Create, FileAccess.Write);
+            formatter.Serialize(stream, dataToSave);
+            stream.Close();
+        }
+
+        public void ReadNerualNetworkSimCount()
+        {
+            if(File.Exists(neuralNetworkSimPath + @"\SaveFileCount.save"))
+            {
+                Stream stream = new FileStream(neuralNetworkSimPath + @"\SaveFileCount.save", FileMode.Open, FileAccess.Read);
+                IFormatter formatter = new BinaryFormatter();
+                DataToSave settings = (DataToSave)formatter.Deserialize(stream);
+                SaverDataToSet.nerualNetworkSettings.saveCount = settings.nerualNetworkSettings.saveCount;
+                stream.Close();
+            }
+        }
         public void ReadNerualNetworkSimSettings()
         {
-            string jsonText = File.ReadAllText(nueralNetworkSettings);
+            if(File.Exists(nueralNetworkSettings + SaverDataToSet.nerualNetworkSettings.saveCount + ".save"))
+            {
+                Stream stream = new FileStream(nueralNetworkSettings + SaverDataToSet.nerualNetworkSettings.saveCount + ".save", FileMode.Open, FileAccess.Read);
+                IFormatter formatter = new BinaryFormatter();
+                DataToSave settings = (DataToSave)formatter.Deserialize(stream);
+                SaverDataToSet.nerualNetworkSettings = settings.nerualNetworkSettings;
+                stream.Close();
+            }
+            
         }
 
     }
