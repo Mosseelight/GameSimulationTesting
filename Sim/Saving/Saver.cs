@@ -64,29 +64,42 @@ namespace GameTesting
             stream.Close();
         }
 
+        //Save so can see the values
+        public void SaveNeuralNetworkSimSettingsJSON()
+        {
+            DataToSave dataToSave = new DataToSave();
+            JsonSerializerOptions options = new JsonSerializerOptions();
+            options.WriteIndented = true;
+
+            dataToSave.nerualNetworkSettings = SaverDataToSet.nerualNetworkSettings;
+
+            string jsonText = JsonSerializer.Serialize(dataToSave.nerualNetworkSettings, options);
+            File.WriteAllText(nueralNetworkSettings + dataToSave.nerualNetworkSettings.saveCount + ".json", jsonText);
+        }
+
         public void SaveNeuralNetworkSimCount()
         {
             DataToSave dataToSave = new DataToSave();
+            JsonSerializerOptions options = new JsonSerializerOptions();
+            options.WriteIndented = true;
 
             dataToSave.nerualNetworkSettings.saveCount = SaverDataToSet.nerualNetworkSettings.saveCount;
 
-            IFormatter formatter = new BinaryFormatter();
-            Stream stream = new FileStream(neuralNetworkSimPath + @"\SaveFileCount.save", FileMode.Create, FileAccess.Write);
-            formatter.Serialize(stream, dataToSave);
-            stream.Close();
+            string jsonText = JsonSerializer.Serialize(dataToSave.nerualNetworkSettings.saveCount, options);
+            File.WriteAllText(neuralNetworkSimPath + @"\SaveFileCount.json", jsonText);
         }
 
         public void ReadNerualNetworkSimCount()
         {
-            if(File.Exists(neuralNetworkSimPath + @"\SaveFileCount.save"))
+            if(File.Exists(neuralNetworkSimPath + @"\SaveFileCount.json"))
             {
-                Stream stream = new FileStream(neuralNetworkSimPath + @"\SaveFileCount.save", FileMode.Open, FileAccess.Read);
-                IFormatter formatter = new BinaryFormatter();
-                DataToSave settings = (DataToSave)formatter.Deserialize(stream);
-                SaverDataToSet.nerualNetworkSettings.saveCount = settings.nerualNetworkSettings.saveCount;
-                stream.Close();
+                JsonSerializerOptions options = new JsonSerializerOptions();
+                options.WriteIndented = true;
+                string jsonSaveCount = File.ReadAllText(neuralNetworkSimPath + @"\SaveFileCount.json");
+                SaverDataToSet.nerualNetworkSettings.saveCount = int.Parse(jsonSaveCount);
             }
         }
+
         public void ReadNerualNetworkSimSettings()
         {
             if(File.Exists(nueralNetworkSettings + SaverDataToSet.nerualNetworkSettings.saveCount + ".save"))

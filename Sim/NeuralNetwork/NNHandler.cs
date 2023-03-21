@@ -64,6 +64,13 @@ public class NeuralNetworkHandler
         RandomizeWeights();
     }
 
+    static float RandomNumber(float min, float max)
+    {
+        Random random = new Random();
+        double val = (random.NextDouble() * (max - min) + min);
+        return (float)val;
+    }
+
     public void RandomizeWeights()
     {
         //calculate the weights connecting input to hidden layer
@@ -71,7 +78,7 @@ public class NeuralNetworkHandler
         {
             for (int h = 0; h < hiddenLayerAmount; h++)
             {
-                inHidWeights[h + hiddenLayerAmount * i] = new Random().NextSingle();
+                inHidWeights[h + hiddenLayerAmount * i] = RandomNumber(-1f,1f);
                 inputBias = -5.5f;
             }
         }
@@ -81,7 +88,7 @@ public class NeuralNetworkHandler
         {
             for (int w = 0; w < outputLayerAmount; w++)
             {
-                hidOutWeights[w + outputLayerAmount * h] = new Random().NextSingle();
+                hidOutWeights[w + outputLayerAmount * h] = RandomNumber(-1f,1f);
                 hiddenBias = -0.5f;
             }
         }
@@ -173,6 +180,7 @@ public class NeuralNetworkHandler
         SaverDataToSet.nerualNetworkSettings.hiddenBias = hiddenBias; 
         SaverDataToSet.nerualNetworkSettings.inputBias = inputBias;
         SaverDataToSet.nerualNetworkSettings.saveCount = saveCount;
+        saver.SaveNeuralNetworkSimSettingsJSON();
         saver.SaveNeuralNetworkSimCount();
         saver.SaveNeuralNetworkSimSettings();
     }
