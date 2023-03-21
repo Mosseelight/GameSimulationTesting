@@ -7,11 +7,10 @@ namespace GameTesting{
 public class NeuralNetworkHandler
 {
 
-    int inputLayerAmount = 1;
     int inputNodeAmount = 2;
+    //no weights connecting hidden to hidden
     int hiddenLayerAmount = 1;
     int hiddenNodeAmount = 3;
-    int outputLayerAmount = 1;
     int outputNodeAmount = 1;
     float inputScaleX = 5;
     float inputScaleY = 5;
@@ -30,9 +29,9 @@ public class NeuralNetworkHandler
     const float euler = 2.71828f;
 
     int visualX;
-    int visualScaleX = 10;
+    int visualScaleX = 5;
     int visualY;
-    int visualScaleY = 10;
+    int visualScaleY = 5;
     Color[] colors;
     int saveCount = 1;
 
@@ -56,11 +55,11 @@ public class NeuralNetworkHandler
         Saver saver = new Saver();
         saver.ReadNerualNetworkSimCount();
         saveCount = SaverDataToSet.nerualNetworkSettings.saveCount;
-        inputValues = new float[inputNodeAmount, 0];
-        hiddenValues = new float[hiddenNodeAmount, hiddenLayerAmount];
-        outputValues = new float[outputNodeAmount, outputLayerAmount];
-        inHidWeights = new float[inputNodeAmount * hiddenLayerAmount];
-        hidOutWeights = new float[hiddenLayerAmount * outputNodeAmount];
+        inputValues = new float[inputNodeAmount, 1];
+        hiddenValues = new float[hiddenLayerAmount, hiddenNodeAmount];
+        outputValues = new float[outputNodeAmount, 1];
+        inHidWeights = new float[inputNodeAmount * hiddenNodeAmount];
+        hidOutWeights = new float[hiddenNodeAmount * outputNodeAmount];
 
         visualX = graphics.PreferredBackBufferWidth / visualScaleX;
         visualY = graphics.PreferredBackBufferHeight / visualScaleY;
@@ -72,8 +71,8 @@ public class NeuralNetworkHandler
     static float RandomNumber(float min, float max)
     {
         Random random = new Random();
-        double val = (random.NextDouble() * (max - min) + min);
-        return (float)val;
+        float val = (random.NextSingle() * (max - min) + min);
+        return val;
     }
 
     //do similar way to forwardpropogation to assign weights random value
@@ -85,7 +84,7 @@ public class NeuralNetworkHandler
             for (int h = 0; h < hiddenLayerAmount; h++)
             {
                 inHidWeights[h + hiddenLayerAmount * i] = RandomNumber(-1f,1f);
-                inputBias = -5.5f;
+                inputBias = -0.5f;
             }
         }
 
@@ -113,7 +112,7 @@ public class NeuralNetworkHandler
                 inputValues[0,0] = x / inputScaleX;
                 inputValues[1,0] = y / inputScaleY;
 
-                hiddenValues = neuralNetworkFP.CalculateOutput(inputNodeAmount, hiddenNodeAmount, hiddenLayerAmount, inputValues, inHidWeights, inputBias, 0.5f);
+                hiddenValues = neuralNetworkFP.CalculateOutput(inputNodeAmount, hiddenNodeAmount, 1, inputValues, inHidWeights, inputBias, 0.5f);
                 outputValues = neuralNetworkFP.CalculateOutput(hiddenNodeAmount, outputNodeAmount, hiddenLayerAmount, hiddenValues, hidOutWeights, hiddenBias, 0.5f);
                 outputValues[0,0] *= 255;
                 colors[y + visualY * x] = new Color((int)outputValues[0,0],(int)outputValues[0,0],(int)outputValues[0,0]);
