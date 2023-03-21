@@ -1,4 +1,6 @@
 using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -40,6 +42,8 @@ public class NeuralNetworkHandler
     bool pressedS = false;
     bool pressedX = false;
     bool pressedW = false;
+
+     Stopwatch stopwatch = new Stopwatch();
 
     [Serializable]public class NerualNetworkSettings
     {
@@ -84,7 +88,7 @@ public class NeuralNetworkHandler
             for (int h = 0; h < hiddenLayerAmount; h++)
             {
                 inHidWeights[h + hiddenLayerAmount * i] = RandomNumber(-1f,1f);
-                inputBias = -5.5f;
+                inputBias = RandomNumber(-1f,1f);
             }
         }
 
@@ -94,7 +98,7 @@ public class NeuralNetworkHandler
             for (int w = 0; w < outputNodeAmount; w++)
             {
                 hidOutWeights[w + outputNodeAmount * h] = RandomNumber(-1f,1f);
-                hiddenBias = -0.5f;
+                hiddenBias = RandomNumber(-1f,1f);
             }
         }
     }
@@ -165,15 +169,15 @@ public class NeuralNetworkHandler
 
     public void DrawPixels(Texture2D pixel, SpriteBatch spriteBatch, GraphicsDeviceManager graphics)
     {
+        spriteBatch.Begin();
         for (int x = 0; x < visualX; x++)
         {
             for (int y = 0; y < visualY; y++) 
             {
-                spriteBatch.Begin();
                 spriteBatch.Draw(pixel, new Vector2(x * visualScaleX,y * visualScaleY), colors[y + visualY * x]);
-                spriteBatch.End();
             }
         }
+        spriteBatch.End();
     }
 
     public void ApplySaveData()
