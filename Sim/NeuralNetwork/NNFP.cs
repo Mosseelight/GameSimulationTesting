@@ -2,21 +2,24 @@ using System;
 
 public class NeuralNetworkForwardPropogation
 {
-    public float[] CalculateOutput(int inputNum, int outputNum, float[] inputValue, float[] weights, float bias, float biasWeight)
+    public float[,] CalculateOutput(int inputNum, int outputNum, int layerAmount, float[,] inputValue, float[] weights, float bias, float biasWeight)
     {
-        float[] weightSums = new float[inputNum * outputNum];
+        float[,] weightSums = new float[inputNum * outputNum, layerAmount];
         int weightIndex = 0;
-        for (int o = 0; o < outputNum; o++)
+        for (int l = 0; l < layerAmount; l++)
         {
-            float weightSum = 0;
-            for (int i = 0; i < inputNum; i++)
+            for (int o = 0; o < outputNum; o++)
             {
-                weightIndex = i + inputNum * o;
-                weightSum += CalculateValue(inputValue[i], weights[weightIndex]);
+                float weightSum = 0;
+                for (int i = 0; i < inputNum; i++)
+                {
+                    weightIndex = i + inputNum * o;
+                    weightSum += CalculateValue(inputValue[i,l], weights[weightIndex]);
+                }
+                weightSum += CalculateValue(bias, biasWeight);
+                weightSum = CalculateSigmoidShrink(weightSum);
+                weightSums[o,l] = weightSum;
             }
-            weightSum += CalculateValue(bias, biasWeight);
-            weightSum = CalculateSigmoidShrink(weightSum);
-            weightSums[o] = weightSum;
         }
         return weightSums;
     }

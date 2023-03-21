@@ -7,20 +7,25 @@ namespace GameTesting{
 public class NeuralNetworkHandler
 {
 
-    int inputLayerAmount = 2;
-    int hiddenLayerAmount = 3;
+    int inputLayerAmount = 1;
+    int inputNodeAmount = 2;
+    int hiddenLayerAmount = 1;
+    int hiddenNodeAmount = 3;
     int outputLayerAmount = 1;
+    int outputNodeAmount = 1;
     float inputScaleX = 5;
     float inputScaleY = 5;
 
 
-    float[] inputLayers;
+    //use first index of 0 because only one column of inputs
+    float[,] inputValues;
     float[] inHidWeights;
     float inputBias;
-    float[] hiddenLayers;
+    //row be the values and colunm be the index of which layer it is
+    float[,] hiddenValues;
     float[] hidOutWeights;
     float hiddenBias;
-    float[] outputLayers;
+    float[,] outputValues;
 
     const float euler = 2.71828f;
 
@@ -51,11 +56,11 @@ public class NeuralNetworkHandler
         Saver saver = new Saver();
         saver.ReadNerualNetworkSimCount();
         saveCount = SaverDataToSet.nerualNetworkSettings.saveCount;
-        inputLayers = new float[inputLayerAmount];
-        hiddenLayers = new float[hiddenLayerAmount];
-        outputLayers = new float[outputLayerAmount];
-        inHidWeights = new float[inputLayerAmount * hiddenLayerAmount];
-        hidOutWeights = new float[hiddenLayerAmount * outputLayerAmount];
+        inputValues = new float[inputNodeAmount, 0];
+        hiddenValues = new float[hiddenNodeAmount, hiddenLayerAmount];
+        outputValues = new float[outputNodeAmount, outputLayerAmount];
+        inHidWeights = new float[inputNodeAmount * hiddenLayerAmount];
+        hidOutWeights = new float[hiddenLayerAmount * outputNodeAmount];
 
         visualX = graphics.PreferredBackBufferWidth / visualScaleX;
         visualY = graphics.PreferredBackBufferHeight / visualScaleY;
@@ -71,10 +76,11 @@ public class NeuralNetworkHandler
         return (float)val;
     }
 
+    //do similar way to forwardpropogation to assign weights random value
     public void RandomizeWeights()
     {
         //calculate the weights connecting input to hidden layer
-        for (int i = 0; i < inputLayerAmount; i++)
+        for (int i = 0; i < inputNodeAmount; i++)
         {
             for (int h = 0; h < hiddenLayerAmount; h++)
             {
@@ -86,9 +92,9 @@ public class NeuralNetworkHandler
         //calculate the weights connecting hidden to output layer (hidden to hidden layer not set up yet)
         for (int h = 0; h < hiddenLayerAmount; h++)
         {
-            for (int w = 0; w < outputLayerAmount; w++)
+            for (int w = 0; w < outputNodeAmount; w++)
             {
-                hidOutWeights[w + outputLayerAmount * h] = RandomNumber(-1f,1f);
+                hidOutWeights[w + outputNodeAmount * h] = RandomNumber(-1f,1f);
                 hiddenBias = -0.5f;
             }
         }
@@ -104,13 +110,13 @@ public class NeuralNetworkHandler
         {
             for (int y = 0; y < visualY; y++)
             {
-                inputLayers[0] = x / inputScaleX;
-                inputLayers[1] = y / inputScaleY;
+                inputValues[0,0] = x / inputScaleX;
+                inputValues[1,0] = y / inputScaleY;
 
-                hiddenLayers = neuralNetworkFP.CalculateOutput(inputLayerAmount, hiddenLayerAmount, inputLayers, inHidWeights, inputBias, 0.5f);
-                outputLayers = neuralNetworkFP.CalculateOutput(hiddenLayerAmount, outputLayerAmount, hiddenLayers, hidOutWeights, hiddenBias, 0.5f);
-                outputLayers[0] *= 255;
-                colors[y + visualY * x] = new Color((int)outputLayers[0],(int)outputLayers[0],(int)outputLayers[0]);
+                hiddenValues = neuralNetworkFP.CalculateOutput(inputNodeAmount, hiddenNodeAmount, hiddenLayerAmount, inputValues, inHidWeights, inputBias, 0.5f);
+                outputValues = neuralNetworkFP.CalculateOutput(hiddenNodeAmount, outputNodeAmount, hiddenLayerAmount, hiddenValues, hidOutWeights, hiddenBias, 0.5f);
+                outputValues[0,0] *= 255;
+                colors[y + visualY * x] = new Color((int)outputValues[0,0],(int)outputValues[0,0],(int)outputValues[0,0]);
             }
         }
     }
