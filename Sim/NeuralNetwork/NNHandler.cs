@@ -84,7 +84,7 @@ public class NeuralNetworkHandler
             for (int h = 0; h < hiddenLayerAmount; h++)
             {
                 inHidWeights[h + hiddenLayerAmount * i] = RandomNumber(-1f,1f);
-                inputBias = -0.5f;
+                inputBias = -5.5f;
             }
         }
 

@@ -6,22 +6,21 @@ public class NeuralNetworkForwardPropogation
     {
         float[,] weightSums = new float[inputNum * outputNum, layerAmount];
         int weightIndex = 0;
-        //for (int l = 0; l < layerAmount; l++)
-        //{
+        for (int l = 0; l < layerAmount; l++)
+        {
             for (int o = 0; o < outputNum; o++)
             {
                 float weightSum = 0;
                 for (int i = 0; i < inputNum; i++)
                 {
                     weightIndex = i + inputNum * o;
-                    Console.WriteLine(inputValue[1,0]);
-                    weightSum += CalculateValue(inputValue[1,0], weights[weightIndex]);
+                    weightSum += CalculateValue(inputValue[i,0], weights[weightIndex]);
                 }
                 weightSum += CalculateValue(bias, biasWeight);
-                weightSum = CalculateLinear(weightSum);
-                weightSums[o,0] = weightSum;
+                weightSum = CalculateSigmoidShrink(weightSum);
+                weightSums[o,layerAmount - 1] = weightSum;
             }
-        //}
+        }
         return weightSums;
     }
 
