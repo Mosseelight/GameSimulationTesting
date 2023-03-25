@@ -2,8 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
+using System.Collections.Generic;
 using System.Formats.Asn1;
 
 namespace GameTesting
@@ -103,10 +103,6 @@ namespace GameTesting
                 vectorField.HandleInput();
                 vectorField.ApplyFieldDirection();
             }
-            if(runNerualNetworkSim)
-            {
-                neuralNetwork.HandleInput();
-            }
 
             base.Update(gameTime);
             time = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -116,7 +112,6 @@ namespace GameTesting
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.DarkCyan);
-
             // TODO: Add your drawing code here
             if(runGravitySim)
             {
@@ -128,6 +123,8 @@ namespace GameTesting
             }
             if(runNerualNetworkSim)
             {
+                neuralNetwork.RunNerualNetwork();
+                neuralNetwork.HandleInput();
                 neuralNetwork.DrawPixels(pixel, spriteBatch, _graphics);
             }
 

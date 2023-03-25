@@ -1,6 +1,4 @@
 using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -12,7 +10,7 @@ public class NeuralNetworkHandler
     int inputNodeAmount = 2;
     //no weights connecting hidden to hidden
     int hiddenLayerAmount = 1;
-    int hiddenNodeAmount = 3;
+    int hiddenNodeAmount = 30;
     int outputNodeAmount = 1;
     float inputScaleX = 5;
     float inputScaleY = 5;
@@ -42,8 +40,6 @@ public class NeuralNetworkHandler
     bool pressedS = false;
     bool pressedX = false;
     bool pressedW = false;
-
-     Stopwatch stopwatch = new Stopwatch();
 
     [Serializable]public class NerualNetworkSettings
     {
