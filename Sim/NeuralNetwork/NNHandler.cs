@@ -17,14 +17,14 @@ public class NeuralNetworkHandler
 
 
     //use first index of 0 because only one column of inputs
-    float[,] inputValues;
+    float[][] inputValues;
     float[] inHidWeights;
     float inputBias;
     //row be the values and colunm be the index of which layer it is
-    float[,] hiddenValues;
+    float[][] hiddenValues;
     float[] hidOutWeights;
     float hiddenBias;
-    float[,] outputValues;
+    float[][] outputValues;
 
     const float euler = 2.71828f;
 
@@ -55,9 +55,15 @@ public class NeuralNetworkHandler
         Saver saver = new Saver();
         saver.ReadNerualNetworkSimCount();
         saveCount = SaverDataToSet.nerualNetworkSettings.saveCount;
-        inputValues = new float[inputNodeAmount, 1];
-        hiddenValues = new float[hiddenLayerAmount, hiddenNodeAmount];
-        outputValues = new float[outputNodeAmount, 1];
+        inputValues = new float[1][];
+        inputValues[0] = new float[inputNodeAmount];
+        hiddenValues = new float[hiddenLayerAmount][];
+        for (int i = 0; i < hiddenLayerAmount; i++)
+        {
+            hiddenValues[i] = new float[hiddenNodeAmount];
+        }
+        outputValues = new float[1][];
+        outputValues[0] = new float[outputNodeAmount];
         inHidWeights = new float[inputNodeAmount * hiddenNodeAmount];
         hidOutWeights = new float[hiddenNodeAmount * outputNodeAmount];
 
@@ -109,13 +115,13 @@ public class NeuralNetworkHandler
         {
             for (int y = 0; y < visualY; y++)
             {
-                inputValues[0,0] = x / inputScaleX;
-                inputValues[1,0] = y / inputScaleY;
+                inputValues[0][0] = x / inputScaleX;
+                inputValues[0][1] = y / inputScaleY;
 
                 hiddenValues = neuralNetworkFP.CalculateOutput(inputNodeAmount, hiddenNodeAmount, 1, inputValues, inHidWeights, inputBias, 0.5f);
                 outputValues = neuralNetworkFP.CalculateOutput(hiddenNodeAmount, outputNodeAmount, hiddenLayerAmount, hiddenValues, hidOutWeights, hiddenBias, 0.5f);
-                outputValues[0,0] *= 255;
-                colors[y + visualY * x] = new Color((int)outputValues[0,0],(int)outputValues[0,0],(int)outputValues[0,0]);
+                outputValues[0][0] *= 255;
+                colors[y + visualY * x] = new Color((int)outputValues[0][0],(int)outputValues[0][0],(int)outputValues[0][0]);
             }
         }
     }
