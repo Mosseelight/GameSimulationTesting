@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
-using System.Diagnostics;
 using System.Collections.Generic;
 using System.Formats.Asn1;
 
@@ -33,6 +32,7 @@ namespace GameTesting
         bool runVectorFieldSim = false;
         bool runNerualNetworkSim = false;
         bool Initializer = false;
+
 
         public Game1()
         {
@@ -103,6 +103,10 @@ namespace GameTesting
                 vectorField.HandleInput();
                 vectorField.ApplyFieldDirection();
             }
+            if(runNerualNetworkSim)
+            {
+                neuralNetwork.HandleInput();
+            }
 
             base.Update(gameTime);
             time = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -123,8 +127,6 @@ namespace GameTesting
             }
             if(runNerualNetworkSim)
             {
-                neuralNetwork.RunNerualNetwork();
-                neuralNetwork.HandleInput();
                 neuralNetwork.DrawPixels(pixel, spriteBatch, _graphics);
             }
 
