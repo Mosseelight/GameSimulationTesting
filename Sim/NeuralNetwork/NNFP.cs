@@ -2,9 +2,18 @@ using System;
 
 public class NeuralNetworkForwardPropogation
 {
-    public float[][] CalculateOutput(int inputNum, int outputNum, int layerValue, float[][] inputValue, float[] weights, float bias, float biasWeight)
+    public float[][] CalculateOutput(int inputNum, int outputNum, int layerValue, float[][] inputValue, float bias, float biasWeight)
     {
         float[][] weightSums = new float[layerValue][];
+        float[] weights = new float[inputNum * outputNum];
+        for (int i = 0; i < inputNum; i++)
+        {
+            for (int o = 0; o < outputNum; o++)
+            {
+                weights[o + outputNum * i] = RandomNumber(-1f,1f);
+                bias = RandomNumber(-10f,10f);
+            }
+        }
         for (int i = 0; i < layerValue; i++)
         {
             weightSums[i] = new float[inputNum * outputNum];
@@ -25,7 +34,15 @@ public class NeuralNetworkForwardPropogation
                 weightSums[layerValue - 1][o] = weightSum;
             }
         }
+        weights = null;
         return weightSums;
+    }
+
+    static float RandomNumber(float min, float max)
+    {
+        Random random = new Random();
+        float val = (random.NextSingle() * (max - min) + min);
+        return val;
     }
 
     float CalculateValue(float input, float weight)
