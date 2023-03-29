@@ -10,7 +10,7 @@ public class NeuralNetworkHandler
     int inputNodeAmount = 2;
     //no weights connecting hidden to hidden
     int hiddenLayerAmount = 1;
-    int hiddenNodeAmount = 30;
+    int hiddenNodeAmount = 3;
     int outputNodeAmount = 1;
     float inputScaleX = 5;
     float inputScaleY = 5;
@@ -25,6 +25,7 @@ public class NeuralNetworkHandler
     float[] hidOutWeights;
     float hiddenBias;
     float[][] outputValues;
+    float[][] weights;
 
     const float euler = 2.71828f;
 
@@ -56,11 +57,27 @@ public class NeuralNetworkHandler
         saver.ReadNerualNetworkSimCount();
         saveCount = SaverDataToSet.nerualNetworkSettings.saveCount;
         inputValues = new float[1][];
+        weights = new float[2 + hiddenLayerAmount][];
         inputValues[0] = new float[inputNodeAmount];
         hiddenValues = new float[hiddenLayerAmount][];
         for (int i = 0; i < hiddenLayerAmount; i++)
         {
             hiddenValues[i] = new float[hiddenNodeAmount];
+        }
+        for (int l = 0; l < 2 + hiddenLayerAmount; l++)
+        {
+            if(l == 0)
+            {
+                weights[l] = new float[inputNodeAmount * hiddenNodeAmount];
+            }
+            if(l > 0 && l < 1 + hiddenLayerAmount)
+            {
+                weights[l] = new float[hiddenNodeAmount * hiddenNodeAmount];
+            }
+            if(l == 1 + hiddenLayerAmount)
+            {
+                weights[l] = new float[hiddenNodeAmount * outputNodeAmount];
+            }
         }
         outputValues = new float[1][];
         outputValues[0] = new float[outputNodeAmount];
@@ -80,22 +97,38 @@ public class NeuralNetworkHandler
         //calculate the weights connecting input to hidden layer
         for (int i = 0; i < inputNodeAmount; i++)
         {
-            for (int h = 0; h < hiddenLayerAmount; h++)
+            for (int h = 0; h < hiddenNodeAmount; h++)
             {
-                inHidWeights[h + hiddenLayerAmount * i] =  RandomNumber(-1f,1f);
+                weights[0][h + hiddenNodeAmount * i] =  RandomNumber(-1f,1f);
                 inputBias = RandomNumber(-1f,1f);
             }
         }
 
-        //calculate the weights connecting hidden to output layer (hidden to hidden layer not set up yet)
-        for (int h = 0; h < hiddenLayerAmount; h++)
+        //calculate the weights connecting hidden to hidden layer
+        for (int l = 0; l < hiddenLayerAmount; l++)
         {
-            for (int w = 0; w < outputNodeAmount; w++)
+            for (int h = 0; h < hiddenNodeAmount; h++)
             {
-                hidOutWeights[w + outputNodeAmount * h] = RandomNumber(-1f,1f);
-                hiddenBias = RandomNumber(-1f,1f);
+                for (int w = 0; w < hiddenNodeAmount; w++)
+                {
+                    if(l > 0 && l < 1 + hiddenLayerAmount)
+                    {
+                        weights[l][w + hiddenNodeAmount * h] = RandomNumber(-1f,1f);
+                        hiddenBias = RandomNumber(-1f,1f);
+                    }
+                }
             }
         }
+
+        //calculate the weights connecting hidden to output layer
+        for (int h = 0; h < hiddenNodeAmount; h++)
+            {
+                for (int w = 0; w < outputNodeAmount; w++)
+                {
+                    weights[1 + hiddenLayerAmount][w + outputNodeAmount * h] = RandomNumber(-1f,1f);
+                    hiddenBias = RandomNumber(-1f,1f);
+                }
+            }
     }
     static float RandomNumber(float min, float max)
     {
@@ -117,8 +150,8 @@ public class NeuralNetworkHandler
                 inputValues[0][0] = x / inputScaleX;
                 inputValues[0][1] = y / inputScaleY;
 
-                hiddenValues = neuralNetworkFP.CalculateOutput(inputNodeAmount, hiddenNodeAmount, 1, inputValues, inHidWeights, inputBias, 0.5f);
-                outputValues = neuralNetworkFP.CalculateOutput(hiddenNodeAmount, outputNodeAmount, hiddenLayerAmount, hiddenValues, hidOutWeights, hiddenBias, 0.5f);
+                hiddenValues = neuralNetworkFP.CalculateOutput(inputNodeAmount, hiddenNodeAmount, 1, inputValues, weights, inputBias, 0.5f);
+                outputValues = neuralNetworkFP.CalculateOutput(hiddenNodeAmount, outputNodeAmount, 2 + hiddenLayerAmount, hiddenValues, weights, hiddenBias, 0.5f);
                 outputValues[0][0] *= 255;
                 colors[y + visualY * x] = new Color((int)outputValues[0][0],(int)outputValues[0][0],(int)outputValues[0][0]);
             }
