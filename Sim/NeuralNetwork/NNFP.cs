@@ -2,7 +2,7 @@ using System;
 
 public class NeuralNetworkForwardPropogation
 {
-    public float[][] CalculateOutput(int inputNum, int outputNum, int layerValue, float[][] inputValue, float[][] weights, float bias, float biasWeight)
+    public float[][] CalculateOutput(int inputNum, int outputNum, int layerValue, int layeramounts, float[][] inputValue, float[][] weights, float bias, float biasWeight)
     {
         float[][] weightSums = new float[layerValue][];
         for (int i = 0; i < layerValue; i++)
