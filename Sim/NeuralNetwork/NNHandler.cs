@@ -145,6 +145,8 @@ public class NeuralNetworkHandler
         //for multiple layers have an index for which layer it is at
         //and use the 2 for loops for input and output, using the index
         //to find the amount of times the for loops have to run
+        //use jagged arrays for the values and bias and check to see if work
+        //when the layer index increses it should increse the index for the jagged arrays so that they switch to a different layer
 
         for (int x = 0; x < visualX; x++)
         {
@@ -153,19 +155,16 @@ public class NeuralNetworkHandler
                 inputValues[0][0] = x / inputScaleX;
                 inputValues[0][1] = y / inputScaleY;
 
-                //input to hidden
-                hiddenValues = neuralNetworkFP.CalculateOutput(inputNodeAmount, hiddenNodeAmount, 1, 1, inputValues, weights, inputBias, 0.5f);
-                outputValues = neuralNetworkFP.CalculateOutput(hiddenNodeAmount, outputNodeAmount, 2 + hiddenLayerAmount, 1, hiddenValues, weights, hiddenBias, 0.5f);
-                outputValues[0][0] *= 255;
-                colors[y + visualY * x] = new Color((int)outputValues[0][0],(int)outputValues[0][0],(int)outputValues[0][0]);
+                for (int l = 1; l < 2 + hiddenLayerAmount; l++)
+                {
+                    values[l] = neuralNetworkFP.CalculateOutput(nodeAmounts[l].Length, nodeAmounts[l].Length, l, 1, inputValues, weights, inputBias, 0.5f)[l];
+                    if(l == 1 + hiddenLayerAmount)
+                    {
+                        values[l][0] *= 255;
+                        colors[y + visualY * x] = new Color((int)outputValues[0][0],(int)outputValues[0][0],(int)outputValues[0][0]);
+                    }
+                }
             }
-        }
-
-        //use jagged arrays for the values and bias and check to see if work
-        //when the layer index increses it should increse the index for the jagged arrays so that they switch to a different layer
-        for (int l = 1; l < 2 + hiddenLayerAmount; l++)
-        {
-            values[l] = neuralNetworkFP.CalculateOutput(nodeAmounts[l].Length, nodeAmounts[l].Length, l, 1, inputValues, weights, inputBias, 0.5f)[l];
         }
     }
 
