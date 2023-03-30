@@ -12,19 +12,19 @@ public class NeuralNetworkHandler
     int hiddenLayerAmount = 1;
     int hiddenNodeAmount = 3;
     int outputNodeAmount = 1;
+    int[][] nodeAmounts;
     float inputScaleX = 5;
     float inputScaleY = 5;
 
 
     //use first index of 0 because only one column of inputs
     float[][] inputValues;
-    float[] inHidWeights;
     float inputBias;
     //row be the values and colunm be the index of which layer it is
     float[][] hiddenValues;
-    float[] hidOutWeights;
     float hiddenBias;
     float[][] outputValues;
+    float[][] values;
     float[][] weights;
 
     const float euler = 2.71828f;
@@ -47,8 +47,7 @@ public class NeuralNetworkHandler
         public int saveCount {get; set;}
         public float inputBias {get; set;}
         public float hiddenBias {get; set;}
-        public float[] inHidWeights {get; set;}
-        public float[] hidOutWeights {get; set;}
+        public float[][] weights {get; set;}
     }
 
     public void InitNeuralNetwork(GraphicsDeviceManager graphics)
@@ -57,6 +56,8 @@ public class NeuralNetworkHandler
         saver.ReadNerualNetworkSimCount();
         saveCount = SaverDataToSet.nerualNetworkSettings.saveCount;
         inputValues = new float[1][];
+        nodeAmounts = new int[inputNodeAmount + hiddenNodeAmount + outputNodeAmount][];
+        values = new float[1 + hiddenLayerAmount][];
         weights = new float[2 + hiddenLayerAmount][];
         inputValues[0] = new float[inputNodeAmount];
         hiddenValues = new float[hiddenLayerAmount][];
@@ -68,21 +69,22 @@ public class NeuralNetworkHandler
         {
             if(l == 0)
             {
+                nodeAmounts[l] = new int[inputNodeAmount];
                 weights[l] = new float[inputNodeAmount * hiddenNodeAmount];
             }
             if(l > 0 && l < 1 + hiddenLayerAmount)
             {
+                nodeAmounts[l] = new int[hiddenNodeAmount];
                 weights[l] = new float[hiddenNodeAmount * hiddenNodeAmount];
             }
             if(l == 1 + hiddenLayerAmount)
             {
+                nodeAmounts[l] = new int[outputNodeAmount];
                 weights[l] = new float[hiddenNodeAmount * outputNodeAmount];
             }
         }
         outputValues = new float[1][];
         outputValues[0] = new float[outputNodeAmount];
-        inHidWeights = new float[inputNodeAmount * hiddenNodeAmount];
-        hidOutWeights = new float[hiddenNodeAmount * outputNodeAmount];
 
         visualX = graphics.PreferredBackBufferWidth / visualScaleX;
         visualY = graphics.PreferredBackBufferHeight / visualScaleY;
@@ -105,13 +107,13 @@ public class NeuralNetworkHandler
         }
 
         //calculate the weights connecting hidden to hidden layer
-        for (int l = 0; l < hiddenLayerAmount; l++)
+        for (int l = 0; l < 2 + hiddenLayerAmount; l++)
         {
             for (int h = 0; h < hiddenNodeAmount; h++)
             {
                 for (int w = 0; w < hiddenNodeAmount; w++)
                 {
-                    if(l > 0 && l < 1 + hiddenLayerAmount)
+                    if(l != 1 + hiddenLayerAmount && l != 0)
                     {
                         weights[l][w + hiddenNodeAmount * h] = RandomNumber(-1f,1f);
                         hiddenBias = RandomNumber(-1f,1f);
@@ -121,14 +123,14 @@ public class NeuralNetworkHandler
         }
 
         //calculate the weights connecting hidden to output layer
-        for (int h = 0; h < hiddenNodeAmount; h++)
+        for (int o = 0; o < outputNodeAmount; o++)
+        {
+            for (int h = 0; h < hiddenNodeAmount; h++)
             {
-                for (int w = 0; w < outputNodeAmount; w++)
-                {
-                    weights[1 + hiddenLayerAmount][w + outputNodeAmount * h] = RandomNumber(-1f,1f);
-                    hiddenBias = RandomNumber(-1f,1f);
-                }
+                weights[1 + hiddenLayerAmount][h + hiddenNodeAmount * o] = RandomNumber(-1f,1f);
+                hiddenBias = RandomNumber(-1f,1f);
             }
+        }
     }
     static float RandomNumber(float min, float max)
     {
@@ -139,6 +141,7 @@ public class NeuralNetworkHandler
 
     public void RunNerualNetwork()
     {
+        
         //for multiple layers have an index for which layer it is at
         //and use the 2 for loops for input and output, using the index
         //to find the amount of times the for loops have to run
@@ -150,11 +153,19 @@ public class NeuralNetworkHandler
                 inputValues[0][0] = x / inputScaleX;
                 inputValues[0][1] = y / inputScaleY;
 
-                hiddenValues = neuralNetworkFP.CalculateOutput(inputNodeAmount, hiddenNodeAmount, 1, inputValues, weights, inputBias, 0.5f);
-                outputValues = neuralNetworkFP.CalculateOutput(hiddenNodeAmount, outputNodeAmount, 2 + hiddenLayerAmount, hiddenValues, weights, hiddenBias, 0.5f);
+                //input to hidden
+                hiddenValues = neuralNetworkFP.CalculateOutput(inputNodeAmount, hiddenNodeAmount, 1, 1, inputValues, weights, inputBias, 0.5f);
+                outputValues = neuralNetworkFP.CalculateOutput(hiddenNodeAmount, outputNodeAmount, 2 + hiddenLayerAmount, 1, hiddenValues, weights, hiddenBias, 0.5f);
                 outputValues[0][0] *= 255;
                 colors[y + visualY * x] = new Color((int)outputValues[0][0],(int)outputValues[0][0],(int)outputValues[0][0]);
             }
+        }
+
+        //use jagged arrays for the values and bias and check to see if work
+        //when the layer index increses it should increse the index for the jagged arrays so that they switch to a different layer
+        for (int l = 1; l < 2 + hiddenLayerAmount; l++)
+        {
+            values[l] = neuralNetworkFP.CalculateOutput(nodeAmounts[l].Length, nodeAmounts[l].Length, l, 1, inputValues, weights, inputBias, 0.5f)[l];
         }
     }
 
@@ -218,8 +229,7 @@ public class NeuralNetworkHandler
     {
         Saver saver = new Saver();
         saver.CreateFolder();
-        SaverDataToSet.nerualNetworkSettings.hidOutWeights = hidOutWeights;
-        SaverDataToSet.nerualNetworkSettings.inHidWeights = inHidWeights;
+        SaverDataToSet.nerualNetworkSettings.weights = weights;
         SaverDataToSet.nerualNetworkSettings.hiddenBias = hiddenBias; 
         SaverDataToSet.nerualNetworkSettings.inputBias = inputBias;
         SaverDataToSet.nerualNetworkSettings.saveCount = saveCount;
@@ -233,8 +243,7 @@ public class NeuralNetworkHandler
         Saver saver = new Saver();
         saver.ReadNerualNetworkSimCount();
         saver.ReadNerualNetworkSimSettings();
-        hidOutWeights = SaverDataToSet.nerualNetworkSettings.hidOutWeights;
-        inHidWeights = SaverDataToSet.nerualNetworkSettings.inHidWeights;
+        weights = SaverDataToSet.nerualNetworkSettings.weights;
         hiddenBias = SaverDataToSet.nerualNetworkSettings.hiddenBias;
         inputBias = SaverDataToSet.nerualNetworkSettings.inputBias;
         saveCount = SaverDataToSet.nerualNetworkSettings.saveCount;
