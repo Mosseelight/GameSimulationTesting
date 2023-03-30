@@ -9,7 +9,7 @@ public class NeuralNetworkHandler
 
     int inputNodeAmount = 2;
     //no weights connecting hidden to hidden
-    int hiddenLayerAmount = 1;
+    int hiddenLayerAmount = 2;
     int hiddenNodeAmount = 3;
     int outputNodeAmount = 1;
     int[][] nodeAmounts;
@@ -57,7 +57,7 @@ public class NeuralNetworkHandler
         saveCount = SaverDataToSet.nerualNetworkSettings.saveCount;
         inputValues = new float[1][];
         nodeAmounts = new int[inputNodeAmount + hiddenNodeAmount + outputNodeAmount][];
-        values = new float[1 + hiddenLayerAmount][];
+        values = new float[2 + hiddenLayerAmount][];
         weights = new float[2 + hiddenLayerAmount][];
         inputValues[0] = new float[inputNodeAmount];
         hiddenValues = new float[hiddenLayerAmount][];
@@ -70,16 +70,19 @@ public class NeuralNetworkHandler
             if(l == 0)
             {
                 nodeAmounts[l] = new int[inputNodeAmount];
+                values[l] = new float[inputNodeAmount];
                 weights[l] = new float[inputNodeAmount * hiddenNodeAmount];
             }
             if(l > 0 && l < 1 + hiddenLayerAmount)
             {
                 nodeAmounts[l] = new int[hiddenNodeAmount];
+                values[l] = new float[hiddenNodeAmount];
                 weights[l] = new float[hiddenNodeAmount * hiddenNodeAmount];
             }
             if(l == 1 + hiddenLayerAmount)
             {
                 nodeAmounts[l] = new int[outputNodeAmount];
+                values[l] = new float[outputNodeAmount];
                 weights[l] = new float[hiddenNodeAmount * outputNodeAmount];
             }
         }
@@ -155,13 +158,18 @@ public class NeuralNetworkHandler
                 inputValues[0][0] = x / inputScaleX;
                 inputValues[0][1] = y / inputScaleY;
 
-                for (int l = 1; l < 2 + hiddenLayerAmount; l++)
+                for (int l = 0; l < 2 + hiddenLayerAmount; l++)
                 {
-                    values[l] = neuralNetworkFP.CalculateOutput(nodeAmounts[l].Length, nodeAmounts[l].Length, l, 1, inputValues, weights, inputBias, 0.5f)[l];
+                    Console.WriteLine(values[l].Length + " " + values[l + 1].Length + " " + l + " " + values.Length);
+                    values[l + 1] = neuralNetworkFP.CalculateOutput(nodeAmounts[l].Length, nodeAmounts[l + 1].Length, l, values, weights, inputBias, 0.5f)[l];
                     if(l == 1 + hiddenLayerAmount)
                     {
                         values[l][0] *= 255;
                         colors[y + visualY * x] = new Color((int)outputValues[0][0],(int)outputValues[0][0],(int)outputValues[0][0]);
+                    }
+                    else
+                    {
+                        //values[l + 1] = neuralNetworkFP.CalculateOutput(nodeAmounts[l].Length, nodeAmounts[l + 1].Length, l, values, weights, inputBias, 0.5f)[l];
                     }
                 }
             }
