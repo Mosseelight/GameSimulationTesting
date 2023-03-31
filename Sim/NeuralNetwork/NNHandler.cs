@@ -160,8 +160,6 @@ public class NeuralNetworkHandler
 
                 for (int l = 0; l < 2 + hiddenLayerAmount; l++)
                 {
-                    Console.WriteLine(values[l].Length + " " + values[l + 1].Length + " " + l + " " + values.Length);
-                    values[l + 1] = neuralNetworkFP.CalculateOutput(nodeAmounts[l].Length, nodeAmounts[l + 1].Length, l, values, weights, inputBias, 0.5f)[l];
                     if(l == 1 + hiddenLayerAmount)
                     {
                         values[l][0] *= 255;
@@ -169,7 +167,7 @@ public class NeuralNetworkHandler
                     }
                     else
                     {
-                        //values[l + 1] = neuralNetworkFP.CalculateOutput(nodeAmounts[l].Length, nodeAmounts[l + 1].Length, l, values, weights, inputBias, 0.5f)[l];
+                        values[l + 1] = neuralNetworkFP.CalculateOutput(nodeAmounts[l].Length, nodeAmounts[l + 1].Length, l, values, weights, inputBias, 0.5f)[l];
                     }
                 }
             }
