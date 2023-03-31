@@ -9,7 +9,7 @@ public class NeuralNetworkHandler
 
     int inputNodeAmount = 2;
     int hiddenLayerAmount = 4;
-    int hiddenNodeAmount = 6;
+    int hiddenNodeAmount = 8;
     int outputNodeAmount = 1;
     int[][] nodeAmounts;
     float inputScaleX = 5;
@@ -33,6 +33,7 @@ public class NeuralNetworkHandler
     bool pressedS = false;
     bool pressedX = false;
     bool pressedW = false;
+    bool pressedE = false;
 
     [Serializable]public class NerualNetworkSettings
     {
@@ -190,6 +191,16 @@ public class NeuralNetworkHandler
         if(Keyboard.GetState().IsKeyUp(Keys.W))
         {
             pressedW = false;
+        }
+        if (Keyboard.GetState().IsKeyDown(Keys.E) && !pressedE)
+        {
+            pressedE = true;
+            RandomizeWeights();
+            RunNerualNetwork(); 
+        }
+        if(Keyboard.GetState().IsKeyUp(Keys.E))
+        {
+            pressedE = false;
         }
     }
 

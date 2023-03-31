@@ -19,7 +19,7 @@ public class NeuralNetworkForwardPropogation
                 weightSum += CalculateValue(inputValue[layerValue][i], weights[layerValue][weightIndex]);
             }
             weightSum += CalculateValue(bias, biasWeight);
-            weightSum = CalculateSigmoidShrink(weightSum);
+            weightSum = CalculateArcTan(weightSum);
             weightSums[layerValue][o] = weightSum;
         }
         return weightSums;
@@ -70,5 +70,31 @@ public class NeuralNetworkForwardPropogation
     float CalculateSigmoidShrink(float input)
     {
         return input / (1 + (float)Math.Exp(-input));
+    }
+
+    //weirdness
+    float CalculateSin(float input)
+    {
+        return (float)Math.Sin(input);
+    }
+
+    float CalculateCos(float input)
+    {
+        return (float)Math.Cos(input);
+    }
+
+    float CalculateCbrt(float input)
+    {
+        return (float)Math.Cbrt(input);
+    }
+
+    float CalculateReciprocal(float input)
+    {
+        return (float)Math.ReciprocalEstimate(input);
+    }
+
+    float CalculateFloor(float input)
+    {
+        return (float)Math.Floor(input);
     }
 }
