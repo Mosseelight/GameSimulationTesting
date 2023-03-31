@@ -9,25 +9,18 @@ public class NeuralNetworkHandler
 
     int inputNodeAmount = 2;
     //no weights connecting hidden to hidden
-    int hiddenLayerAmount = 2;
-    int hiddenNodeAmount = 3;
+    int hiddenLayerAmount = 4;
+    int hiddenNodeAmount = 6;
     int outputNodeAmount = 1;
     int[][] nodeAmounts;
     float inputScaleX = 5;
     float inputScaleY = 5;
 
 
-    //use first index of 0 because only one column of inputs
-    float[][] inputValues;
     float inputBias;
-    //row be the values and colunm be the index of which layer it is
-    float[][] hiddenValues;
     float hiddenBias;
-    float[][] outputValues;
     float[][] values;
     float[][] weights;
-
-    const float euler = 2.71828f;
 
     int visualX;
     int visualScaleX = 5;
@@ -55,16 +48,9 @@ public class NeuralNetworkHandler
         Saver saver = new Saver();
         saver.ReadNerualNetworkSimCount();
         saveCount = SaverDataToSet.nerualNetworkSettings.saveCount;
-        inputValues = new float[1][];
         nodeAmounts = new int[inputNodeAmount + hiddenNodeAmount + outputNodeAmount][];
         values = new float[2 + hiddenLayerAmount][];
         weights = new float[2 + hiddenLayerAmount][];
-        inputValues[0] = new float[inputNodeAmount];
-        hiddenValues = new float[hiddenLayerAmount][];
-        for (int i = 0; i < hiddenLayerAmount; i++)
-        {
-            hiddenValues[i] = new float[hiddenNodeAmount];
-        }
         for (int l = 0; l < 2 + hiddenLayerAmount; l++)
         {
             if(l == 0)
@@ -86,8 +72,6 @@ public class NeuralNetworkHandler
                 weights[l] = new float[hiddenNodeAmount * outputNodeAmount];
             }
         }
-        outputValues = new float[1][];
-        outputValues[0] = new float[outputNodeAmount];
 
         visualX = graphics.PreferredBackBufferWidth / visualScaleX;
         visualY = graphics.PreferredBackBufferHeight / visualScaleY;
@@ -155,15 +139,15 @@ public class NeuralNetworkHandler
         {
             for (int y = 0; y < visualY; y++)
             {
-                inputValues[0][0] = x / inputScaleX;
-                inputValues[0][1] = y / inputScaleY;
+                values[0][0] = x / inputScaleX;
+                values[0][1] = y / inputScaleY;
 
                 for (int l = 0; l < 2 + hiddenLayerAmount; l++)
                 {
                     if(l == 1 + hiddenLayerAmount)
                     {
                         values[l][0] *= 255;
-                        colors[y + visualY * x] = new Color((int)outputValues[0][0],(int)outputValues[0][0],(int)outputValues[0][0]);
+                        colors[y + visualY * x] = new Color((int)values[l][0],(int)values[l][0],(int)values[l][0]);
                     }
                     else
                     {
