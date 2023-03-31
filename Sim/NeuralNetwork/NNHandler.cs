@@ -8,7 +8,6 @@ public class NeuralNetworkHandler
 {
 
     int inputNodeAmount = 2;
-    //no weights connecting hidden to hidden
     int hiddenLayerAmount = 4;
     int hiddenNodeAmount = 6;
     int outputNodeAmount = 1;
@@ -128,13 +127,6 @@ public class NeuralNetworkHandler
 
     public void RunNerualNetwork()
     {
-        
-        //for multiple layers have an index for which layer it is at
-        //and use the 2 for loops for input and output, using the index
-        //to find the amount of times the for loops have to run
-        //use jagged arrays for the values and bias and check to see if work
-        //when the layer index increses it should increse the index for the jagged arrays so that they switch to a different layer
-
         for (int x = 0; x < visualX; x++)
         {
             for (int y = 0; y < visualY; y++)
