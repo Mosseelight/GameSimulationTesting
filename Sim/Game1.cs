@@ -20,7 +20,8 @@ namespace GameTesting
         //simulation vars
         ObjSimulation objSim = new ObjSimulation();
         VectorFieldSim vectorField = new VectorFieldSim();
-        NeuralNetworkHandler neuralNetwork = new NeuralNetworkHandler();
+        NeuralNetworkHandlerVisual neuralNetwork = new NeuralNetworkHandlerVisual();
+        NeuralNetworkHandlerWord nerualNetworkWords = new NeuralNetworkHandlerWord();
 
         Texture2D circle;
         Texture2D arrow;
@@ -31,6 +32,7 @@ namespace GameTesting
         bool runGravitySim = false;
         bool runVectorFieldSim = false;
         bool runNerualNetworkSim = false;
+        bool runNerualNetworkWordSim = false;
         bool Initializer = false;
 
 
@@ -90,6 +92,14 @@ namespace GameTesting
                     neuralNetwork.RunNerualNetwork();
                     Console.WriteLine("pressed 3");
                 }
+                if(Keyboard.GetState().IsKeyDown(Keys.D4) && !runNerualNetworkWordSim)
+                {
+                    runNerualNetworkWordSim = true;
+                    Initializer = true;
+                    nerualNetworkWords.InitNeuralNetwork(_graphics);
+                    nerualNetworkWords.RunNerualNetwork();
+                    Console.WriteLine("pressed 4");
+                }
             }
 
             // TODO: Add your update logic here
@@ -106,6 +116,10 @@ namespace GameTesting
             if(runNerualNetworkSim)
             {
                 neuralNetwork.HandleInput();
+            }
+            if(runNerualNetworkWordSim)
+            {
+                nerualNetworkWords.HandleInput();
             }
 
             base.Update(gameTime);
@@ -128,6 +142,10 @@ namespace GameTesting
             if(runNerualNetworkSim)
             {
                 neuralNetwork.DrawPixels(pixel, spriteBatch, _graphics);
+            }
+            if(runNerualNetworkWordSim)
+            {
+                nerualNetworkWords.DrawPixels(pixel, spriteBatch, _graphics);
             }
 
 

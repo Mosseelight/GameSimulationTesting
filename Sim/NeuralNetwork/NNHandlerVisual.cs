@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace GameTesting{
-public class NeuralNetworkHandler
+public class NeuralNetworkHandlerVisual
 {
 
     int inputNodeAmount = 2;
@@ -35,7 +35,7 @@ public class NeuralNetworkHandler
     bool pressedW = false;
     bool pressedE = false;
 
-    [Serializable]public class NerualNetworkSettings
+    [Serializable]public class NerualNetworkVisualSettings
     {
         public int saveCount {get; set;}
         public float inputBias {get; set;}
@@ -47,7 +47,7 @@ public class NeuralNetworkHandler
     {
         Saver saver = new Saver();
         saver.ReadNerualNetworkSimCount();
-        saveCount = SaverDataToSet.nerualNetworkSettings.saveCount;
+        saveCount = SaverDataToSet.nerualNetworkVisualSettings.saveCount;
         nodeAmounts = new int[inputNodeAmount + hiddenNodeAmount + outputNodeAmount][];
         values = new float[2 + hiddenLayerAmount][];
         weights = new float[2 + hiddenLayerAmount][];
@@ -151,6 +151,34 @@ public class NeuralNetworkHandler
         }
     }
 
+    public void TrainNueralNetwork()
+    {
+        for (int x = 0; x < visualX; x++)
+        {
+            for (int y = 0; y < visualY; y++)
+            {
+                values[0][0] = x / inputScaleX;
+                values[0][1] = y / inputScaleY;
+
+                for (int l = 0; l < 2 + hiddenLayerAmount; l++)
+                {
+                    if(l == 1 + hiddenLayerAmount)
+                    {
+                        //process the value through BP
+
+
+                        values[l][0] *= 255;
+                        colors[y + visualY * x] = new Color((int)values[l][0],(int)values[l][0],(int)values[l][0]);
+                    }
+                    else
+                    {
+                        values[l + 1] = neuralNetworkFP.CalculateOutput(nodeAmounts[l].Length, nodeAmounts[l + 1].Length, l, values, weights, inputBias, 0.5f)[l];
+                    }
+                }
+            }
+        }
+    }
+
     public void HandleInput()
     {
         if (Keyboard.GetState().IsKeyDown(Keys.Q) && !pressedQ)
@@ -221,10 +249,10 @@ public class NeuralNetworkHandler
     {
         Saver saver = new Saver();
         saver.CreateFolder();
-        SaverDataToSet.nerualNetworkSettings.weights = weights;
-        SaverDataToSet.nerualNetworkSettings.hiddenBias = hiddenBias; 
-        SaverDataToSet.nerualNetworkSettings.inputBias = inputBias;
-        SaverDataToSet.nerualNetworkSettings.saveCount = saveCount;
+        SaverDataToSet.nerualNetworkVisualSettings.weights = weights;
+        SaverDataToSet.nerualNetworkVisualSettings.hiddenBias = hiddenBias; 
+        SaverDataToSet.nerualNetworkVisualSettings.inputBias = inputBias;
+        SaverDataToSet.nerualNetworkVisualSettings.saveCount = saveCount;
         saver.SaveNeuralNetworkSimSettingsJSON();
         saver.SaveNeuralNetworkSimCount();
         saver.SaveNeuralNetworkSimSettings();
@@ -235,10 +263,10 @@ public class NeuralNetworkHandler
         Saver saver = new Saver();
         saver.ReadNerualNetworkSimCount();
         saver.ReadNerualNetworkSimSettings();
-        weights = SaverDataToSet.nerualNetworkSettings.weights;
-        hiddenBias = SaverDataToSet.nerualNetworkSettings.hiddenBias;
-        inputBias = SaverDataToSet.nerualNetworkSettings.inputBias;
-        saveCount = SaverDataToSet.nerualNetworkSettings.saveCount;
+        weights = SaverDataToSet.nerualNetworkVisualSettings.weights;
+        hiddenBias = SaverDataToSet.nerualNetworkVisualSettings.hiddenBias;
+        inputBias = SaverDataToSet.nerualNetworkVisualSettings.inputBias;
+        saveCount = SaverDataToSet.nerualNetworkVisualSettings.saveCount;
         RunNerualNetwork();
     }
 }

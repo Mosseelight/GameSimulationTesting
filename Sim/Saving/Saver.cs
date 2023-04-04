@@ -56,7 +56,7 @@ namespace GameTesting
         {
             DataToSave dataToSave = new DataToSave();
 
-            dataToSave.nerualNetworkSettings = SaverDataToSet.nerualNetworkSettings;
+            dataToSave.nerualNetworkSettings = SaverDataToSet.nerualNetworkVisualSettings;
 
             IFormatter formatter = new BinaryFormatter();
             Stream stream = new FileStream(nueralNetworkSettings + dataToSave.nerualNetworkSettings.saveCount + ".save", FileMode.Create, FileAccess.Write);
@@ -71,7 +71,7 @@ namespace GameTesting
             JsonSerializerOptions options = new JsonSerializerOptions();
             options.WriteIndented = true;
 
-            dataToSave.nerualNetworkSettings = SaverDataToSet.nerualNetworkSettings;
+            dataToSave.nerualNetworkSettings = SaverDataToSet.nerualNetworkVisualSettings;
 
             string jsonText = JsonSerializer.Serialize(dataToSave.nerualNetworkSettings, options);
             File.WriteAllText(nueralNetworkSettings + dataToSave.nerualNetworkSettings.saveCount + ".json", jsonText);
@@ -83,7 +83,7 @@ namespace GameTesting
             JsonSerializerOptions options = new JsonSerializerOptions();
             options.WriteIndented = true;
 
-            dataToSave.nerualNetworkSettings.saveCount = SaverDataToSet.nerualNetworkSettings.saveCount;
+            dataToSave.nerualNetworkSettings.saveCount = SaverDataToSet.nerualNetworkVisualSettings.saveCount;
 
             string jsonText = JsonSerializer.Serialize(dataToSave.nerualNetworkSettings.saveCount, options);
             File.WriteAllText(neuralNetworkSimPath + @"\SaveFileCount.json", jsonText);
@@ -96,18 +96,18 @@ namespace GameTesting
                 JsonSerializerOptions options = new JsonSerializerOptions();
                 options.WriteIndented = true;
                 string jsonSaveCount = File.ReadAllText(neuralNetworkSimPath + @"\SaveFileCount.json");
-                SaverDataToSet.nerualNetworkSettings.saveCount = int.Parse(jsonSaveCount);
+                SaverDataToSet.nerualNetworkVisualSettings.saveCount = int.Parse(jsonSaveCount);
             }
         }
 
         public void ReadNerualNetworkSimSettings()
         {
-            if(File.Exists(nueralNetworkSettings + SaverDataToSet.nerualNetworkSettings.saveCount + ".save"))
+            if(File.Exists(nueralNetworkSettings + SaverDataToSet.nerualNetworkVisualSettings.saveCount + ".save"))
             {
-                Stream stream = new FileStream(nueralNetworkSettings + SaverDataToSet.nerualNetworkSettings.saveCount + ".save", FileMode.Open, FileAccess.Read);
+                Stream stream = new FileStream(nueralNetworkSettings + SaverDataToSet.nerualNetworkVisualSettings.saveCount + ".save", FileMode.Open, FileAccess.Read);
                 IFormatter formatter = new BinaryFormatter();
                 DataToSave settings = (DataToSave)formatter.Deserialize(stream);
-                SaverDataToSet.nerualNetworkSettings = settings.nerualNetworkSettings;
+                SaverDataToSet.nerualNetworkVisualSettings = settings.nerualNetworkSettings;
                 stream.Close();
             }
             
@@ -119,6 +119,6 @@ namespace GameTesting
     [Serializable]public class DataToSave
     {
         public ObjSimulation.ObjectSimSettings objectSimSettings = new ObjSimulation.ObjectSimSettings();
-        public NeuralNetworkHandler.NerualNetworkSettings nerualNetworkSettings = new NeuralNetworkHandler.NerualNetworkSettings();
+        public NeuralNetworkHandlerVisual.NerualNetworkVisualSettings nerualNetworkSettings = new NeuralNetworkHandlerVisual.NerualNetworkVisualSettings();
     }
 }
