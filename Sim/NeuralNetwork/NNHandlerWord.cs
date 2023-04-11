@@ -10,7 +10,7 @@ public class NeuralNetworkHandlerWord
 
     int inputNodeAmount = 2;
     int hiddenLayerAmount = 4;
-    int hiddenNodeAmount = 16;
+    int hiddenNodeAmount = 200;
     int[][] nodeAmounts;
     float inputScaleX = 5;
     float inputScaleY = 5;
@@ -30,7 +30,28 @@ public class NeuralNetworkHandlerWord
 
 
     int wordCount = 20;
-    string[] words = {"yes", "opalim", "te", "golim", "no", "bad", "good", "da", "ti", "ebam", "majkati"};
+    //put into a file so easeier to read
+    string[] words = {"yes", "opalim", "te", "golim", "no", "bad", "good", 
+                    "word", "poltics", "test", "ai", "neural", "network", 
+                    "number", "simulation", "testing", "game", "liberal", "conservitive", 
+                    "libertarian", "right", "left", "authortarian", 
+                    "why", "what", "who", "when", "where", "percent", "one", "two", 
+                    "three", "four", "five", "six", "seven", "eight", "nine", "ten", 
+                    "rate", "spend", "help", "down", "drop", "half", "quarter", "full", 
+                    "math", "science", "geography", "history", "affect", "effect",  
+                    "internet", "transportation", "high", "low", "more", "less", 
+                    "you", "they", "i", "me", "we", "their", "research", "note", "level",
+                    "is", "eat", "make", "do", "evil", "smart", "am", "fake", "real", "for",
+                    "paid", "money", "dollar", "rich", "red", "green", "blue", "yellow",
+                    "purple", "cyan", "sky", "night", "dark", "light", "bright", "not", 
+                    "will", "be", "handle", "name", "action", "or", "event", "have", "positive",
+                    "negative", "power", "weak", "detail", "small", "big", "huge", "tiny",
+                    "follow", "walk", "away", "close", "above", "below", "far", "very",
+                    "detect", "find", "throw", "grab", "programming", "java", "c++",
+                    "c#", "python", "water", "drink", "soil", "planet", "earth", "mars", 
+                    "sun", "stone", "ground", "air", "breath", "human", "source", 
+                    "against"
+                    };
     string outputSentence;
 
 
@@ -134,6 +155,7 @@ public class NeuralNetworkHandlerWord
 
     public void RunNerualNetwork()
     {
+        outputSentence = "";
         for (int i = 0; i < wordCount; i++)
         {
             values[0][0] = RandomNumber(-100,100);

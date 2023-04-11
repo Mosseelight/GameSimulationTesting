@@ -19,7 +19,7 @@ public class NeuralNetworkForwardPropogation
                 weightSum += CalculateValue(inputValue[layerValue][i], weights[layerValue][weightIndex]);
             }
             weightSum += CalculateValue(bias, biasWeight);
-            weightSum = CalculateReLU(weightSum);
+            weightSum = CalculateCos(weightSum);
             weightSums[layerValue][o] = weightSum;
         }
         return weightSums;

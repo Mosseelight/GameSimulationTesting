@@ -22,6 +22,8 @@ namespace GameTesting
         VectorFieldSim vectorField = new VectorFieldSim();
         NeuralNetworkHandlerVisual neuralNetwork = new NeuralNetworkHandlerVisual();
         NeuralNetworkHandlerWord nerualNetworkWords = new NeuralNetworkHandlerWord();
+        MandelBrotHandler mandelBrot = new MandelBrotHandler();
+        Grapher grapher = new Grapher();
 
         Texture2D circle;
         Texture2D arrow;
@@ -33,6 +35,8 @@ namespace GameTesting
         bool runVectorFieldSim = false;
         bool runNerualNetworkSim = false;
         bool runNerualNetworkWordSim = false;
+        bool runMandelBrotSim = false;
+        bool runGraphSim = false;
         bool Initializer = false;
 
 
@@ -100,6 +104,21 @@ namespace GameTesting
                     nerualNetworkWords.RunNerualNetwork();
                     Console.WriteLine("pressed 4");
                 }
+                if(Keyboard.GetState().IsKeyDown(Keys.D5) && !runMandelBrotSim)
+                {
+                    runMandelBrotSim = true;
+                    Initializer = true;
+                    mandelBrot.InitMandel(_graphics);
+                    mandelBrot.RunMandel();
+                    Console.WriteLine("pressed 5");
+                }
+                if(Keyboard.GetState().IsKeyDown(Keys.D6) && !runGraphSim)
+                {
+                    runGraphSim = true;
+                    Initializer = true;
+                    grapher.InitGraph(_graphics);
+                    Console.WriteLine("pressed 6");
+                }
             }
 
             // TODO: Add your update logic here
@@ -147,7 +166,14 @@ namespace GameTesting
             {
                 nerualNetworkWords.DrawPixels(pixel, spriteBatch, _graphics);
             }
-
+            if(runMandelBrotSim)
+            {
+                mandelBrot.DrawPixels(pixel, spriteBatch, _graphics);
+            }
+            if(runGraphSim)
+            {
+                grapher.DrawPixels(pixel, spriteBatch, _graphics);
+            }
 
             base.Draw(gameTime);
         }
