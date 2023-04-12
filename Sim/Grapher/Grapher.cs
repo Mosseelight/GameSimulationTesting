@@ -35,7 +35,16 @@ namespace GameTesting
 
         public void RunGraph()
         {
-            
+            for (int x = 0; x < visualX; x++)
+            {
+                for (int y = 0; y < visualY; y++) 
+                {
+                    if(y == GraphingFunction(x)) 
+                    {
+                        colors[y + visualY * x] = new Color(0f,0f,0f);
+                    }
+                }
+            }
         }
 
         public void DrawPixels(Texture2D pixel, SpriteBatch spriteBatch, GraphicsDeviceManager graphics)
@@ -49,6 +58,13 @@ namespace GameTesting
                 }
             }
             spriteBatch.End();
+        }
+
+
+        int GraphingFunction(int inputX)
+        {
+            float value = (float)Math.Sin(inputX);
+            return (int)value;
         }
     }
 }

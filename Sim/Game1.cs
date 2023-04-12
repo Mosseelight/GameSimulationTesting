@@ -117,6 +117,7 @@ namespace GameTesting
                     runGraphSim = true;
                     Initializer = true;
                     grapher.InitGraph(_graphics);
+                    grapher.RunGraph();
                     Console.WriteLine("pressed 6");
                 }
             }
