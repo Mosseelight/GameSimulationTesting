@@ -7,33 +7,36 @@ namespace GameTesting
 {
     public class Grapher
     {
-        int visualScaleX = 5;
-        int visualScaleY = 5;
+        int visualScale = 5;
         int visualX;
         int visualY;
         Color[] colors;
 
 
         int xPos;
+        int xOffset;
         int yPos;
+        int yOffset;
 
 
         public void InitGraph(GraphicsDeviceManager graphics)
         {
-            visualX = graphics.PreferredBackBufferWidth / visualScaleX;
-            visualY = graphics.PreferredBackBufferHeight / visualScaleY;
+            visualX = graphics.PreferredBackBufferWidth / visualScale;
+            xOffset = (graphics.PreferredBackBufferWidth / 2) / visualScale;
+            visualY = graphics.PreferredBackBufferHeight / visualScale;
+            yOffset = (graphics.PreferredBackBufferHeight / 2) / visualScale;
             colors = new Color[visualX * visualY];
             for (int i = 0; i < colors.Length; i++)
             {
                 colors[i] = new Color(256f, 256f, 256f);
             }
+            Console.WriteLine(xOffset + " " + yOffset);
         }
 
         public void RunGraph()
         {
             
         }
-
 
         public void DrawPixels(Texture2D pixel, SpriteBatch spriteBatch, GraphicsDeviceManager graphics)
         {
@@ -42,7 +45,7 @@ namespace GameTesting
             {
                 for (int y = 0; y < visualY; y++) 
                 {
-                    spriteBatch.Draw(pixel, new Vector2(x * visualScaleX,y * visualScaleY), colors[y + visualY * x]);
+                    spriteBatch.Draw(pixel, new Vector2(x * visualScale,y * visualScale), colors[y + visualY * x]);
                 }
             }
             spriteBatch.End();
