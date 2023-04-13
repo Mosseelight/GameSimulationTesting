@@ -16,6 +16,7 @@ namespace GameTesting
         private GraphicsDeviceManager _graphics;
         private SpriteBatch spriteBatch;
         private SpriteFont font;
+        Camera camera = new Camera(new Vector2(0, 0), 1f);
 
         //simulation vars
         ObjSimulation objSim = new ObjSimulation();
@@ -150,6 +151,7 @@ namespace GameTesting
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.DarkCyan);
+
             // TODO: Add your drawing code here
             if(runGravitySim)
             {
@@ -169,11 +171,11 @@ namespace GameTesting
             }
             if(runMandelBrotSim)
             {
-                mandelBrot.DrawPixels(pixel, spriteBatch, _graphics);
+                mandelBrot.DrawPixels(pixel, spriteBatch, _graphics, camera);
             }
             if(runGraphSim)
             {
-                grapher.DrawPixels(pixel, spriteBatch, _graphics);
+                grapher.DrawPixels(pixel, spriteBatch, _graphics, camera);
             }
 
             base.Draw(gameTime);

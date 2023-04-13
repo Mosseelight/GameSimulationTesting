@@ -161,17 +161,17 @@ namespace GameTesting
         public void DrawSim(Texture2D circle, SpriteBatch spriteBatch, GraphicsDeviceManager graphics, SpriteFont font)
         {
             Vector2 textMiddlePos = font.MeasureString("Gravity " + gravity) / 2;
+            spriteBatch.Begin();
             for (int i = 0; i < objects.Length; i++)
             {
                 if(objects[i].enabled)
                 {
-                    spriteBatch.Begin();
                     spriteBatch.DrawString(font, "Gravity: " + gravity.ToString("N03"), new Vector2(textMiddlePos.X + 40, 1000), Color.Black, 0, textMiddlePos, 1.5f, SpriteEffects.None, 0.5f);
                     spriteBatch.DrawString(font, "CollPushFactor: " + collsionPushFactor.ToString("N03"), new Vector2(textMiddlePos.X + 40, 970), Color.Black, 0, textMiddlePos, 1.5f, SpriteEffects.None, 0.5f);
                     spriteBatch.Draw(circle, objects[i].pos, new Color(255,255,255));
-                    spriteBatch.End();
                 }
             }
+            spriteBatch.End();
         }
 
         public void HandleInput()

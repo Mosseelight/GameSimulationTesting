@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.Generic;
 
+namespace GameTesting {
 public class VectorFieldSim
 {
         
@@ -143,9 +144,9 @@ public class VectorFieldSim
 
     public void DrawSim(Texture2D circle, Texture2D arrow, SpriteBatch spriteBatch, GraphicsDeviceManager graphics, SpriteFont font)
     {
+        spriteBatch.Begin();
         for (int b = 0; b < objects.Count; b++)
         {
-            spriteBatch.Begin();
             for (int i = 0; i < vectorsPos.Length; i++)
             {
                 Vector2 origin = new Vector2(arrow.Width / 2f, arrow.Height / 2f);
@@ -153,8 +154,8 @@ public class VectorFieldSim
                 spriteBatch.Draw(arrow, vectorsPos[i], null, Color.White, angle, origin, Vector2.One, SpriteEffects.None, 0f);
             }
             spriteBatch.Draw(circle, objects[b].pos, Color.White);
-            spriteBatch.End();
         }
+        spriteBatch.End();
         CheckBounds();
     }
 
@@ -163,6 +164,7 @@ public class VectorFieldSim
         Vector2 result = new Vector2(1/x, 1/y);
         return result;
     }
+}
 }
 
 

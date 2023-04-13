@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -7,30 +8,29 @@ namespace GameTesting
 {
     public class Grapher
     {
-        int visualScale = 5;
+        int visualScale = 10;
         int visualX;
         int visualY;
         Color[] colors;
 
 
-        int xPos;
         int xOffset;
-        int yPos;
         int yOffset;
+        int graphIndex = 0;
+        int drawIndex = 0;
 
 
         public void InitGraph(GraphicsDeviceManager graphics)
         {
             visualX = graphics.PreferredBackBufferWidth / visualScale;
-            xOffset = (graphics.PreferredBackBufferWidth / 2) / visualScale;
+            xOffset = visualX / 2;
             visualY = graphics.PreferredBackBufferHeight / visualScale;
-            yOffset = (graphics.PreferredBackBufferHeight / 2) / visualScale;
+            yOffset = visualY / 2;
             colors = new Color[visualX * visualY];
             for (int i = 0; i < colors.Length; i++)
             {
                 colors[i] = new Color(256f, 256f, 256f);
             }
-            Console.WriteLine(xOffset + " " + yOffset);
         }
 
         public void RunGraph()
@@ -39,22 +39,36 @@ namespace GameTesting
             {
                 for (int y = 0; y < visualY; y++) 
                 {
-                    if(y == GraphingFunction(x)) 
+                    if(Math.Abs(y - GraphingFunction(x)) < 0.1) 
                     {
                         colors[y + visualY * x] = new Color(0f,0f,0f);
                     }
                 }
             }
+
+            /*for (int y = -yOffset; y < yOffset; y++)
+            {
+                for (int x = -xOffset; x < xOffset; x++) 
+                {
+                    if(Math.Abs(y - GraphingFunction(x)) < 0.1) 
+                    {
+                        Console.WriteLine(GraphingFunction(x));
+                        colors[graphIndex + (((visualX * visualY) / 2) - (yOffset))] = new Color(0f,0f,0f);
+                        graphIndex++;
+                    }
+                }
+            }*/
         }
 
-        public void DrawPixels(Texture2D pixel, SpriteBatch spriteBatch, GraphicsDeviceManager graphics)
+        public void DrawPixels(Texture2D pixel, SpriteBatch spriteBatch, GraphicsDeviceManager graphics, Camera camera)
         {
-            spriteBatch.Begin();
-            for (int x = 0; x < visualX; x++)
+            spriteBatch.Begin(transformMatrix: camera.GetViewMatrix(graphics));
+            for (int x = -xOffset; x < xOffset; x++)
             {
-                for (int y = 0; y < visualY; y++) 
+                for (int y = -yOffset; y < yOffset; y++) 
                 {
-                    spriteBatch.Draw(pixel, new Vector2(x * visualScale,y * visualScale), colors[y + visualY * x]);
+                    spriteBatch.Draw(pixel, new Vector2(x * visualScale, y * visualScale), colors[y + visualY * x]);
+                    drawIndex++;
                 }
             }
             spriteBatch.End();
@@ -63,7 +77,7 @@ namespace GameTesting
 
         int GraphingFunction(int inputX)
         {
-            float value = (float)Math.Sin(inputX);
+            float value = inputX * inputX * 0.1f;
             return (int)value;
         }
     }

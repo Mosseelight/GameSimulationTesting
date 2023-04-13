@@ -27,9 +27,9 @@ namespace GameTesting
         }
 
 
-        public void DrawPixels(Texture2D pixel, SpriteBatch spriteBatch, GraphicsDeviceManager graphics)
+        public void DrawPixels(Texture2D pixel, SpriteBatch spriteBatch, GraphicsDeviceManager graphics, Camera camera)
         {
-            spriteBatch.Begin();
+            spriteBatch.Begin(transformMatrix: camera.GetViewMatrix(graphics));
             for (int x = 0; x < visualX; x++)
             {
                 for (int y = 0; y < visualY; y++) 
