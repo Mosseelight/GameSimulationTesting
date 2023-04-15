@@ -25,6 +25,7 @@ namespace GameTesting
         NeuralNetworkHandlerWord nerualNetworkWords = new NeuralNetworkHandlerWord();
         MandelBrotHandler mandelBrot = new MandelBrotHandler();
         Grapher grapher = new Grapher();
+        PathFinderHandler pathFinder = new PathFinderHandler();
 
         Texture2D circle;
         Texture2D arrow;
@@ -38,6 +39,7 @@ namespace GameTesting
         bool runNerualNetworkWordSim = false;
         bool runMandelBrotSim = false;
         bool runGraphSim = false;
+        bool runPathSim = false;
         bool Initializer = false;
 
 
@@ -121,6 +123,13 @@ namespace GameTesting
                     grapher.RunGraph();
                     Console.WriteLine("pressed 6");
                 }
+                if(Keyboard.GetState().IsKeyDown(Keys.D7) && !runPathSim)
+                {
+                    runPathSim = true;
+                    Initializer = true;
+                    pathFinder.initPF(_graphics);
+                    Console.WriteLine("pressed 7");
+                }
             }
 
             // TODO: Add your update logic here
@@ -176,6 +185,10 @@ namespace GameTesting
             if(runGraphSim)
             {
                 grapher.DrawPixels(pixel, spriteBatch, _graphics, camera);
+            }
+            if(runPathSim)
+            {
+                pathFinder.Draw(pixel, spriteBatch, _graphics);
             }
 
             base.Draw(gameTime);
