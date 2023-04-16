@@ -127,7 +127,8 @@ namespace GameTesting
                 {
                     runPathSim = true;
                     Initializer = true;
-                    pathFinder.initPF(_graphics);
+                    pathFinder.InitPF(_graphics);
+                    pathFinder.RunPathFinder();
                     Console.WriteLine("pressed 7");
                 }
             }
