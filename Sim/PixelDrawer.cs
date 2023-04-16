@@ -37,7 +37,7 @@ namespace GameTesting
             {
                 for (int y = 0; y < visualY; y++) 
                 {
-                    spriteBatch.Draw(pixel, new Vector2(x * visualScale, y * visualScale), colors[y + visualY * x]);
+                    spriteBatch.Draw(pixel, new Vector2(x * visualScale, y * visualScale), null, colors[y + visualY * x], 0, Vector2.Zero, new Vector2(visualScale, visualScale), SpriteEffects.None, 0f);
                     drawIndex++;
                 }
             }

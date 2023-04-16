@@ -1,5 +1,5 @@
 using System;
-using System.Linq;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -14,13 +14,13 @@ namespace GameTesting
         int endPIndex;
 
         List<int> checkedCells = new List<int>();
-        int parentIndex = 0;
+        int parentIndex = 1;
         bool foundEnd = false;
 
         public void InitPF(GraphicsDeviceManager graphics)
         {
             pixelDrawer = new PixelDrawer();
-            pixelDrawer.visualScale = 10;
+            pixelDrawer.visualScale = 3;
             pixelDrawer.InitDrawer(graphics);
             startPIndex = new Random().Next(0, pixelDrawer.colors.Length - 1);
             endPIndex = new Random().Next(0, pixelDrawer.colors.Length - 1);
@@ -41,32 +41,31 @@ namespace GameTesting
         // -1 on y goes down
         // +1 on y goes up
 
-        public void RunPathFinder()
+        public async void RunPathFinder()
         {
             parentIndex = startPIndex;
             //start of check
-            int c = 1;
-            while (foundEnd == false)
+            for (int c = 1; !foundEnd; c++)
             {
                 int indexToCheck = 0;
                 for (int i = 0; i < 4; i++)
                 {
-                    if (i == 0)
+                    if (i == 1)
                     {
                         //left
                         indexToCheck = ((parentIndex) - pixelDrawer.yOffset * 2);
                     }
-                    if (i == 1)
+                    if (i == 2)
                     {
                         //right
                         indexToCheck = ((parentIndex) + pixelDrawer.yOffset * 2);
                     }
-                    if (i == 2)
+                    if (i == 3)
                     {
                         //down
                         indexToCheck = (parentIndex + 1);
                     }
-                    if (i == 3)
+                    if (i == 0)
                     {
                         //up
                         indexToCheck = (parentIndex - 1);
@@ -82,12 +81,12 @@ namespace GameTesting
                         checkedCells.Add(indexToCheck);
                     }
                 }
+
+                await Task.Delay(1);
+
                 parentIndex = checkedCells[c + 1];
-                c++;
             }
         }
-
-
 
         public void Draw(Texture2D pixel, SpriteBatch spriteBatch, GraphicsDeviceManager graphics)
         {
