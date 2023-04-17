@@ -21,7 +21,7 @@ namespace GameTesting
         public void InitPF(GraphicsDeviceManager graphics)
         {
             pixelDrawer = new PixelDrawer();
-            pixelDrawer.visualScale = 5;
+            pixelDrawer.visualScale = 3;
             pixelDrawer.InitDrawer(graphics);
             startPIndex = new Random().Next(0, pixelDrawer.colors.Length - 1);
             endPIndex = new Random().Next(0, pixelDrawer.colors.Length - 1);
@@ -45,7 +45,6 @@ namespace GameTesting
         public void RunPathFinder()
         {
             parentIndex = startPIndex;
-            //start of check
             for (int c = 1; !foundEnd; c++)
             {
                 int indexToCheck = 0;
@@ -68,12 +67,12 @@ namespace GameTesting
                     }
                     if (indexToCheck == endPIndex && indexToCheck < pixelDrawer.colors.Length && indexToCheck > -1)
                     {
-                        pixelDrawer.colors[indexToCheck] = new Color(0f, 0f, 0f);
+                        pixelDrawer.colors[indexToCheck] = new Color(256f, 0f, 0f);
                         foundEnd = true;
                     }
                     else if (!checkedCells.Contains(indexToCheck) && indexToCheck < pixelDrawer.colors.Length && indexToCheck > -1)
                     {
-                        pixelDrawer.colors[indexToCheck] = new Color(0.1f, 0.5f, 0.1f);
+                        pixelDrawer.colors[indexToCheck] = new Color(checkedCells.Count / (pixelDrawer.xOffset * pixelDrawer.visualScale), checkedCells.Count / (pixelDrawer.xOffset * pixelDrawer.visualScale), checkedCells.Count / (pixelDrawer.xOffset * pixelDrawer.visualScale));
                         checkedCells.Add(indexToCheck);
                     }
                 }
@@ -81,6 +80,12 @@ namespace GameTesting
                 //await Task.Delay(1);
                 parentIndex = checkedCells[c+1];
             }
+        }
+
+        void DrawPathEnd()
+        {
+            Vector2 endP = new Vector2(((endPIndex / pixelDrawer.xOffset * 2) * pixelDrawer.yOffset * 2 * pixelDrawer.visualScale), ((endPIndex % pixelDrawer.xOffset * 2) * pixelDrawer.visualScale));
+            Vector2 startP = new Vector2(((startPIndex / pixelDrawer.xOffset * 2) * pixelDrawer.yOffset * 2 * pixelDrawer.visualScale), ((startPIndex % pixelDrawer.xOffset * 2) * pixelDrawer.visualScale));
         }
 
         public void Draw(Texture2D pixel, SpriteBatch spriteBatch, GraphicsDeviceManager graphics)
