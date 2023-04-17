@@ -53,6 +53,9 @@ namespace GameTesting
                 {
                     switch (i)
                     {
+                        case 0:
+                            indexToCheck = (parentIndex - 1);
+                            break;
                         case 1:
                             indexToCheck = ((parentIndex) - pixelDrawer.yOffset * 2);
                             break;
@@ -61,9 +64,6 @@ namespace GameTesting
                             break;
                         case 3:
                             indexToCheck = (parentIndex + 1);
-                            break;
-                        case 0:
-                            indexToCheck = (parentIndex - 1);
                             break;
                     }
                     if (indexToCheck == endPIndex && indexToCheck < pixelDrawer.colors.Length && indexToCheck > -1)
