@@ -147,13 +147,13 @@ public class VectorFieldSim
         spriteBatch.Begin();
         for (int b = 0; b < objects.Count; b++)
         {
+            spriteBatch.Draw(circle, objects[b].pos, Color.White);
             for (int i = 0; i < vectorsPos.Length; i++)
             {
                 Vector2 origin = new Vector2(arrow.Width / 2f, arrow.Height / 2f);
                 float angle = (float)Math.Atan2(vectorsDirs[i].Y, vectorsDirs[i].X);
                 spriteBatch.Draw(arrow, vectorsPos[i], null, Color.White, angle, origin, Vector2.One, SpriteEffects.None, 0f);
             }
-            spriteBatch.Draw(circle, objects[b].pos, Color.White);
         }
         spriteBatch.End();
         CheckBounds();

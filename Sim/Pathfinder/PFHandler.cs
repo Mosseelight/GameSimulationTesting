@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
@@ -20,7 +21,7 @@ namespace GameTesting
         public void InitPF(GraphicsDeviceManager graphics)
         {
             pixelDrawer = new PixelDrawer();
-            pixelDrawer.visualScale = 3;
+            pixelDrawer.visualScale = 5;
             pixelDrawer.InitDrawer(graphics);
             startPIndex = new Random().Next(0, pixelDrawer.colors.Length - 1);
             endPIndex = new Random().Next(0, pixelDrawer.colors.Length - 1);
@@ -41,7 +42,7 @@ namespace GameTesting
         // -1 on y goes down
         // +1 on y goes up
 
-        public async void RunPathFinder()
+        public void RunPathFinder()
         {
             parentIndex = startPIndex;
             //start of check
@@ -50,25 +51,20 @@ namespace GameTesting
                 int indexToCheck = 0;
                 for (int i = 0; i < 4; i++)
                 {
-                    if (i == 1)
+                    switch (i)
                     {
-                        //left
-                        indexToCheck = ((parentIndex) - pixelDrawer.yOffset * 2);
-                    }
-                    if (i == 2)
-                    {
-                        //right
-                        indexToCheck = ((parentIndex) + pixelDrawer.yOffset * 2);
-                    }
-                    if (i == 3)
-                    {
-                        //down
-                        indexToCheck = (parentIndex + 1);
-                    }
-                    if (i == 0)
-                    {
-                        //up
-                        indexToCheck = (parentIndex - 1);
+                        case 1:
+                            indexToCheck = ((parentIndex) - pixelDrawer.yOffset * 2);
+                            break;
+                        case 2:
+                            indexToCheck = ((parentIndex) + pixelDrawer.yOffset * 2);
+                            break;
+                        case 3:
+                            indexToCheck = (parentIndex + 1);
+                            break;
+                        case 0:
+                            indexToCheck = (parentIndex - 1);
+                            break;
                     }
                     if (indexToCheck == endPIndex && indexToCheck < pixelDrawer.colors.Length && indexToCheck > -1)
                     {
@@ -82,9 +78,8 @@ namespace GameTesting
                     }
                 }
 
-                await Task.Delay(1);
-
-                parentIndex = checkedCells[c + 1];
+                //await Task.Delay(1);
+                parentIndex = checkedCells[c+1];
             }
         }
 
