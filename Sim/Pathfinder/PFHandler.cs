@@ -56,10 +56,10 @@ namespace GameTesting
                             indexToCheck = (parentIndex - 1);
                             break;
                         case 1:
-                            indexToCheck = ((parentIndex) - pixelDrawer.yOffset * 2);
+                            indexToCheck = ((parentIndex) - pixelDrawer.yTotal);
                             break;
                         case 2:
-                            indexToCheck = ((parentIndex) + pixelDrawer.yOffset * 2);
+                            indexToCheck = ((parentIndex) + pixelDrawer.yTotal);
                             break;
                         case 3:
                             indexToCheck = (parentIndex + 1);
@@ -84,8 +84,8 @@ namespace GameTesting
 
         void DrawPathEnd()
         {
-            Vector2 endP = new Vector2(((endPIndex / pixelDrawer.xOffset * 2) * pixelDrawer.yOffset * 2 * pixelDrawer.visualScale), ((endPIndex % pixelDrawer.xOffset * 2) * pixelDrawer.visualScale));
-            Vector2 startP = new Vector2(((startPIndex / pixelDrawer.xOffset * 2) * pixelDrawer.yOffset * 2 * pixelDrawer.visualScale), ((startPIndex % pixelDrawer.xOffset * 2) * pixelDrawer.visualScale));
+            Vector2 endP = new Vector2(((endPIndex / pixelDrawer.xTotal) * pixelDrawer.yTotal * pixelDrawer.visualScale), ((endPIndex % pixelDrawer.xTotal) * pixelDrawer.visualScale));
+            Vector2 startP = new Vector2(((startPIndex / pixelDrawer.xTotal) * pixelDrawer.yTotal * pixelDrawer.visualScale), ((startPIndex % pixelDrawer.xTotal) * pixelDrawer.visualScale));
         }
 
         public void Draw(Texture2D pixel, SpriteBatch spriteBatch, GraphicsDeviceManager graphics)

@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -13,15 +14,19 @@ namespace GameTesting
 
 
         public int xOffset;
+        public int xTotal;
         public int yOffset;
+        public int yTotal;
         int drawIndex = 0;
 
 
         public void InitDrawer(GraphicsDeviceManager graphics)
         {
             visualX = graphics.PreferredBackBufferWidth / visualScale;
+            xTotal = graphics.PreferredBackBufferWidth / visualScale;
             xOffset = visualX / 2;
             visualY = graphics.PreferredBackBufferHeight / visualScale;
+            yTotal = graphics.PreferredBackBufferHeight / visualScale;
             yOffset = visualY / 2;
             colors = new Color[visualX * visualY];
             for (int i = 0; i < colors.Length; i++)

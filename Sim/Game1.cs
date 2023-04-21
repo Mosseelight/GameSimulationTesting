@@ -26,6 +26,7 @@ namespace GameTesting
         MandelBrotHandler mandelBrot = new MandelBrotHandler();
         Grapher grapher = new Grapher();
         PathFinderHandler pathFinder = new PathFinderHandler();
+        RayTracerHandler rayTracer = new RayTracerHandler();
 
         Texture2D circle;
         Texture2D arrow;
@@ -40,6 +41,7 @@ namespace GameTesting
         bool runMandelBrotSim = false;
         bool runGraphSim = false;
         bool runPathSim = false;
+        bool runRayTracerSim = false;
         bool Initializer = false;
 
 
@@ -131,6 +133,14 @@ namespace GameTesting
                     pathFinder.RunPathFinder();
                     Console.WriteLine("pressed 7");
                 }
+                if(Keyboard.GetState().IsKeyDown(Keys.D8) && !runRayTracerSim)
+                {
+                    runRayTracerSim = true;
+                    Initializer = true;
+                    rayTracer.InitRayTracer(_graphics);
+                    Console.WriteLine("pressed 8");
+                
+                }
             }
 
             // TODO: Add your update logic here
@@ -190,6 +200,10 @@ namespace GameTesting
             if(runPathSim)
             {
                 pathFinder.Draw(pixel, spriteBatch, _graphics);
+            }
+            if(runRayTracerSim)
+            {
+                rayTracer.Draw(pixel, spriteBatch, _graphics);
             }
 
             base.Draw(gameTime);
