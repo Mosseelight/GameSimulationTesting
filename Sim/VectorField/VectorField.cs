@@ -144,7 +144,9 @@ public class VectorFieldSim
 
     public void DrawSim(Texture2D circle, Texture2D arrow, SpriteBatch spriteBatch, GraphicsDeviceManager graphics, SpriteFont font)
     {
+        Vector2 textMiddlePos = font.MeasureString("Total: " + objects.Count) / 2;
         spriteBatch.Begin();
+        spriteBatch.DrawString(font, "Total: " + objects.Count.ToString("N01"), new Vector2(textMiddlePos.X + 40, 1000), Color.Black, 0, textMiddlePos, 1.5f, SpriteEffects.None, 0.5f);
         for (int b = 0; b < objects.Count; b++)
         {
             spriteBatch.Draw(circle, objects[b].pos, Color.White);
@@ -161,7 +163,7 @@ public class VectorFieldSim
 
     public Vector2 CalculateVectorValue(float x, float y)
     {
-        Vector2 result = new Vector2(1/x, 1/y);
+        Vector2 result = new Vector2(-y * 500,x * 500);
         return result;
     }
 }
