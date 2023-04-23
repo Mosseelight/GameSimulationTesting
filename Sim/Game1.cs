@@ -27,6 +27,7 @@ namespace GameTesting
         Grapher grapher = new Grapher();
         PathFinderHandler pathFinder = new PathFinderHandler();
         RayTracerHandler rayTracer = new RayTracerHandler();
+        ReflectorHandler reflector = new ReflectorHandler();
 
         Texture2D circle;
         Texture2D arrow;
@@ -42,6 +43,7 @@ namespace GameTesting
         bool runGraphSim = false;
         bool runPathSim = false;
         bool runRayTracerSim = false;
+        bool runReflectorSim = false;
         bool Initializer = false;
 
 
@@ -139,7 +141,14 @@ namespace GameTesting
                     Initializer = true;
                     rayTracer.InitRayTracer(_graphics);
                     Console.WriteLine("pressed 8");
-                
+                }
+                if(Keyboard.GetState().IsKeyDown(Keys.D9) && !runReflectorSim)
+                {
+                    runReflectorSim = true;
+                    Initializer = true;
+                    reflector.InitReflector(_graphics);
+                    reflector.DrawReflectorLine();
+                    Console.WriteLine("pressed 9");
                 }
             }
 
@@ -204,6 +213,10 @@ namespace GameTesting
             if(runRayTracerSim)
             {
                 rayTracer.Draw(pixel, spriteBatch, _graphics);
+            }
+            if(runReflectorSim)
+            {
+                reflector.Draw(pixel, spriteBatch, _graphics);
             }
 
             base.Draw(gameTime);

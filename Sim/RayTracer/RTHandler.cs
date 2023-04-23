@@ -13,7 +13,7 @@ namespace GameTesting
         {
             PhyObject pObject = new PhyObject();
             pObject.radius = 100;
-            pixelDrawer.visualScale = 1;
+            pixelDrawer.visualScale = 5;
             pixelDrawer.InitDrawer(graphics);
             pObject.position = new Vector3(pixelDrawer.xOffset, pixelDrawer.yOffset, 0);
             for (int x = 0; x < pixelDrawer.xTotal; x++)

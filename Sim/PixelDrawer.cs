@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -32,6 +33,27 @@ namespace GameTesting
             for (int i = 0; i < colors.Length; i++)
             {
                 colors[i] = new Color(256f, 256f, 256f);
+            }
+        }
+
+        public void LineDrawer(Vector2 lineDir, int lineLength, Vector2 lineOrigin, Color lineColor, int[] stopList)
+        {
+            Vector2 linePos;
+            linePos = lineOrigin;
+            for (int i = 0; i < lineLength; i++)
+            {
+                int index = (yTotal * (int)linePos.X) + (int)linePos.Y;
+                colors[index] = lineColor;
+                linePos += lineDir;
+                if(!stopList.Contains(index + yTotal))
+                {
+                    colors[index] = lineColor;
+                    linePos += lineDir;
+                }
+                else 
+                {
+                    break;
+                }
             }
         }
 
