@@ -71,7 +71,7 @@ namespace GameTesting
 
             circle = this.Content.Load<Texture2D>("circle");
             arrow = this.Content.Load<Texture2D>("arrow");
-            font = this.Content.Load<SpriteFont>("arial.ttf");
+            font = this.Content.Load<SpriteFont>("Arial");
             pixel = this.Content.Load<Texture2D>("pixel");
         }
 
