@@ -22,9 +22,9 @@ public class NeuralNetworkHandlerVisual
     float[][] weights;
 
     int visualX;
-    int visualScaleX = 5;
+    int visualScaleX = 4;
     int visualY;
-    int visualScaleY = 5;
+    int visualScaleY = 4;
     Color[] colors;
     int saveCount = 1;
 
@@ -140,6 +140,18 @@ public class NeuralNetworkHandlerVisual
                     if(l == 1 + hiddenLayerAmount)
                     {
                         values[l][0] *= 255;
+                        if(values[l][0] < 85)
+                        {
+                            colors[y + visualY * x] = new Color(0,0,(int)values[l][0] * 2);
+                        }
+                        if(values[l][0] > 85 && values[l][0] < 170)
+                        {
+                            colors[y + visualY * x] = new Color(0,(int)values[l][0] * 2,0);
+                        }
+                        if(values[l][0] > 170)
+                        {
+                            colors[y + visualY * x] = new Color((int)values[l][0] * 2,0,0);
+                        }
                         colors[y + visualY * x] = new Color((int)values[l][0],(int)values[l][0],(int)values[l][0]);
                     }
                     else
@@ -151,6 +163,7 @@ public class NeuralNetworkHandlerVisual
         }
     }
 
+    /*
     public void TrainNueralNetwork()
     {
         for (int x = 0; x < visualX; x++)
@@ -168,7 +181,18 @@ public class NeuralNetworkHandlerVisual
 
 
                         values[l][0] *= 255;
-                        colors[y + visualY * x] = new Color((int)values[l][0],(int)values[l][0],(int)values[l][0]);
+                        if(values[l][0] < 85)
+                        {
+                            colors[y + visualY * x] = new Color(0f,0f,values[l][0]);
+                        }
+                        if(values[l][0] > 85 && values[l][0] < 170)
+                        {
+                            colors[y + visualY * x] = new Color(0f,(int)values[l][0],0f);
+                        }
+                        if(values[l][0] > 170)
+                        {
+                            colors[y + visualY * x] = new Color((int)values[l][0],0f,0f);
+                        }
                     }
                     else
                     {
@@ -178,6 +202,7 @@ public class NeuralNetworkHandlerVisual
             }
         }
     }
+    */
 
     public void HandleInput()
     {
