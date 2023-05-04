@@ -10,7 +10,7 @@ namespace GameTesting
 
         PixelDrawer pixelDrawer = new PixelDrawer();
         int[] wallCells;
-        int relfections = 1;
+        int relfections = 2;
 
         public void InitReflector(GraphicsDeviceManager graphics)
         {
@@ -46,8 +46,8 @@ namespace GameTesting
                     }
                     else 
                     {
-                        lineDir = new Vector2(0.5f,0.5f);
-                        lineOrigin = new Vector2(40, 30);
+                        lineDir = new Vector2(0.5f, 0.5f);
+                        lineOrigin = linePos - Vector2.One;
                         hitReflectorCell = true;
                     }
                 }
