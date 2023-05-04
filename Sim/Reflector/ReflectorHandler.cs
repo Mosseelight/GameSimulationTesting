@@ -10,7 +10,7 @@ namespace GameTesting
 
         PixelDrawer pixelDrawer = new PixelDrawer();
         int[] wallCells;
-        int relfections = 2;
+        int relfections = 1;
 
         public void InitReflector(GraphicsDeviceManager graphics)
         {
@@ -27,26 +27,28 @@ namespace GameTesting
 
         public void DrawReflectorLine()
         {
-            Vector2 lineOrigin = Vector2.Zero;
+            Vector2 lineOrigin = new Vector2(50, 20);
             Vector2 lineDir = new Vector2(0.5f,0.5f);
             Vector2 linePos;
-            linePos = lineOrigin;
+            bool hitReflectorCell;
             for (int r = 0; r < relfections; r++)
             {
-                while(true)
+                hitReflectorCell = false;
+                linePos = lineOrigin;
+                while(!hitReflectorCell)
                 {
                     int index = (pixelDrawer.yTotal * (int)linePos.X) + (int)linePos.Y;
-                    pixelDrawer.colors[index] = Color.Green;
                     linePos += lineDir;
-                    if(!wallCells.Contains(index + (pixelDrawer.yTotal * r)))
+                    if(!wallCells.Contains(index))
                     {
                         pixelDrawer.colors[index] = Color.Green;
                         linePos += lineDir;
                     }
                     else 
                     {
-                        lineDir = new Vector2(-1f, 0f);
-                        break;
+                        lineDir = new Vector2(0.5f,0.5f);
+                        lineOrigin = new Vector2(40, 30);
+                        hitReflectorCell = true;
                     }
                 }
             }

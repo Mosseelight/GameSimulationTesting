@@ -155,6 +155,10 @@ public class VectorFieldSim
                 Vector2 origin = new Vector2(arrow.Width / 2f, arrow.Height / 2f);
                 float angle = (float)Math.Atan2(vectorsDirs[i].Y, vectorsDirs[i].X);
                 spriteBatch.Draw(arrow, vectorsPos[i], null, Color.White, angle, origin, Vector2.One, SpriteEffects.None, 0f);
+                if(i == vectorsPos.Length - 1)
+                {
+                    spriteBatch.Draw(arrow, vectorsPos[i], null, Color.White, 0, origin, Vector2.One, SpriteEffects.None, 0f);
+                }
             }
         }
         spriteBatch.End();
@@ -163,7 +167,7 @@ public class VectorFieldSim
 
     public Vector2 CalculateVectorValue(float x, float y)
     {
-        Vector2 result = new Vector2(-y * 500,x * 500);
+        Vector2 result = new Vector2(x,y);
         return result;
     }
 }

@@ -22,11 +22,12 @@ public class NeuralNetworkHandlerVisual
     float[][] weights;
 
     int visualX;
-    int visualScaleX = 4;
+    int visualScaleX = 3;
     int visualY;
-    int visualScaleY = 4;
+    int visualScaleY = 3;
     Color[] colors;
     int saveCount = 1;
+    int xyCount = 0;
 
     NeuralNetworkForwardPropogation neuralNetworkFP = new NeuralNetworkForwardPropogation();
     bool pressedQ = false;
@@ -128,9 +129,9 @@ public class NeuralNetworkHandlerVisual
 
     public void RunNerualNetwork()
     {
-        for (int x = 0; x < visualX; x++)
+        for (int x = -visualX / 2; x < visualX / 2; x++)
         {
-            for (int y = 0; y < visualY; y++)
+            for (int y = -visualY / 2; y < visualY / 2; y++)
             {
                 values[0][0] = x / inputScaleX;
                 values[0][1] = y / inputScaleY;
@@ -140,27 +141,29 @@ public class NeuralNetworkHandlerVisual
                     if(l == 1 + hiddenLayerAmount)
                     {
                         values[l][0] *= 255;
-                        if(values[l][0] < 85)
+                        colors[xyCount] = new Color((int)values[l][0],(int)values[l][0],(int)values[l][0]);
+                        /*if(values[l][0] < 85)
                         {
-                            colors[y + visualY * x] = new Color(0,0,(int)values[l][0] * 2);
+                            colors[xyCount] = new Color(0,0,(int)values[l][0] * 2);
                         }
                         if(values[l][0] > 85 && values[l][0] < 170)
                         {
-                            colors[y + visualY * x] = new Color(0,(int)values[l][0] * 2,0);
+                            colors[xyCount] = new Color(0,(int)values[l][0] * 2,0);
                         }
                         if(values[l][0] > 170)
                         {
-                            colors[y + visualY * x] = new Color((int)values[l][0] * 2,0,0);
-                        }
-                        colors[y + visualY * x] = new Color((int)values[l][0],(int)values[l][0],(int)values[l][0]);
+                            colors[xyCount] = new Color((int)values[l][0] * 2,0,0);
+                        }*/
                     }
                     else
                     {
                         values[l + 1] = neuralNetworkFP.CalculateOutput(nodeAmounts[l].Length, nodeAmounts[l + 1].Length, l, values, weights, inputBias, 0.5f)[l];
                     }
                 }
+                xyCount++;
             }
         }
+        xyCount = 0;
     }
 
     /*
