@@ -80,7 +80,6 @@ namespace GameTesting
             int rightIndex = pIndex + pixelDrawer.yTotal;
             int upIndex = pIndex - 1;
             int downIndex = pIndex + 1;
-            Random random = new Random();
             
 
             //horizontal
