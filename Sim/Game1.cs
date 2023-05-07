@@ -139,7 +139,7 @@ namespace GameTesting
                 {
                     runRayTracerSim = true;
                     Initializer = true;
-                    rayTracer.InitRayTracer(_graphics);
+                    rayTracer.InitRenderer(_graphics);
                     Console.WriteLine("pressed 8");
                 }
                 if(Keyboard.GetState().IsKeyDown(Keys.D9) && !runReflectorSim)
