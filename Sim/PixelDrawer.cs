@@ -70,5 +70,10 @@ namespace GameTesting
             }
             spriteBatch.End();
         }
+
+        public Vector2 GetPosOnIndex(int index)
+        {
+            return new Vector2((float)Math.Floor((double)((index % yTotal) * visualScale)), (float)Math.Floor((double)((index / yTotal) * visualScale)));
+        }
     }
 }
