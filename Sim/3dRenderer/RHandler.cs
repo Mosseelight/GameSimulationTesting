@@ -31,6 +31,9 @@ namespace GameTesting
 
         opencl for gpu acceleration
 
+        put vertexs into a array of 3 in the triangle
+        so can access in loops
+
         */
 
 
@@ -43,17 +46,11 @@ namespace GameTesting
             pixelDrawer.visualScale = 3;
             pixelDrawer.InitDrawer(graphics);
 
-            triangle = new Triangle(new Vertex(new Vector3(0, 0, 0), new Vector3(1, 1, 1), Color.Black), new Vertex(new Vector3(50 * pixelDrawer.visualScale, 100 * pixelDrawer.visualScale, 0), new Vector3(1, 1, 1), Color.Black), new Vertex(new Vector3(100 * pixelDrawer.visualScale, 50 * pixelDrawer.visualScale, 0), new Vector3(1, 1, 1), Color.Black));
+            triangle = new Triangle(new Vertex(new Vector3(500, 500, 0), new Vector3(1, 1, 1), Color.Black), new Vertex(new Vector3(000, 500, 0), new Vector3(1, 1, 1), Color.Black), new Vertex(new Vector3(500, 1000, 0), new Vector3(1, 1, 1), Color.Black));
         }
 
         public void Draw(Texture2D pixel, SpriteBatch spriteBatch, GraphicsDeviceManager graphics)
         {
-            triangle.verLeft.position.X++;
-            triangle.verRight.position.X++;
-            triangle.verTop.position.X++;
-            triangle.verLeft.position.Y++;
-            triangle.verRight.position.Y++;
-            triangle.verTop.position.Y++;
             Rasterization();
             pixelDrawer.DrawPixels(pixel, spriteBatch, graphics);
             for (int i = 0; i < pixelDrawer.colors.Length; i++)
