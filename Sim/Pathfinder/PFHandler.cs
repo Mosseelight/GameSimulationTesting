@@ -15,7 +15,7 @@ namespace GameTesting
         int endPIndex;
 
         List<int> checkedCells = new List<int>();
-        int parentIndex = 1;
+        int parentIndex = 3;
         bool foundEnd = false;
 
         public void InitPF(GraphicsDeviceManager graphics)
@@ -80,12 +80,6 @@ namespace GameTesting
                 //await Task.Delay(1);
                 parentIndex = checkedCells[c+1];
             }
-        }
-
-        void DrawPathEnd()
-        {
-            Vector2 endP = new Vector2(((endPIndex / pixelDrawer.xTotal) * pixelDrawer.yTotal * pixelDrawer.visualScale), ((endPIndex % pixelDrawer.xTotal) * pixelDrawer.visualScale));
-            Vector2 startP = new Vector2(((startPIndex / pixelDrawer.xTotal) * pixelDrawer.yTotal * pixelDrawer.visualScale), ((startPIndex % pixelDrawer.xTotal) * pixelDrawer.visualScale));
         }
 
         public void Draw(Texture2D pixel, SpriteBatch spriteBatch, GraphicsDeviceManager graphics)
