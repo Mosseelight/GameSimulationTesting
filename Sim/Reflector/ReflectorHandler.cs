@@ -57,7 +57,7 @@ namespace GameTesting
                     else 
                     {
                         lineOrigin = linePos - new Vector2((float)Math.Ceiling(lineDir.X), (float)Math.Ceiling(lineDir.Y));
-                        lineDir = ReturnSrufaceDirection(lineDir, GetPosOnIndex(index), index);
+                        lineDir = ReturnSrufaceDirection(lineDir, pixelDrawer.GetPosOnIndex(index), index);
                         hitReflectorCell = true;
                     }
                     await Task.Delay(1);
@@ -92,11 +92,6 @@ namespace GameTesting
             {
                 return new Vector2(-dir.X, dir.Y);
             }
-        }
-
-        Vector2 GetPosOnIndex(int index)
-        {
-            return new Vector2(((index / pixelDrawer.xTotal) * pixelDrawer.yTotal * pixelDrawer.visualScale), ((index % pixelDrawer.xTotal) * pixelDrawer.visualScale));
         }
 
         public void Draw(Texture2D pixel, SpriteBatch spriteBatch, GraphicsDeviceManager graphics)
