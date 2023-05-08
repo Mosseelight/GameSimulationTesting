@@ -20,14 +20,14 @@ namespace GameTesting
     public class Triangle
     {
         public Vertex verLeft; //left point
-        public Vertex verTop; // top point
         public Vertex verRight; // right point
+        public Vertex verTop; // top point
 
-        public Triangle(Vertex _verLeft, Vertex _verTop, Vertex _verRight)
+        public Triangle(Vertex _verLeft, Vertex _verRight, Vertex _verTop)
         {
             verLeft = _verLeft;
-            verTop = _verTop;
             verRight = _verRight;
+            verTop = _verTop;
         }
 
         public bool ContainsPoint(Vector2 point)
