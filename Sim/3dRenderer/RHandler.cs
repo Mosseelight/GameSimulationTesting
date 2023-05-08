@@ -18,7 +18,7 @@ namespace GameTesting
         switch to z-buffer
 
         3. fragment shading
-        idk??
+        idk?? put sin on colors or something
 
         4. output
         under 20ms render time
