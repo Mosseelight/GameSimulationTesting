@@ -38,21 +38,33 @@ namespace GameTesting
 
 
         PixelDrawer pixelDrawer = new PixelDrawer();
+        Camera camera;
 
-        Triangle triangle;
+        Triangle[] triangle = new Triangle[2];
 
         public void InitRenderer(GraphicsDeviceManager graphics)
         {
             pixelDrawer.visualScale = 3;
             pixelDrawer.InitDrawer(graphics);
 
-            triangle = new Triangle(new Vertex(new Vector3(500, 500, 0), new Vector3(1, 1, 1), Color.Black), new Vertex(new Vector3(000, 500, 0), new Vector3(1, 1, 1), Color.Black), new Vertex(new Vector3(500, 1000, 0), new Vector3(1, 1, 1), Color.Black));
+            camera = new Camera(new Vector2(pixelDrawer.xOffset * pixelDrawer.visualScale, pixelDrawer.yOffset * pixelDrawer.visualScale), 1);
+
+            triangle[0] = new Triangle(new Vertex(new Vector3(0, 0, 0), new Vector3(1, 1, 1), Color.Black), new Vertex(new Vector3(0, 500, 0), new Vector3(1, 1, 1), Color.Black), new Vertex(new Vector3(500, 500, 0), new Vector3(1, 1, 1), Color.Black));
+            triangle[1] = new Triangle(new Vertex(new Vector3(0, 0, 0), new Vector3(1, 1, 1), Color.Black), new Vertex(new Vector3(500, 0, 0), new Vector3(1, 1, 1), Color.Black), new Vertex(new Vector3(500, 500, 0), new Vector3(1, 1, 1), Color.Black));
         }
 
         public void Draw(Texture2D pixel, SpriteBatch spriteBatch, GraphicsDeviceManager graphics)
         {
             Rasterization();
-            pixelDrawer.DrawPixels(pixel, spriteBatch, graphics);
+            spriteBatch.Begin(transformMatrix: camera.GetViewMatrix(graphics));
+            for (int x = 0; x < pixelDrawer.xTotal; x++)
+            {
+                for (int y = 0; y < pixelDrawer.yTotal; y++) 
+                {
+                    spriteBatch.Draw(pixel, new Vector2(x * pixelDrawer.visualScale, y * pixelDrawer.visualScale), null, pixelDrawer.colors[y + pixelDrawer.yTotal * x], 0, Vector2.Zero, new Vector2(pixelDrawer.visualScale, pixelDrawer.visualScale), SpriteEffects.None, 0f);
+                }
+            }
+            spriteBatch.End();
             for (int i = 0; i < pixelDrawer.colors.Length; i++)
             {
                 pixelDrawer.colors[i] = Color.White;
@@ -66,14 +78,24 @@ namespace GameTesting
 
         void Rasterization()
         {
-            for (int x = 0; x < pixelDrawer.xTotal; x++)
+            for (int i = 0; i < triangle.Length; i++)
             {
-                for (int y = 0; y < pixelDrawer.yTotal; y++)
+                for (int x = 0; x < pixelDrawer.xTotal; x++)
                 {
-                    Vector2 pos = pixelDrawer.GetPosOnIndex(y + pixelDrawer.yTotal * x);
-                    if(triangle.ContainsPoint(pos))
+                    for (int y = 0; y < pixelDrawer.yTotal; y++)
                     {
-                        pixelDrawer.colors[y + pixelDrawer.yTotal * x] = Color.Black;
+                        Vector2 pos = pixelDrawer.GetPosOnIndex(y + pixelDrawer.yTotal * x);
+                        if(triangle[i].ContainsPoint(pos))
+                        {
+                            if(i == 0)
+                            {
+                                pixelDrawer.colors[y + pixelDrawer.yTotal * x] = Color.Red;
+                            }
+                            else
+                            {
+                                pixelDrawer.colors[y + pixelDrawer.yTotal * x] = Color.Green;
+                            }
+                        }
                     }
                 }
             }

@@ -22,6 +22,7 @@ namespace GameTesting
         public Vertex verLeft; //left point
         public Vertex verRight; // right point
         public Vertex verTop; // top point
+        
 
         public Triangle(Vertex _verLeft, Vertex _verRight, Vertex _verTop)
         {
