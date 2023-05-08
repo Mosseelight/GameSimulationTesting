@@ -18,7 +18,6 @@ namespace GameTesting
         public int xTotal;
         public int yOffset;
         public int yTotal;
-        int drawIndex = 0;
 
 
         public void InitDrawer(GraphicsDeviceManager graphics)
@@ -65,7 +64,6 @@ namespace GameTesting
                 for (int y = 0; y < visualY; y++) 
                 {
                     spriteBatch.Draw(pixel, new Vector2(x * visualScale, y * visualScale), null, colors[y + visualY * x], 0, Vector2.Zero, new Vector2(visualScale, visualScale), SpriteEffects.None, 0f);
-                    drawIndex++;
                 }
             }
             spriteBatch.End();

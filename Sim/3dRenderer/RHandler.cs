@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -11,11 +12,22 @@ namespace GameTesting
         /*
         
         1. vertex shader
+        get the projection done
+
         2. rasterization
+        switch to z-buffer
+
         3. fragment shading
+        idk??
+
         4. output
+        under 20ms render time
+
 
         https://en.wikipedia.org/wiki/Graphics_pipeline
+
+        https://en.wikipedia.org/wiki/Z-buffering
+        Switch to this for drawing the pixels
 
         opencl for gpu acceleration
 
@@ -28,7 +40,7 @@ namespace GameTesting
 
         public void InitRenderer(GraphicsDeviceManager graphics)
         {
-            pixelDrawer.visualScale = 1;
+            pixelDrawer.visualScale = 3;
             pixelDrawer.InitDrawer(graphics);
 
             triangle = new Triangle(new Vertex(new Vector3(0, 0, 0), new Vector3(1, 1, 1), Color.Black), new Vertex(new Vector3(50 * pixelDrawer.visualScale, 100 * pixelDrawer.visualScale, 0), new Vector3(1, 1, 1), Color.Black), new Vertex(new Vector3(100 * pixelDrawer.visualScale, 50 * pixelDrawer.visualScale, 0), new Vector3(1, 1, 1), Color.Black));
