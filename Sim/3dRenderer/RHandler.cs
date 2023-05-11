@@ -39,11 +39,16 @@ namespace GameTesting
 
         PixelDrawer pixelDrawer = new PixelDrawer();
         Camera camera;
-        Matrix projectionMat;
+        Matrix perspectiveMat;
+        float fov = 45;
+        float nearValue = 0.1f;
+        float farValue = 1000000000000;
+
         Matrix viewMat;
         Matrix worldMat;
+        Matrix projectMat;
 
-        Triangle[] triangle = new Triangle[4];
+        Triangle[] triangle = new Triangle[2];
 
         public void InitRenderer(GraphicsDeviceManager graphics)
         {
@@ -51,12 +56,11 @@ namespace GameTesting
             pixelDrawer.InitDrawer(graphics);
 
             camera = new Camera(new Vector3(0, 0, -10), Vector3.Zero, 1);
+            perspectiveMat = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(fov), pixelDrawer.xTotal / pixelDrawer.yTotal, nearValue, farValue);
 
-            triangle[0] = new Triangle(new Vertex(new Vector3(0, 0, -10), Vector3.One, Color.Black), new Vertex(new Vector3(0, 10, -10), Vector3.One, Color.Black), new Vertex(new Vector3(10, 10, -10), Vector3.One, Color.Black));
-            triangle[1] = new Triangle(new Vertex(new Vector3(0, 0, -10), Vector3.One, Color.Black), new Vertex(new Vector3(10, 0, -10), Vector3.One, Color.Black), new Vertex(new Vector3(10, 10, -10), Vector3.One, Color.Black));
+            triangle[0] = new Triangle(new Vertex(new Vector3(0, 0, 5), Vector3.One, Color.Black), new Vertex(new Vector3(0, 1, 5), Vector3.One, Color.Black), new Vertex(new Vector3(1, 1, 5), Vector3.One, Color.Black));
+            triangle[1] = new Triangle(new Vertex(new Vector3(0, 0, 5), Vector3.One, Color.Black), new Vertex(new Vector3(1, 0, 5), Vector3.One, Color.Black), new Vertex(new Vector3(1, 1, 5), Vector3.One, Color.Black));
 
-            triangle[2] = new Triangle(new Vertex(new Vector3(10, 0, -10), Vector3.One, Color.Black), new Vertex(new Vector3(10, 0, -20), Vector3.One, Color.Black), new Vertex(new Vector3(10, 10, -20), Vector3.One, Color.Black));
-            triangle[3] = new Triangle(new Vertex(new Vector3(10, 0, -10), Vector3.One, Color.Black), new Vertex(new Vector3(10, 10, -10), Vector3.One, Color.Black), new Vertex(new Vector3(10, 10, -20), Vector3.One, Color.Black));
         }
 
         public void Draw(Texture2D pixel, SpriteBatch spriteBatch, GraphicsDeviceManager graphics)
@@ -76,7 +80,10 @@ namespace GameTesting
             {
                 for (int v = 0; v < 3; v++)
                 {
-                    
+                    Vector4 vertexPos = new Vector4(triangle[i].vertices[v].position, 1);
+                    vertexPos = Vector4.Transform(vertexPos, perspectiveMat);
+                    vertexPos = new Vector4(vertexPos.X / vertexPos.W, vertexPos.Y / vertexPos.W, vertexPos.Z / vertexPos.W, vertexPos.W);
+                    triangle[i].vertices[v].scrPos = new Vector2(((vertexPos.X + 1)/2)*pixelDrawer.xTotal, (((vertexPos.Y * -1) + 1)/2)*pixelDrawer.yTotal);
                 }
             }
         }
