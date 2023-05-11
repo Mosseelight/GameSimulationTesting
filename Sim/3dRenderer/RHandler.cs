@@ -39,41 +39,46 @@ namespace GameTesting
 
         PixelDrawer pixelDrawer = new PixelDrawer();
         Camera camera;
+        Matrix projectionMat;
+        Matrix viewMat;
+        Matrix worldMat;
 
-        Triangle[] triangle = new Triangle[2];
+        Triangle[] triangle = new Triangle[4];
 
         public void InitRenderer(GraphicsDeviceManager graphics)
         {
             pixelDrawer.visualScale = 3;
             pixelDrawer.InitDrawer(graphics);
 
-            camera = new Camera(new Vector2(pixelDrawer.xOffset * pixelDrawer.visualScale, pixelDrawer.yOffset * pixelDrawer.visualScale), 1);
+            camera = new Camera(new Vector3(0, 0, -10), Vector3.Zero, 1);
 
-            triangle[0] = new Triangle(new Vertex(new Vector3(0, 0, 0), new Vector3(1, 1, 1), Color.Black), new Vertex(new Vector3(0, 500, 0), new Vector3(1, 1, 1), Color.Black), new Vertex(new Vector3(500, 500, 0), new Vector3(1, 1, 1), Color.Black));
-            triangle[1] = new Triangle(new Vertex(new Vector3(0, 0, 0), new Vector3(1, 1, 1), Color.Black), new Vertex(new Vector3(500, 0, 0), new Vector3(1, 1, 1), Color.Black), new Vertex(new Vector3(500, 500, 0), new Vector3(1, 1, 1), Color.Black));
+            triangle[0] = new Triangle(new Vertex(new Vector3(0, 0, -10), Vector3.One, Color.Black), new Vertex(new Vector3(0, 10, -10), Vector3.One, Color.Black), new Vertex(new Vector3(10, 10, -10), Vector3.One, Color.Black));
+            triangle[1] = new Triangle(new Vertex(new Vector3(0, 0, -10), Vector3.One, Color.Black), new Vertex(new Vector3(10, 0, -10), Vector3.One, Color.Black), new Vertex(new Vector3(10, 10, -10), Vector3.One, Color.Black));
+
+            triangle[2] = new Triangle(new Vertex(new Vector3(10, 0, -10), Vector3.One, Color.Black), new Vertex(new Vector3(10, 0, -20), Vector3.One, Color.Black), new Vertex(new Vector3(10, 10, -20), Vector3.One, Color.Black));
+            triangle[3] = new Triangle(new Vertex(new Vector3(10, 0, -10), Vector3.One, Color.Black), new Vertex(new Vector3(10, 10, -10), Vector3.One, Color.Black), new Vertex(new Vector3(10, 10, -20), Vector3.One, Color.Black));
         }
 
         public void Draw(Texture2D pixel, SpriteBatch spriteBatch, GraphicsDeviceManager graphics)
         {
+            VertexShader(graphics);
             Rasterization();
-            spriteBatch.Begin(transformMatrix: camera.GetViewMatrix(graphics));
-            for (int x = 0; x < pixelDrawer.xTotal; x++)
-            {
-                for (int y = 0; y < pixelDrawer.yTotal; y++) 
-                {
-                    spriteBatch.Draw(pixel, new Vector2(x * pixelDrawer.visualScale, y * pixelDrawer.visualScale), null, pixelDrawer.colors[y + pixelDrawer.yTotal * x], 0, Vector2.Zero, new Vector2(pixelDrawer.visualScale, pixelDrawer.visualScale), SpriteEffects.None, 0f);
-                }
-            }
-            spriteBatch.End();
+            pixelDrawer.DrawPixels(pixel, spriteBatch, graphics);
             for (int i = 0; i < pixelDrawer.colors.Length; i++)
             {
                 pixelDrawer.colors[i] = Color.White;
             }
         }
 
-        void VertexShader()
+        void VertexShader(GraphicsDeviceManager graphics)
         {
-            
+            for (int i = 0; i < triangle.Length; i++)
+            {
+                for (int v = 0; v < 3; v++)
+                {
+                    
+                }
+            }
         }
 
         void Rasterization()
@@ -87,14 +92,7 @@ namespace GameTesting
                         Vector2 pos = pixelDrawer.GetPosOnIndex(y + pixelDrawer.yTotal * x);
                         if(triangle[i].ContainsPoint(pos))
                         {
-                            if(i == 0)
-                            {
-                                pixelDrawer.colors[y + pixelDrawer.yTotal * x] = Color.Red;
-                            }
-                            else
-                            {
-                                pixelDrawer.colors[y + pixelDrawer.yTotal * x] = Color.Green;
-                            }
+                            pixelDrawer.colors[y + pixelDrawer.yTotal * x] = Color.Green;
                         }
                     }
                 }

@@ -16,7 +16,7 @@ namespace GameTesting
         private GraphicsDeviceManager _graphics;
         private SpriteBatch spriteBatch;
         private SpriteFont font;
-        Camera camera = new Camera(new Vector2(0, 0), 1f);
+        Camera camera = new Camera(new Vector3(0, 0, 0), Vector3.Zero, 1f);
 
         //simulation vars
         ObjSimulation objSim = new ObjSimulation();

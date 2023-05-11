@@ -6,6 +6,7 @@ namespace GameTesting
     public struct Vertex
     {
         public Vector3 position;
+        public Vector2 scrPos;
         public Vector3 normal;
         public Color color;
 
@@ -14,28 +15,27 @@ namespace GameTesting
             position = pos;
             normal = nor;
             color = col;
+            scrPos = Vector2.Zero;
         }
     }
 
     public class Triangle
     {
-        public Vertex verLeft; //left point
-        public Vertex verRight; // right point
-        public Vertex verTop; // top point
+        public Vertex[] vertices = new Vertex[3];
         
 
         public Triangle(Vertex _verLeft, Vertex _verRight, Vertex _verTop)
         {
-            verLeft = _verLeft;
-            verRight = _verRight;
-            verTop = _verTop;
+            vertices[0] = _verLeft;
+            vertices[1] = _verRight;
+            vertices[2] = _verTop;
         }
 
         public bool ContainsPoint(Vector2 point)
         {
-            Vector2 p1 = new Vector2(verLeft.position.X, verLeft.position.Y);
-            Vector2 p2 = new Vector2(verTop.position.X, verTop.position.Y);
-            Vector2 p3 = new Vector2(verRight.position.X, verRight.position.Y);
+            Vector2 p1 = new Vector2(vertices[0].scrPos.X,vertices[0].scrPos.Y);
+            Vector2 p2 = new Vector2(vertices[1].scrPos.X, vertices[1].scrPos.Y);
+            Vector2 p3 = new Vector2(vertices[2].scrPos.X, vertices[2].scrPos.Y);
 
             Vector2 x = p3 - p1; 
             Vector2 y = p2 - p1; 
