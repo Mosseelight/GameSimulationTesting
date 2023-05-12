@@ -48,7 +48,8 @@ namespace GameTesting
         Matrix worldMat;
         Matrix projectMat;
 
-        Triangle[] triangle = new Triangle[2];
+        Triangle[] triangle = new Triangle[4];
+        Mesh[] meshes = new Mesh[1];
 
         public void InitRenderer(GraphicsDeviceManager graphics)
         {
@@ -60,6 +61,11 @@ namespace GameTesting
 
             triangle[0] = new Triangle(new Vertex(new Vector3(0, 0, 5), Vector3.One, Color.Black), new Vertex(new Vector3(0, 1, 5), Vector3.One, Color.Black), new Vertex(new Vector3(1, 1, 5), Vector3.One, Color.Black));
             triangle[1] = new Triangle(new Vertex(new Vector3(0, 0, 5), Vector3.One, Color.Black), new Vertex(new Vector3(1, 0, 5), Vector3.One, Color.Black), new Vertex(new Vector3(1, 1, 5), Vector3.One, Color.Black));
+
+            triangle[2] = new Triangle(new Vertex(new Vector3(0, 1, 5), Vector3.One, Color.Black), new Vertex(new Vector3(0, 1, 6), Vector3.One, Color.Black), new Vertex(new Vector3(1, 1, 6), Vector3.One, Color.Black));
+            triangle[3] = new Triangle(new Vertex(new Vector3(0, 1, 5), Vector3.One, Color.Black), new Vertex(new Vector3(1, 1, 6), Vector3.One, Color.Black), new Vertex(new Vector3(1, 1, 6), Vector3.One, Color.Black));
+
+            meshes[0] = new Mesh().CreateCube(new Vector3(0, 5, 3));
 
         }
 
@@ -86,6 +92,20 @@ namespace GameTesting
                     triangle[i].vertices[v].scrPos = new Vector2(((vertexPos.X + 1)/2)*pixelDrawer.xTotal, (((vertexPos.Y * -1) + 1)/2)*pixelDrawer.yTotal);
                 }
             }
+
+            for (int m = 0; m < meshes.Length; m++)
+            {
+                for (int v = 0; v < meshes[m].tris.Length; v++)
+                {
+                    for (int vv = 0; vv < 3; vv++)
+                    {
+                        Vector4 vertexPos = new Vector4(meshes[m].tris[v].vertices[vv].position, 1);
+                        vertexPos = Vector4.Transform(vertexPos, perspectiveMat);
+                        vertexPos = new Vector4(vertexPos.X / vertexPos.W, vertexPos.Y / vertexPos.W, vertexPos.Z / vertexPos.W, vertexPos.W);
+                        meshes[m].tris[v].vertices[vv].scrPos = new Vector2(((vertexPos.X + 1)/2)*pixelDrawer.xTotal, (((vertexPos.Y * -1) + 1)/2)*pixelDrawer.yTotal);
+                    }
+                }
+            }
         }
 
         void Rasterization()
@@ -100,6 +120,24 @@ namespace GameTesting
                         if(triangle[i].ContainsPoint(pos))
                         {
                             pixelDrawer.colors[y + pixelDrawer.yTotal * x] = Color.Green;
+                        }
+                    }
+                }
+            }
+
+            for (int m = 0; m < meshes.Length; m++)
+            {
+                for (int v = 0; v < meshes[m].tris.Length; v++)
+                {
+                    for (int x = 0; x < pixelDrawer.xTotal; x++)
+                    {
+                        for (int y = 0; y < pixelDrawer.yTotal; y++)
+                        {
+                            Vector2 pos = pixelDrawer.GetPosOnIndex(y + pixelDrawer.yTotal * x);
+                            if(meshes[m].tris[v].ContainsPoint(pos))
+                            {
+                                pixelDrawer.colors[y + pixelDrawer.yTotal * x] = Color.Red;
+                            }
                         }
                     }
                 }
