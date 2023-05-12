@@ -32,13 +32,21 @@ namespace GameTesting
     public class Triangle
     {
         public Vertex[] vertices = new Vertex[3];
-        
+        public Color color = Color.White;
 
         public Triangle(Vertex _verLeft, Vertex _verRight, Vertex _verTop)
         {
             vertices[0] = _verLeft;
             vertices[1] = _verRight;
             vertices[2] = _verTop;
+        }
+
+        public Triangle(Vertex _verLeft, Vertex _verRight, Vertex _verTop, Color col)
+        {
+            vertices[0] = _verLeft;
+            vertices[1] = _verRight;
+            vertices[2] = _verTop;
+            color = col;
         }
 
         public bool ContainsPoint(Vector2 point)
@@ -49,6 +57,17 @@ namespace GameTesting
 
             Vector2 x = p3 - p1; 
             Vector2 y = p2 - p1; 
+
+            float cross = Vector3.Cross(new Vector3(x, 0), new Vector3(y, 0)).Z;
+            if (cross < 0)
+            {
+                Vector2 temp = p2;
+                p2 = p3;
+                p3 = temp;
+                x = p3 - p1; 
+                y = p2 - p1;
+            }
+
             Vector2 b = point - p1; 
 
             float xx = Vector2.Dot(x, x);
@@ -76,23 +95,23 @@ namespace GameTesting
             cube.position = pos;
             cube.tris = new Triangle[12];
             //front
-            cube.tris[0] = new Triangle(new Vertex(Vector3.Zero + pos), new Vertex(new Vector3(0, 1, 0) + pos), new Vertex(new Vector3(1, 1, 0) + pos));
-            cube.tris[1] = new Triangle(new Vertex(Vector3.Zero + pos), new Vertex(new Vector3(1, 0, 0) + pos), new Vertex(new Vector3(1, 1, 0) + pos));
-            //top
-            cube.tris[2] = new Triangle(new Vertex(new Vector3(0, 1, 0) + pos), new Vertex(new Vector3(0, 1, 1) + pos), new Vertex(new Vector3(1, 1, 1) + pos));
-            cube.tris[3] = new Triangle(new Vertex(new Vector3(0, 1, 0) + pos), new Vertex(new Vector3(1, 1, 0) + pos), new Vertex(new Vector3(1, 1, 1) + pos));
+            cube.tris[0] = new Triangle(new Vertex(Vector3.Zero + pos), new Vertex(new Vector3(0, 1, 0) + pos), new Vertex(new Vector3(1, 1, 0) + pos), Color.Green);
+            cube.tris[1] = new Triangle(new Vertex(Vector3.Zero + pos), new Vertex(new Vector3(1, 0, 0) + pos), new Vertex(new Vector3(1, 1, 0) + pos), Color.Green);
             //right
-            cube.tris[4] = new Triangle(new Vertex(new Vector3(1, 0, 0) + pos), new Vertex(new Vector3(1, 1, 0) + pos), new Vertex(new Vector3(1, 1, 1) + pos));
-            cube.tris[5] = new Triangle(new Vertex(new Vector3(1, 0, 0) + pos), new Vertex(new Vector3(1, 0, 1) + pos), new Vertex(new Vector3(1, 1, 1) + pos));
-            //left
-            cube.tris[6] = new Triangle(new Vertex(Vector3.Zero + pos), new Vertex(new Vector3(0, 0, 1) + pos), new Vertex(new Vector3(0, 1, 1) + pos));
-            cube.tris[7] = new Triangle(new Vertex(Vector3.Zero + pos), new Vertex(new Vector3(0, 1, 0) + pos), new Vertex(new Vector3(0, 1, 1) + pos));
+            cube.tris[2] = new Triangle(new Vertex(new Vector3(1, 0, 0) + pos), new Vertex(new Vector3(1, 1, 0) + pos), new Vertex(new Vector3(1, 1, 1) + pos), Color.Pink);
+            cube.tris[3] = new Triangle(new Vertex(new Vector3(1, 0, 0) + pos), new Vertex(new Vector3(1, 0, 1) + pos), new Vertex(new Vector3(1, 1, 1) + pos), Color.Pink);
             //back
-            cube.tris[8] = new Triangle(new Vertex(new Vector3(0, 0, 1) + pos), new Vertex(new Vector3(0, 1, 1) + pos), new Vertex(new Vector3(1, 1, 1) + pos));
-            cube.tris[9] = new Triangle(new Vertex(new Vector3(0, 0, 1) + pos), new Vertex(new Vector3(1, 0, 1) + pos), new Vertex(new Vector3(1, 1, 1) + pos));
+            cube.tris[4] = new Triangle(new Vertex(new Vector3(0, 0, 1) + pos), new Vertex(new Vector3(0, 1, 1) + pos), new Vertex(new Vector3(1, 1, 1) + pos), Color.Purple);
+            cube.tris[5] = new Triangle(new Vertex(new Vector3(0, 0, 1) + pos), new Vertex(new Vector3(1, 0, 1) + pos), new Vertex(new Vector3(1, 1, 1) + pos), Color.Purple);
+            //left
+            cube.tris[6] = new Triangle(new Vertex(Vector3.Zero + pos), new Vertex(new Vector3(0, 0, 1) + pos), new Vertex(new Vector3(0, 1, 1) + pos), Color.Red);
+            cube.tris[7] = new Triangle(new Vertex(Vector3.Zero + pos), new Vertex(new Vector3(0, 1, 0) + pos), new Vertex(new Vector3(0, 1, 1) + pos), Color.Red);
             //bottom
-            cube.tris[10] = new Triangle(new Vertex(Vector3.Zero + pos), new Vertex(new Vector3(1, 0, 0) + pos), new Vertex(new Vector3(1, 0, 1) + pos));
-            cube.tris[11] = new Triangle(new Vertex(Vector3.Zero + pos), new Vertex(new Vector3(0, 0, 1) + pos), new Vertex(new Vector3(1, 0, 1) + pos));
+            cube.tris[8] = new Triangle(new Vertex(Vector3.Zero + pos), new Vertex(new Vector3(1, 0, 0) + pos), new Vertex(new Vector3(1, 0, 1) + pos), Color.Aqua);
+            cube.tris[9] = new Triangle(new Vertex(Vector3.Zero + pos), new Vertex(new Vector3(0, 0, 1) + pos), new Vertex(new Vector3(1, 0, 1) + pos), Color.Aqua);
+            //top
+            cube.tris[10] = new Triangle(new Vertex(new Vector3(1,1,0) + pos), new Vertex(new Vector3(0, 1, 0) + pos), new Vertex(new Vector3(0, 1, 1) + pos), Color.Black);
+            cube.tris[11] = new Triangle(new Vertex(new Vector3(1,1,0) + pos), new Vertex(new Vector3(1, 1, 1) + pos), new Vertex(new Vector3(0, 1, 1) + pos), Color.Black);
             return cube;
         }
     }
