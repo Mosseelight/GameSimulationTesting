@@ -43,8 +43,8 @@ namespace GameTesting
         Camera camera;
         Matrix perspectiveMat;
         float fov = 45;
-        float nearValue = 0.1f;
-        float farValue = 1000000000000;
+        float nearValue = 0.01f;
+        float farValue = 100f;
 
         Matrix viewMat;
         Matrix worldMat;
