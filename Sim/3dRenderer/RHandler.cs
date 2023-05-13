@@ -16,6 +16,8 @@ namespace GameTesting
 
         2. rasterization
         switch to z-buffer
+        backface culling
+        order by z distnace
 
         3. fragment shading
         idk?? put sin on colors or something
@@ -58,6 +60,8 @@ namespace GameTesting
 
             camera = new Camera(new Vector3(0, 0, -10), Vector3.Zero, 1);
             perspectiveMat = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(fov), pixelDrawer.xTotal / pixelDrawer.yTotal, nearValue, farValue);
+            viewMat = Matrix.CreateLookAt(camera.Position, camera.LookAt, Vector3.Up);
+            projectMat = perspectiveMat * viewMat;
 
             triangle[0] = new Triangle(new Vertex(new Vector3(0, 0, 5), Vector3.One, Color.Black), new Vertex(new Vector3(0, 1, 5), Vector3.One, Color.Black), new Vertex(new Vector3(1, 1, 5), Vector3.One, Color.Black));
             triangle[1] = new Triangle(new Vertex(new Vector3(0, 0, 5), Vector3.One, Color.Black), new Vertex(new Vector3(1, 0, 5), Vector3.One, Color.Black), new Vertex(new Vector3(1, 1, 5), Vector3.One, Color.Black));
@@ -65,7 +69,7 @@ namespace GameTesting
             triangle[2] = new Triangle(new Vertex(new Vector3(0, 1, 5), Vector3.One, Color.Black), new Vertex(new Vector3(0, 1, 6), Vector3.One, Color.Black), new Vertex(new Vector3(1, 1, 6), Vector3.One, Color.Black));
             triangle[3] = new Triangle(new Vertex(new Vector3(0, 1, 5), Vector3.One, Color.Black), new Vertex(new Vector3(1, 1, 6), Vector3.One, Color.Black), new Vertex(new Vector3(1, 1, 6), Vector3.One, Color.Black));
 
-            meshes[0] = new Mesh().CreateCube(new Vector3(3, -1, 3));
+            meshes[0] = new Mesh().CreateCube(new Vector3(0, 0, 3));
         }
 
         public void Draw(Texture2D pixel, SpriteBatch spriteBatch, GraphicsDeviceManager graphics)
@@ -81,16 +85,16 @@ namespace GameTesting
 
         void VertexShader(GraphicsDeviceManager graphics)
         {
-            /*for (int i = 0; i < triangle.Length; i++)
+            for (int i = 0; i < triangle.Length; i++)
             {
                 for (int v = 0; v < 3; v++)
                 {
                     Vector4 vertexPos = new Vector4(triangle[i].vertices[v].position, 1);
-                    vertexPos = Vector4.Transform(vertexPos, perspectiveMat);
+                    vertexPos = Vector4.Transform(vertexPos, projectMat);
                     vertexPos = new Vector4(vertexPos.X / vertexPos.W, vertexPos.Y / vertexPos.W, vertexPos.Z / vertexPos.W, vertexPos.W);
                     triangle[i].vertices[v].scrPos = new Vector2(((vertexPos.X + 1)/2)*pixelDrawer.xTotal, (((vertexPos.Y * -1) + 1)/2)*pixelDrawer.yTotal);
                 }
-            }*/
+            }
 
             for (int m = 0; m < meshes.Length; m++)
             {
@@ -99,7 +103,7 @@ namespace GameTesting
                     for (int vv = 0; vv < 3; vv++)
                     {
                         Vector4 vertexPos = new Vector4(meshes[m].tris[v].vertices[vv].position, 1);
-                        vertexPos = Vector4.Transform(vertexPos, perspectiveMat);
+                        vertexPos = Vector4.Transform(vertexPos, projectMat);
                         vertexPos = new Vector4(vertexPos.Y / vertexPos.W, vertexPos.X / vertexPos.W, vertexPos.Z / vertexPos.W, vertexPos.W);
                         meshes[m].tris[v].vertices[vv].scrPos = new Vector2(((vertexPos.X + 1)/2)*pixelDrawer.xTotal, (((vertexPos.Y * -1) + 1)/2)*pixelDrawer.yTotal);
                     }

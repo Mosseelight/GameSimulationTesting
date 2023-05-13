@@ -82,36 +82,64 @@ namespace GameTesting
 
             return (u >= 0) && (v >= 0) && (u + v < 1);
         }
+
+        public Vector3 TriangleCenter()
+        {
+            return (vertices[0].position + vertices[1].position + vertices[2].position)/3;
+        }
+
+        public bool BackfaceCull(Vector3 cameraPos)
+        {
+            Vector3 u = vertices[1].position - vertices[0].position;
+            Vector3 v = vertices[2].position - vertices[0].position;
+            Vector3 camDist = TriangleCenter() - cameraPos;
+            Vector3 triNorVec = Vector3.Cross(u,v);
+            float d = -Vector3.Dot(triNorVec, vertices[0].position);
+            float dist = Vector3.Dot(triNorVec, cameraPos) + d;
+            
+
+            if(dist >= 0)
+                return true;
+
+            return false;
+        }
     }
 
     public class Mesh
     {
         public Triangle[] tris;
         public Vector3 position;
+        public int[] indices;
 
-        public Mesh CreateCube(Vector3 pos)
+        public Mesh CreateCube(Vector3 pos, int[] ind = null)
         {
             Mesh cube = new Mesh();
             cube.position = pos;
             cube.tris = new Triangle[12];
+            cube.indices = new int[12];
+            if(ind == null)
+                ind = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+            if(ind.Length != 12)
+                throw new Exception("Indice length has to be 12");
+            cube.indices = ind;
             //front
-            cube.tris[0] = new Triangle(new Vertex(Vector3.Zero + pos), new Vertex(new Vector3(0, 1, 0) + pos), new Vertex(new Vector3(1, 1, 0) + pos), Color.Green);
-            cube.tris[1] = new Triangle(new Vertex(Vector3.Zero + pos), new Vertex(new Vector3(1, 0, 0) + pos), new Vertex(new Vector3(1, 1, 0) + pos), Color.Green);
+            cube.tris[ind[0]] = new Triangle(new Vertex(Vector3.Zero + pos), new Vertex(new Vector3(0, 1, 0) + pos), new Vertex(new Vector3(1, 1, 0) + pos), Color.Green);
+            cube.tris[ind[1]] = new Triangle(new Vertex(Vector3.Zero + pos), new Vertex(new Vector3(1, 0, 0) + pos), new Vertex(new Vector3(1, 1, 0) + pos), Color.Green);
             //right
-            cube.tris[2] = new Triangle(new Vertex(new Vector3(1, 0, 0) + pos), new Vertex(new Vector3(1, 1, 0) + pos), new Vertex(new Vector3(1, 1, 1) + pos), Color.Pink);
-            cube.tris[3] = new Triangle(new Vertex(new Vector3(1, 0, 0) + pos), new Vertex(new Vector3(1, 0, 1) + pos), new Vertex(new Vector3(1, 1, 1) + pos), Color.Pink);
+            cube.tris[ind[2]] = new Triangle(new Vertex(new Vector3(1, 0, 0) + pos), new Vertex(new Vector3(1, 0, 1) + pos), new Vertex(new Vector3(1, 1, 1) + pos), Color.Pink);
+            cube.tris[ind[3]] = new Triangle(new Vertex(new Vector3(1, 0, 0) + pos), new Vertex(new Vector3(1, 1, 0) + pos), new Vertex(new Vector3(1, 1, 1) + pos), Color.Pink);
             //back
-            cube.tris[4] = new Triangle(new Vertex(new Vector3(0, 0, 1) + pos), new Vertex(new Vector3(0, 1, 1) + pos), new Vertex(new Vector3(1, 1, 1) + pos), Color.Purple);
-            cube.tris[5] = new Triangle(new Vertex(new Vector3(0, 0, 1) + pos), new Vertex(new Vector3(1, 0, 1) + pos), new Vertex(new Vector3(1, 1, 1) + pos), Color.Purple);
+            cube.tris[ind[4]] = new Triangle(new Vertex(new Vector3(0, 0, 1) + pos), new Vertex(new Vector3(0, 1, 1) + pos), new Vertex(new Vector3(1, 1, 1) + pos), Color.Purple);
+            cube.tris[ind[5]] = new Triangle(new Vertex(new Vector3(0, 0, 1) + pos), new Vertex(new Vector3(1, 0, 1) + pos), new Vertex(new Vector3(1, 1, 1) + pos), Color.Purple);
             //left
-            cube.tris[6] = new Triangle(new Vertex(Vector3.Zero + pos), new Vertex(new Vector3(0, 0, 1) + pos), new Vertex(new Vector3(0, 1, 1) + pos), Color.Red);
-            cube.tris[7] = new Triangle(new Vertex(Vector3.Zero + pos), new Vertex(new Vector3(0, 1, 0) + pos), new Vertex(new Vector3(0, 1, 1) + pos), Color.Red);
+            cube.tris[ind[6]] = new Triangle(new Vertex(Vector3.Zero + pos), new Vertex(new Vector3(0, 0, 1) + pos), new Vertex(new Vector3(0, 1, 1) + pos), Color.Red);
+            cube.tris[ind[7]] = new Triangle(new Vertex(Vector3.Zero + pos), new Vertex(new Vector3(0, 1, 0) + pos), new Vertex(new Vector3(0, 1, 1) + pos), Color.Red);
             //bottom
-            cube.tris[8] = new Triangle(new Vertex(Vector3.Zero + pos), new Vertex(new Vector3(1, 0, 0) + pos), new Vertex(new Vector3(1, 0, 1) + pos), Color.Aqua);
-            cube.tris[9] = new Triangle(new Vertex(Vector3.Zero + pos), new Vertex(new Vector3(0, 0, 1) + pos), new Vertex(new Vector3(1, 0, 1) + pos), Color.Aqua);
+            cube.tris[ind[8]] = new Triangle(new Vertex(Vector3.Zero + pos), new Vertex(new Vector3(1, 0, 0) + pos), new Vertex(new Vector3(1, 0, 1) + pos), Color.Aqua);
+            cube.tris[ind[9]] = new Triangle(new Vertex(Vector3.Zero + pos), new Vertex(new Vector3(0, 0, 1) + pos), new Vertex(new Vector3(1, 0, 1) + pos), Color.Aqua);
             //top
-            cube.tris[10] = new Triangle(new Vertex(new Vector3(1,1,0) + pos), new Vertex(new Vector3(0, 1, 0) + pos), new Vertex(new Vector3(0, 1, 1) + pos), Color.Black);
-            cube.tris[11] = new Triangle(new Vertex(new Vector3(1,1,0) + pos), new Vertex(new Vector3(1, 1, 1) + pos), new Vertex(new Vector3(0, 1, 1) + pos), Color.Black);
+            cube.tris[ind[10]] = new Triangle(new Vertex(new Vector3(1,1,0) + pos), new Vertex(new Vector3(0, 1, 0) + pos), new Vertex(new Vector3(0, 1, 1) + pos), Color.Black);
+            cube.tris[ind[11]] = new Triangle(new Vertex(new Vector3(1,1,0) + pos), new Vertex(new Vector3(0, 1, 1) + pos), new Vertex(new Vector3(1, 1, 1) + pos), Color.Black);
             return cube;
         }
     }
