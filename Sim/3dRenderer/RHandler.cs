@@ -58,7 +58,7 @@ namespace GameTesting
             pixelDrawer.visualScale = 3;
             pixelDrawer.InitDrawer(graphics);
 
-            camera = new Camera(new Vector3(0, 0, -10), Vector3.Zero, 1);
+            camera = new Camera(new Vector3(0, -2, 20), Vector3.Zero, 1);
             perspectiveMat = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(fov), pixelDrawer.xTotal / pixelDrawer.yTotal, nearValue, farValue);
             viewMat = Matrix.CreateLookAt(camera.Position, camera.LookAt, Vector3.Up);
             projectMat = perspectiveMat * viewMat;
@@ -69,7 +69,7 @@ namespace GameTesting
             triangle[2] = new Triangle(new Vertex(new Vector3(0, 1, 5), Vector3.One, Color.Black), new Vertex(new Vector3(0, 1, 6), Vector3.One, Color.Black), new Vertex(new Vector3(1, 1, 6), Vector3.One, Color.Black));
             triangle[3] = new Triangle(new Vertex(new Vector3(0, 1, 5), Vector3.One, Color.Black), new Vertex(new Vector3(1, 1, 6), Vector3.One, Color.Black), new Vertex(new Vector3(1, 1, 6), Vector3.One, Color.Black));
 
-            meshes[0] = new Mesh().CreateCube(new Vector3(0, 0, 3));
+            meshes[0] = new Mesh().CreateCube(new Vector3(2, 0, 3));
         }
 
         public void Draw(Texture2D pixel, SpriteBatch spriteBatch, GraphicsDeviceManager graphics)
