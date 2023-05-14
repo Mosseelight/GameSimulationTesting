@@ -6,7 +6,7 @@ namespace GameTesting
     public struct Vertex
     {
         public Vector3 position = Vector3.Zero;
-        public Vector2 scrPos = Vector2.Zero;
+        public Vector3 scrPos = Vector3.Zero;
         public Vector3 normal = Vector3.Zero;
         public Color color = Color.White;
 
@@ -26,6 +26,22 @@ namespace GameTesting
         public Vertex(Vector3 pos)
         {
             position = pos;
+        }
+    }
+
+    public struct BoundBox
+    {
+        public float minX = 0;
+        public float minY = 0;
+        public float maxX = 0;
+        public float maxY = 0;
+
+        public BoundBox(float _miX, float _miY, float _maX, float _maY)
+        {
+            minX = _miX;
+            minY = _miY;
+            maxX = _maX;
+            maxY = _maY;
         }
     }
 
@@ -56,18 +72,7 @@ namespace GameTesting
             Vector2 p3 = new Vector2(vertices[2].scrPos.X, vertices[2].scrPos.Y);
 
             Vector2 x = p3 - p1; 
-            Vector2 y = p2 - p1; 
-
-            float cross = Vector3.Cross(new Vector3(x, 0), new Vector3(y, 0)).Z;
-            if (cross < 0)
-            {
-                Vector2 temp = p2;
-                p2 = p3;
-                p3 = temp;
-                x = p3 - p1; 
-                y = p2 - p1;
-            }
-
+            Vector2 y = p2 - p1;
             Vector2 b = point - p1; 
 
             float xx = Vector2.Dot(x, x);
@@ -78,7 +83,7 @@ namespace GameTesting
 
             float denom = xx*yy - yx*yx;
             float u = (yy*bx - yx*by) / denom;
-            float v = v = (xx*by - yx*bx) / denom;
+            float v = (xx*by - yx*bx) / denom;
 
             return (u >= 0) && (v >= 0) && (u + v < 1);
         }
@@ -86,6 +91,31 @@ namespace GameTesting
         public Vector3 TriangleCenter()
         {
             return (vertices[0].position + vertices[1].position + vertices[2].position)/3;
+        }
+
+        public Vector3 TriangleCenterProj()
+        {
+            return (vertices[0].scrPos + vertices[1].scrPos + vertices[2].scrPos)/3;
+        }
+
+        public BoundBox TriangleBounds()
+        {
+            BoundBox box = new BoundBox();
+            box.minX = MathF.Min(vertices[0].position.X, MathF.Min(vertices[1].position.X, vertices[2].position.X));
+            box.minY = MathF.Min(vertices[0].position.Y, MathF.Min(vertices[1].position.Y, vertices[2].position.Y));
+            box.maxX = MathF.Max(vertices[0].position.X, MathF.Min(vertices[1].position.X, vertices[2].position.X));
+            box.maxY = MathF.Max(vertices[0].position.X, MathF.Min(vertices[1].position.X, vertices[2].position.X));
+            return box;
+        }
+
+        public BoundBox TriangleBoundsProj()
+        {
+            BoundBox box = new BoundBox();
+            box.minX = MathF.Min(vertices[0].scrPos.X, MathF.Min(vertices[1].scrPos.X, vertices[2].scrPos.X));
+            box.minY = MathF.Min(vertices[0].scrPos.Y, MathF.Min(vertices[1].scrPos.Y, vertices[2].scrPos.Y));
+            box.maxX = MathF.Max(vertices[0].scrPos.X, MathF.Min(vertices[1].scrPos.X, vertices[2].scrPos.X));
+            box.maxY = MathF.Max(vertices[0].scrPos.X, MathF.Min(vertices[1].scrPos.X, vertices[2].scrPos.X));
+            return box;
         }
 
         public bool BackfaceCull(Vector3 cameraPos)

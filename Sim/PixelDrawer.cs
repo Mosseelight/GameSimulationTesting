@@ -83,5 +83,10 @@ namespace GameTesting
         {
             return new Vector2((float)Math.Floor((double)((index % yTotal) * visualScale)), (float)Math.Floor((double)((index / yTotal) * visualScale)));
         }
+
+        public int GetIndexOnPos(Vector2 pos)
+        {
+            return (int)(pos.Y + yTotal * pos.X);
+        }
     }
 }

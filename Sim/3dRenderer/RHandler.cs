@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace GameTesting
 {
-    public class RayTracerHandler
+    public class RendererHandler
     {
 
         //To do things
@@ -42,14 +42,17 @@ namespace GameTesting
 
         PixelDrawer pixelDrawer = new PixelDrawer();
         Camera camera;
+
         Matrix perspectiveMat;
         float fov = 45;
         float nearValue = 0.1f;
         float farValue = 100f;
-
         Matrix viewMat;
         Matrix worldMat;
         Matrix projectMat;
+
+        float[] zDepth;
+        float[] zDepthReset;
 
         Triangle[] triangle = new Triangle[4];
         Mesh[] meshes = new Mesh[1];
@@ -58,6 +61,17 @@ namespace GameTesting
         {
             pixelDrawer.visualScale = 3;
             pixelDrawer.InitDrawer(graphics);
+
+            zDepth = new float[pixelDrawer.xTotal * pixelDrawer.yTotal];
+            zDepthReset = new float[pixelDrawer.xTotal * pixelDrawer.yTotal];
+            for (int x = 0; x < pixelDrawer.xTotal; x++)
+            {
+                for (int y = 0; y < pixelDrawer.yTotal; y++)
+                {
+                   zDepth[y + pixelDrawer.yTotal * x] = int.MaxValue; 
+                   zDepthReset[y + pixelDrawer.yTotal * x] = int.MaxValue; 
+                }
+            }
 
             camera = new Camera(new Vector3(0, 0, 10), Vector3.Zero, 1);
 
@@ -96,7 +110,7 @@ namespace GameTesting
                     Vector4 vertexPos = new Vector4(triangle[i].vertices[v].position, 1);
                     vertexPos = Vector4.Transform(vertexPos, projectMat);
                     vertexPos = new Vector4(vertexPos.X / vertexPos.W, vertexPos.Y / vertexPos.W, vertexPos.Z / vertexPos.W, vertexPos.W);
-                    triangle[i].vertices[v].scrPos = new Vector2(((vertexPos.X + 1)/2)*pixelDrawer.xTotal, (((vertexPos.Y * -1) + 1)/2)*pixelDrawer.yTotal);
+                    triangle[i].vertices[v].scrPos = new Vector3(((vertexPos.X + 1)/2)*pixelDrawer.xTotal, (((vertexPos.Y * -1) + 1)/2)*pixelDrawer.yTotal, vertexPos.Z);
                 }
             }
 
@@ -109,7 +123,7 @@ namespace GameTesting
                         Vector4 vertexPos = new Vector4(meshes[m].tris[v].vertices[vv].position, 1);
                         vertexPos = Vector4.Transform(vertexPos, projectMat);
                         vertexPos = new Vector4(vertexPos.Y / vertexPos.W, vertexPos.X / vertexPos.W, vertexPos.Z / vertexPos.W, vertexPos.W);
-                        meshes[m].tris[v].vertices[vv].scrPos = new Vector2(((vertexPos.X + 1)/2)*pixelDrawer.xTotal, (((vertexPos.Y * -1) + 1)/2)*pixelDrawer.yTotal);
+                        meshes[m].tris[v].vertices[vv].scrPos = new Vector3(((vertexPos.X + 1)/2)*pixelDrawer.xTotal, (((vertexPos.Y * -1) + 1)/2)*pixelDrawer.yTotal, vertexPos.Z);
                     }
                 }
             }
@@ -126,10 +140,16 @@ namespace GameTesting
                         Vector2 pos = pixelDrawer.GetPosOnIndex(y + pixelDrawer.yTotal * x);
                         if(triangle[i].ContainsPoint(pos))
                         {
-                            pixelDrawer.colors[y + pixelDrawer.yTotal * x] = Color.Green;
+                            float depth = triangle[i].TriangleCenterProj().Z;
+                            if(depth < zDepth[y + pixelDrawer.yTotal * x])
+                            {
+                                zDepth[y + pixelDrawer.yTotal * x] = depth;
+                                pixelDrawer.colors[y + pixelDrawer.yTotal * x] = Color.Green;
+                            }
                         }
                     }
                 }
+                zDepth = zDepthReset;
             });
 
             Parallel.For (0, meshes.Length, m =>
