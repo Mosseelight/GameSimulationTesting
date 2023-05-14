@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -43,7 +44,7 @@ namespace GameTesting
         Camera camera;
         Matrix perspectiveMat;
         float fov = 45;
-        float nearValue = 0.01f;
+        float nearValue = 0.1f;
         float farValue = 100f;
 
         Matrix viewMat;
@@ -58,10 +59,7 @@ namespace GameTesting
             pixelDrawer.visualScale = 3;
             pixelDrawer.InitDrawer(graphics);
 
-            camera = new Camera(new Vector3(0, -2, 20), Vector3.Zero, 1);
-            perspectiveMat = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(fov), pixelDrawer.xTotal / pixelDrawer.yTotal, nearValue, farValue);
-            viewMat = Matrix.CreateLookAt(camera.Position, camera.LookAt, Vector3.Up);
-            projectMat = perspectiveMat * viewMat;
+            camera = new Camera(new Vector3(0, 0, 10), Vector3.Zero, 1);
 
             triangle[0] = new Triangle(new Vertex(new Vector3(0, 0, 5), Vector3.One, Color.Black), new Vertex(new Vector3(0, 1, 5), Vector3.One, Color.Black), new Vertex(new Vector3(1, 1, 5), Vector3.One, Color.Black));
             triangle[1] = new Triangle(new Vertex(new Vector3(0, 0, 5), Vector3.One, Color.Black), new Vertex(new Vector3(1, 0, 5), Vector3.One, Color.Black), new Vertex(new Vector3(1, 1, 5), Vector3.One, Color.Black));
@@ -69,11 +67,17 @@ namespace GameTesting
             triangle[2] = new Triangle(new Vertex(new Vector3(0, 1, 5), Vector3.One, Color.Black), new Vertex(new Vector3(0, 1, 6), Vector3.One, Color.Black), new Vertex(new Vector3(1, 1, 6), Vector3.One, Color.Black));
             triangle[3] = new Triangle(new Vertex(new Vector3(0, 1, 5), Vector3.One, Color.Black), new Vertex(new Vector3(1, 1, 6), Vector3.One, Color.Black), new Vertex(new Vector3(1, 1, 6), Vector3.One, Color.Black));
 
-            meshes[0] = new Mesh().CreateCube(new Vector3(2, 0, 3));
+            meshes[0] = new Mesh().CreateCube(new Vector3(0, 0, 0));
         }
 
-        public void Draw(Texture2D pixel, SpriteBatch spriteBatch, GraphicsDeviceManager graphics)
+        public void Draw(Texture2D pixel, SpriteBatch spriteBatch, GraphicsDeviceManager graphics, float time)
         {
+            worldMat = Matrix.Identity;
+            perspectiveMat = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(fov), pixelDrawer.xTotal / pixelDrawer.yTotal, nearValue, farValue);
+            viewMat = Matrix.CreateLookAt(camera.Position -= new Vector3(0, 0, 0), camera.LookAt, Vector3.Up);
+            projectMat = worldMat * viewMat * perspectiveMat;
+
+
             VertexShader(graphics);
             Rasterization();
             pixelDrawer.DrawPixels(pixel, spriteBatch, graphics);
@@ -113,7 +117,7 @@ namespace GameTesting
 
         void Rasterization()
         {
-            for (int i = 0; i < triangle.Length; i++)
+            Parallel.For (0, triangle.Length, i =>
             {
                 for (int x = 0; x < pixelDrawer.xTotal; x++)
                 {
@@ -126,9 +130,9 @@ namespace GameTesting
                         }
                     }
                 }
-            }
+            });
 
-            for (int m = 0; m < meshes.Length; m++)
+            Parallel.For (0, meshes.Length, m =>
             {
                 for (int v = 0; v < meshes[m].tris.Length; v++)
                 {
@@ -144,7 +148,7 @@ namespace GameTesting
                         }
                     }
                 }
-            }
+            });
         }
 
 

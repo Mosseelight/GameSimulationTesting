@@ -212,7 +212,7 @@ namespace GameTesting
             }
             if(runRayTracerSim)
             {
-                rayTracer.Draw(pixel, spriteBatch, _graphics);
+                rayTracer.Draw(pixel, spriteBatch, _graphics, gameTime.ElapsedGameTime.Milliseconds);
             }
             if(runReflectorSim)
             {
