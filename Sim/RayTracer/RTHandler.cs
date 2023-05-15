@@ -28,15 +28,12 @@ namespace GameTesting
             {
                 for (int x = 0; x < pixelDrawer.xTotal; x++) 
                 {
-                    double r = (double)x / (pixelDrawer.xTotal-1);
-                    double g = (double)y / (pixelDrawer.yTotal-1);
-                    double b = 0.25;
+                    double u = (double)x / (pixelDrawer.xTotal-1);
+                    double v = (double)y / (pixelDrawer.yTotal-1);
 
-                    int ir = (int)(255.999 * r);
-                    int ig = (int)(255.999 * g);
-                    int ib = (int)(255.999 * b);
+                    Ray r = new Ray(camera.origin, camera.lowerLeft.X + u * (double)camera.horizontal.X + v * (double)camera.vertical.X - camera.origin.X), ));
 
-                    pixelDrawer.colors[pixelDrawer.GetIndexOnPos(new Vector2(x, (pixelDrawer.yTotal - 1) - y))] = new Color(ir, ig, ib);
+                    pixelDrawer.colors[pixelDrawer.GetIndexOnPos(new Vector2(x, (pixelDrawer.yTotal - 1) - y))] = getRayColor(r);
                 }
             }
         }
@@ -46,7 +43,7 @@ namespace GameTesting
             pixelDrawer.DrawPixels(pixel, spriteBatch, graphics);
         }
 
-        Color getRayColor(ray ray)
+        Color getRayColor(Ray ray)
         {
             Vector3 unitDir = Vector3.Normalize(ray.direction);
             float t = 0.5f * (unitDir.Y + 1);
