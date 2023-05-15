@@ -156,6 +156,7 @@ namespace GameTesting
                 {
                     runRayTracerSim = true;
                     Initializer = true;
+                    rayTracer.InitRayTracer(_graphics);
                     Console.WriteLine("pressed 0");
                 }
             }
@@ -218,9 +219,13 @@ namespace GameTesting
             {
                 pathFinder.Draw(pixel, spriteBatch, _graphics);
             }
+            if(runRendererSim)
+            {
+                renderer.Draw(pixel, spriteBatch, _graphics, gameTime.ElapsedGameTime.Milliseconds);
+            }
             if(runRayTracerSim)
             {
-                rayTracer.Draw(pixel, spriteBatch, _graphics, gameTime.ElapsedGameTime.Milliseconds);
+                rayTracer.Draw(pixel, spriteBatch, _graphics);
             }
             if(runReflectorSim)
             {
