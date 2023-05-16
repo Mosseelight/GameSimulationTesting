@@ -16,7 +16,7 @@ namespace GameTesting
         private GraphicsDeviceManager _graphics;
         private SpriteBatch spriteBatch;
         private SpriteFont font;
-        Camera camera = new Camera(new Vector2(0, 0), 1f);
+        Camera camera = new Camera(new Vector3(0, 0, 0), Vector3.Zero, 1f);
 
         //simulation vars
         ObjSimulation objSim = new ObjSimulation();
@@ -26,6 +26,7 @@ namespace GameTesting
         MandelBrotHandler mandelBrot = new MandelBrotHandler();
         Grapher grapher = new Grapher();
         PathFinderHandler pathFinder = new PathFinderHandler();
+        RendererHandler renderer = new RendererHandler();
         RayTracerHandler rayTracer = new RayTracerHandler();
         ReflectorHandler reflector = new ReflectorHandler();
 
@@ -42,6 +43,7 @@ namespace GameTesting
         bool runMandelBrotSim = false;
         bool runGraphSim = false;
         bool runPathSim = false;
+        bool runRendererSim = false;
         bool runRayTracerSim = false;
         bool runReflectorSim = false;
         bool Initializer = false;
@@ -135,11 +137,11 @@ namespace GameTesting
                     pathFinder.RunPathFinder();
                     Console.WriteLine("pressed 7");
                 }
-                if(Keyboard.GetState().IsKeyDown(Keys.D8) && !runRayTracerSim)
+                if(Keyboard.GetState().IsKeyDown(Keys.D8) && !runRendererSim)
                 {
-                    runRayTracerSim = true;
+                    runRendererSim = true;
                     Initializer = true;
-                    rayTracer.InitRenderer(_graphics);
+                    renderer.InitRenderer(_graphics);
                     Console.WriteLine("pressed 8");
                 }
                 if(Keyboard.GetState().IsKeyDown(Keys.D9) && !runReflectorSim)
@@ -149,6 +151,13 @@ namespace GameTesting
                     reflector.InitReflector(_graphics);
                     reflector.DrawReflectorLine();
                     Console.WriteLine("pressed 9");
+                }
+                if(Keyboard.GetState().IsKeyDown(Keys.D0) && !runRayTracerSim)
+                {
+                    runRayTracerSim = true;
+                    Initializer = true;
+                    rayTracer.InitRayTracer(_graphics);
+                    Console.WriteLine("pressed 0");
                 }
             }
 
@@ -209,6 +218,10 @@ namespace GameTesting
             if(runPathSim)
             {
                 pathFinder.Draw(pixel, spriteBatch, _graphics);
+            }
+            if(runRendererSim)
+            {
+                renderer.Draw(pixel, spriteBatch, _graphics, gameTime.ElapsedGameTime.Milliseconds);
             }
             if(runRayTracerSim)
             {

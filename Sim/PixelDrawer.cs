@@ -19,6 +19,7 @@ namespace GameTesting
         public int yOffset;
         public int yTotal;
 
+        Texture2D screenTexture;
 
         public void InitDrawer(GraphicsDeviceManager graphics)
         {
@@ -28,6 +29,7 @@ namespace GameTesting
             visualY = graphics.PreferredBackBufferHeight / visualScale;
             yTotal = graphics.PreferredBackBufferHeight / visualScale;
             yOffset = visualY / 2;
+            screenTexture = new Texture2D(graphics.GraphicsDevice, visualX, visualY);
             colors = new Color[visualX * visualY];
             for (int i = 0; i < colors.Length; i++)
             {
@@ -69,9 +71,22 @@ namespace GameTesting
             spriteBatch.End();
         }
 
+        /*public void NewDrawPixels(GraphicsDeviceManager graphics, SpriteBatch spriteBatch)
+        {
+            screenTexture.SetData(colors);
+            spriteBatch.Begin();
+            spriteBatch.Draw(screenTexture, Vector2.Zero, null, Color.White, 0, Vector2.Zero, new Vector2(visualScale, visualScale), SpriteEffects.None, 0);
+            spriteBatch.End();
+        }*/
+
         public Vector2 GetPosOnIndex(int index)
         {
             return new Vector2((float)Math.Floor((double)((index % yTotal) * visualScale)), (float)Math.Floor((double)((index / yTotal) * visualScale)));
+        }
+
+        public int GetIndexOnPos(Vector2 pos)
+        {
+            return (int)(pos.Y + yTotal * pos.X);
         }
     }
 }
