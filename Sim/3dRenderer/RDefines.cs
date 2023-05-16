@@ -152,18 +152,33 @@ namespace GameTesting
             if(ind.Length != 12)
                 throw new Exception("Indice length has to be 12");
             cube.indices = ind;
-            cube.tris[ind[0]] = new Triangle(new Vertex(new Vector3(-1, -1, -1) + pos), new Vertex(new Vector3(-1, -1, 1) + pos), new Vertex(new Vector3(-1, 1, 1) + pos), Color.Green);
-            cube.tris[ind[1]] = new Triangle(new Vertex(new Vector3(1, 1, -1) + pos), new Vertex(new Vector3(-1, -1, -1) + pos), new Vertex(new Vector3(-1, 0, -1) + pos), Color.Green);
-            cube.tris[ind[2]] = new Triangle(new Vertex(new Vector3(1, -1, 1) + pos), new Vertex(new Vector3(-1, -1, -1) + pos), new Vertex(new Vector3(1, -1, -1) + pos), Color.Pink);
-            cube.tris[ind[3]] = new Triangle(new Vertex(new Vector3(1, 1, -1) + pos), new Vertex(new Vector3(1, -1, -1) + pos), new Vertex(new Vector3(-1, -1, -1) + pos), Color.Pink);
-            cube.tris[ind[4]] = new Triangle(new Vertex(new Vector3(-1, -1, -1) + pos), new Vertex(new Vector3(-1, 1, 1) + pos), new Vertex(new Vector3(-1, 1, -1) + pos), Color.Purple);
-            cube.tris[ind[5]] = new Triangle(new Vertex(new Vector3(1, -1, 1) + pos), new Vertex(new Vector3(-1, -1, 1) + pos), new Vertex(new Vector3(-1, -1, -1) + pos), Color.Purple);
-            cube.tris[ind[6]] = new Triangle(new Vertex(new Vector3(-1, 1, 1) + pos), new Vertex(new Vector3(-1, -1, 1) + pos), new Vertex(new Vector3(1, 1, 1) + pos), Color.Red);
-            cube.tris[ind[7]] = new Triangle(new Vertex(new Vector3(1, 1, 1) + pos), new Vertex(new Vector3(1, -1, -1) + pos), new Vertex(new Vector3(1, 1, -1) + pos), Color.Red);
-            cube.tris[ind[8]] = new Triangle(new Vertex(new Vector3(1, -1, -1) + pos), new Vertex(new Vector3(1, 1, 1) + pos), new Vertex(new Vector3(1, -1, 1) + pos), Color.Aqua);
-            cube.tris[ind[9]] = new Triangle(new Vertex(new Vector3(1, 1, 1) + pos), new Vertex(new Vector3(1, 1, -1) + pos), new Vertex(new Vector3(-1, 1, -1) + pos), Color.Aqua);
+            //front
+            cube.tris[ind[0]] = new Triangle(new Vertex(new Vector3(-1, 1, -1) + pos), new Vertex(new Vector3(1, 1, 1) + pos), new Vertex(new Vector3(1, 1, -1) + pos), Color.Green);
+            cube.tris[ind[1]] = new Triangle(new Vertex(new Vector3(1, 1, 1) + pos), new Vertex(new Vector3(-1, -1, 1) + pos), new Vertex(new Vector3(1, -1, 1) + pos), Color.Green);
+            //
+            cube.tris[ind[2]] = new Triangle(new Vertex(new Vector3(-1, 1, 1) + pos), new Vertex(new Vector3(-1, -1, -1) + pos), new Vertex(new Vector3(-1, -1, 1) + pos), Color.Pink);
+            cube.tris[ind[3]] = new Triangle(new Vertex(new Vector3(1, -1, -1) + pos), new Vertex(new Vector3(-1, -1, 1) + pos), new Vertex(new Vector3(-1, -1, -1) + pos), Color.Pink);
+            //
+            cube.tris[ind[4]] = new Triangle(new Vertex(new Vector3(1, 1, -1) + pos), new Vertex(new Vector3(1, -1, 1) + pos), new Vertex(new Vector3(1, -1, -1) + pos), Color.Purple);
+            cube.tris[ind[5]] = new Triangle(new Vertex(new Vector3(-1, 1, 1) + pos), new Vertex(new Vector3(1, -1, -1) + pos), new Vertex(new Vector3(-1, -1, -1) + pos), Color.Purple);
+            cube.tris[ind[6]] = new Triangle(new Vertex(new Vector3(-1, 1, -1) + pos), new Vertex(new Vector3(-1, 1, 1) + pos), new Vertex(new Vector3(1, 1, 1) + pos), Color.Red);
+            cube.tris[ind[7]] = new Triangle(new Vertex(new Vector3(1, 1, 1) + pos), new Vertex(new Vector3(-1, 1, 1) + pos), new Vertex(new Vector3(-1, -1, 1) + pos), Color.Red);
+            cube.tris[ind[8]] = new Triangle(new Vertex(new Vector3(-1, 1, 1) + pos), new Vertex(new Vector3(-1, 1, -1) + pos), new Vertex(new Vector3(-1, -1, -1) + pos), Color.Aqua);
+            cube.tris[ind[9]] = new Triangle(new Vertex(new Vector3(1, 1, -1) + pos), new Vertex(new Vector3(1, 1, 1) + pos), new Vertex(new Vector3(1, -1, 1) + pos), Color.Aqua);
             cube.tris[ind[10]] = new Triangle(new Vertex(new Vector3(1,1,1) + pos), new Vertex(new Vector3(-1, 1, -1) + pos), new Vertex(new Vector3(-1, 1, 1) + pos), Color.Black);
             cube.tris[ind[11]] = new Triangle(new Vertex(new Vector3(1,1,1) + pos), new Vertex(new Vector3(-1, 1, 1) + pos), new Vertex(new Vector3(1, -1, 1) + pos), Color.Black);
+            return cube;
+            Vector3[] verticesCubeBlender = new Vector3[]
+            {
+                new Vector3(1.000000f, 1.000000f, -1.000000f),
+                new Vector3(1.000000f, -1.000000f, -1.000000f),
+                new Vector3(1.000000f, 1.000000f, 1.000000f),
+                new Vector3(1.000000f, -1.000000f, 1.000000f),
+                new Vector3(-1.000000f, 1.000000f, -1.000000f),
+                new Vector3(-1.000000f, -1.000000f, -1.000000f),
+                new Vector3(-1.000000f, 1.000000f, 1.000000f),
+                new Vector3(-1.000000f, -1.000000f, 1.000000f)
+            };
             return cube;
         }
     }

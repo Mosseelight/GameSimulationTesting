@@ -74,13 +74,6 @@ namespace GameTesting
             }
 
             camera = new Camera(new Vector3(0, 0, 10), Vector3.Zero, 1);
-
-            triangle[0] = new Triangle(new Vertex(new Vector3(0, 0, 5), Vector3.One, Color.Black), new Vertex(new Vector3(0, 1, 5), Vector3.One, Color.Black), new Vertex(new Vector3(1, 1, 5), Vector3.One, Color.Black));
-            triangle[1] = new Triangle(new Vertex(new Vector3(0, 0, 5), Vector3.One, Color.Black), new Vertex(new Vector3(1, 0, 5), Vector3.One, Color.Black), new Vertex(new Vector3(1, 1, 5), Vector3.One, Color.Black));
-
-            triangle[2] = new Triangle(new Vertex(new Vector3(0, 1, 5), Vector3.One, Color.Black), new Vertex(new Vector3(0, 1, 6), Vector3.One, Color.Black), new Vertex(new Vector3(1, 1, 6), Vector3.One, Color.Black));
-            triangle[3] = new Triangle(new Vertex(new Vector3(0, 1, 5), Vector3.One, Color.Black), new Vertex(new Vector3(1, 1, 6), Vector3.One, Color.Black), new Vertex(new Vector3(1, 1, 6), Vector3.One, Color.Black));
-
             meshes[0] = new Mesh().CreateCube(new Vector3(0, 0, 0));
         }
 
@@ -103,17 +96,6 @@ namespace GameTesting
 
         void VertexShader(GraphicsDeviceManager graphics)
         {
-            for (int i = 0; i < triangle.Length; i++)
-            {
-                for (int v = 0; v < 3; v++)
-                {
-                    Vector4 vertexPos = new Vector4(triangle[i].vertices[v].position, 1);
-                    vertexPos = Vector4.Transform(vertexPos, projectMat);
-                    vertexPos = new Vector4(vertexPos.X / vertexPos.W, vertexPos.Y / vertexPos.W, vertexPos.Z / vertexPos.W, vertexPos.W);
-                    triangle[i].vertices[v].scrPos = new Vector3(((vertexPos.X + 1)/2)*pixelDrawer.xTotal, (((vertexPos.Y * -1) + 1)/2)*pixelDrawer.yTotal, vertexPos.Z);
-                }
-            }
-
             for (int m = 0; m < meshes.Length; m++)
             {
                 for (int v = 0; v < meshes[m].tris.Length; v++)
@@ -131,28 +113,8 @@ namespace GameTesting
 
         void Rasterization()
         {
-            Parallel.For (0, triangle.Length, i =>
-            {
-                for (int x = 0; x < pixelDrawer.xTotal; x++)
-                {
-                    for (int y = 0; y < pixelDrawer.yTotal; y++)
-                    {
-                        Vector2 pos = pixelDrawer.GetPosOnIndex(y + pixelDrawer.yTotal * x);
-                        if(triangle[i].ContainsPoint(pos))
-                        {
-                            float depth = triangle[i].TriangleCenterProj().Z;
-                            if(depth < zDepth[y + pixelDrawer.yTotal * x])
-                            {
-                                zDepth[y + pixelDrawer.yTotal * x] = depth;
-                                pixelDrawer.colors[y + pixelDrawer.yTotal * x] = Color.Green;
-                            }
-                        }
-                    }
-                }
-                zDepth = zDepthReset;
-            });
 
-            /*Parallel.For (0, meshes.Length, m =>
+            Parallel.For (0, meshes.Length, m =>
             {
                 for (int v = 0; v < meshes[m].tris.Length; v++)
                 {
@@ -168,9 +130,9 @@ namespace GameTesting
                         }
                     }
                 }
-            });*/
+            });
 
-            Parallel.For (0, meshes.Length, m =>
+            /*Parallel.For (0, meshes.Length, m =>
             {
                 for (int v = 0; v < meshes[m].tris.Length; v++)
                 {
@@ -186,7 +148,7 @@ namespace GameTesting
                         }
                     }
                 }
-            });
+            });*/
         }
 
 

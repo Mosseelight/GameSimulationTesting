@@ -39,7 +39,7 @@ namespace GameTesting
             {
                 for (int y = yOffset; y > -yOffset; y--)
                 {
-                    if(y > GraphingFunction(-x))
+                    if(y == GraphingFunction(-x))
                     {
                         colors[graphIndex] = Color.Red;
                     }
@@ -64,7 +64,7 @@ namespace GameTesting
 
         int GraphingFunction(int x)
         {
-            double value = x;
+            double value = x*x*x;
             return (int)Math.Round(value);
         }
     }
