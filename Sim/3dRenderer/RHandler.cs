@@ -73,7 +73,7 @@ namespace GameTesting
                 }
             }
 
-            camera = new Camera(new Vector3(0, 0, 10), Vector3.Zero, 5);
+            camera = new Camera(new Vector3(0, 0, 10), Vector3.Zero, 1);
 
             triangle[0] = new Triangle(new Vertex(new Vector3(0, 0, 5), Vector3.One, Color.Black), new Vertex(new Vector3(0, 1, 5), Vector3.One, Color.Black), new Vertex(new Vector3(1, 1, 5), Vector3.One, Color.Black));
             triangle[1] = new Triangle(new Vertex(new Vector3(0, 0, 5), Vector3.One, Color.Black), new Vertex(new Vector3(1, 0, 5), Vector3.One, Color.Black), new Vertex(new Vector3(1, 1, 5), Vector3.One, Color.Black));
@@ -88,7 +88,11 @@ namespace GameTesting
         {
             worldMat = Matrix.Identity;
             perspectiveMat = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(fov), pixelDrawer.xTotal / pixelDrawer.yTotal, nearValue, farValue);
+<<<<<<< HEAD
             viewMat = Matrix.CreateLookAt(camera.Position -= new Vector3(0.1f, 0, 0.1f), camera.LookAt, Vector3.Up);
+=======
+            viewMat = Matrix.CreateLookAt(camera.Position -= new Vector3(0, 0, 0), camera.LookAt, Vector3.Up);
+>>>>>>> 4df3e6973f4ddcf19f47be3051afd4062081b735
             projectMat = worldMat * viewMat * perspectiveMat;
 
 
@@ -152,6 +156,7 @@ namespace GameTesting
                 zDepth = zDepthReset;
             });
 
+<<<<<<< HEAD
             /*Parallel.For (0, meshes.Length, m =>
             {
                 for (int v = 0; v < meshes[m].tris.Length; v++)
@@ -170,6 +175,8 @@ namespace GameTesting
                 }
             });*/
 
+=======
+>>>>>>> 4df3e6973f4ddcf19f47be3051afd4062081b735
             Parallel.For (0, meshes.Length, m =>
             {
                 for (int v = 0; v < meshes[m].tris.Length; v++)
@@ -187,7 +194,10 @@ namespace GameTesting
                     }
                 }
             });
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4df3e6973f4ddcf19f47be3051afd4062081b735
         }
 
 

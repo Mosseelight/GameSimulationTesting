@@ -54,7 +54,6 @@ namespace GameTesting
         }
     }
 
-
     //needed for extra percision
     public class VectorD3
     {
