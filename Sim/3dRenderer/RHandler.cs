@@ -52,7 +52,6 @@ namespace GameTesting
         Matrix projectMat;
 
         float[] zDepth;
-        float[] zDepthReset;
 
         Triangle[] triangle = new Triangle[4];
         Mesh[] meshes = new Mesh[1];
@@ -63,18 +62,24 @@ namespace GameTesting
             pixelDrawer.InitDrawer(graphics);
 
             zDepth = new float[pixelDrawer.xTotal * pixelDrawer.yTotal];
-            zDepthReset = new float[pixelDrawer.xTotal * pixelDrawer.yTotal];
             for (int x = 0; x < pixelDrawer.xTotal; x++)
             {
                 for (int y = 0; y < pixelDrawer.yTotal; y++)
                 {
                    zDepth[y + pixelDrawer.yTotal * x] = int.MaxValue; 
-                   zDepthReset[y + pixelDrawer.yTotal * x] = int.MaxValue; 
                 }
             }
 
             camera = new Camera(new Vector3(0, 0, 10), Vector3.Zero, 1);
             meshes[0] = new Mesh().CreateCube(new Vector3(0, 0, 0));
+
+            for (int m = 0; m < meshes.Length; m++)
+            {
+                for (int v = 0; v < meshes[m].tris.Length; v++)
+                {
+                    meshes[m].tris[v].FixWindingOrder();
+                }
+            }
         }
 
         public void Draw(Texture2D pixel, SpriteBatch spriteBatch, GraphicsDeviceManager graphics, float time)
@@ -104,7 +109,7 @@ namespace GameTesting
                     {
                         Vector4 vertexPos = new Vector4(meshes[m].tris[v].vertices[vv].position, 1);
                         vertexPos = Vector4.Transform(vertexPos, projectMat);
-                        vertexPos = new Vector4(vertexPos.Y / vertexPos.W, vertexPos.X / vertexPos.W, vertexPos.Z / vertexPos.W, vertexPos.W);
+                        vertexPos = new Vector4(vertexPos.X / vertexPos.W, vertexPos.Y / vertexPos.W, vertexPos.Z / vertexPos.W, vertexPos.W);
                         meshes[m].tris[v].vertices[vv].scrPos = new Vector3(((vertexPos.X + 1)/2)*pixelDrawer.xTotal, (((vertexPos.Y * -1) + 1)/2)*pixelDrawer.yTotal, vertexPos.Z);
                     }
                 }
@@ -114,13 +119,14 @@ namespace GameTesting
         void Rasterization()
         {
 
-            Parallel.For (0, meshes.Length, m =>
+            /*Parallel.For (0, meshes.Length, m =>
             {
+                //meshes[m].SortIndices(camera.Position);
                 for (int v = 0; v < meshes[m].tris.Length; v++)
                 {
-                    for (int x = (int)meshes[m].tris[v].TriangleBounds().minX; x < (int)meshes[m].tris[v].TriangleBounds().maxX; x++)
+                    for (int x = (int)meshes[m].tris[v].TriangleBoundsProj().minX; x < (int)meshes[m].tris[v].TriangleBoundsProj().maxX; x++)
                     {
-                        for (int y = (int)meshes[m].tris[v].TriangleBounds().minY; y < (int)meshes[m].tris[v].TriangleBounds().maxY; y++)
+                        for (int y = (int)meshes[m].tris[v].TriangleBoundsProj().minY; y < (int)meshes[m].tris[v].TriangleBoundsProj().maxY; y++)
                         {
                             Vector2 pos = new Vector2(x,y);
                             if(meshes[m].tris[v].ContainsPoint(pos))
@@ -130,9 +136,9 @@ namespace GameTesting
                         }
                     }
                 }
-            });
+            });*/
 
-            /*Parallel.For (0, meshes.Length, m =>
+            Parallel.For (0, meshes.Length, m =>
             {
                 for (int v = 0; v < meshes[m].tris.Length; v++)
                 {
@@ -140,15 +146,15 @@ namespace GameTesting
                     {
                         for (int y = 0; y < pixelDrawer.yTotal; y++)
                         {
-                            Vector2 pos = pixelDrawer.GetPosOnIndex(y + pixelDrawer.yTotal * x);
+                            Vector2 pos = new Vector2(x,y);
                             if(meshes[m].tris[v].ContainsPoint(pos))
                             {
-                                pixelDrawer.colors[y + pixelDrawer.yTotal * x] = meshes[m].tris[v].color;
+                                pixelDrawer.colors[(pixelDrawer.yTotal * x) + y] = meshes[m].tris[v].color;
                             }
                         }
                     }
                 }
-            });*/
+            });
         }
 
 

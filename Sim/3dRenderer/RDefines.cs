@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 
 namespace GameTesting
@@ -48,13 +50,15 @@ namespace GameTesting
     public class Triangle
     {
         public Vertex[] vertices = new Vertex[3];
+        public Vector3 normal;
         public Color color = Color.White;
+        int currentIndice = 0;
 
         public Triangle(Vertex _verLeft, Vertex _verRight, Vertex _verTop)
         {
             vertices[0] = _verLeft;
-            vertices[1] = _verRight;
-            vertices[2] = _verTop;
+            vertices[1] = _verTop;
+            vertices[2] = _verRight;
         }
 
         public Triangle(Vertex _verLeft, Vertex _verRight, Vertex _verTop, Color col)
@@ -63,6 +67,24 @@ namespace GameTesting
             vertices[1] = _verRight;
             vertices[2] = _verTop;
             color = col;
+        }
+
+        public Triangle(Vertex _verLeft, Vertex _verRight, Vertex _verTop, Color col, Vector3 nor)
+        {
+            vertices[0] = _verLeft;
+            vertices[1] = _verTop;
+            vertices[2] = _verRight;
+            color = col;
+            normal = nor;
+        }
+        public Triangle(Vertex _verLeft, Vertex _verRight, Vertex _verTop, Color col, Vector3 nor, int curInd)
+        {
+            vertices[0] = _verLeft;
+            vertices[1] = _verTop;
+            vertices[2] = _verRight;
+            color = col;
+            normal = nor;
+            currentIndice = curInd;
         }
 
         public bool ContainsPoint(Vector2 point)
@@ -101,10 +123,10 @@ namespace GameTesting
         public BoundBox TriangleBounds()
         {
             BoundBox box = new BoundBox();
-            box.minX = MathF.Min(vertices[0].scrPos.X, MathF.Min(vertices[1].scrPos.X, vertices[2].scrPos.X));
-            box.minY = MathF.Min(vertices[0].scrPos.Y, MathF.Min(vertices[1].scrPos.Y, vertices[2].scrPos.Y));
-            box.maxX = MathF.Max(vertices[0].scrPos.X, MathF.Min(vertices[1].scrPos.X, vertices[2].scrPos.X));
-            box.maxY = MathF.Max(vertices[0].scrPos.X, MathF.Min(vertices[1].scrPos.X, vertices[2].scrPos.X));
+            box.minX = MathF.Min(vertices[0].position.X, MathF.Min(vertices[1].position.X, vertices[2].position.X));
+            box.minY = MathF.Min(vertices[0].position.Y, MathF.Min(vertices[1].position.Y, vertices[2].position.Y));
+            box.maxX = MathF.Max(vertices[0].position.X, MathF.Min(vertices[1].position.X, vertices[2].position.X));
+            box.maxY = MathF.Max(vertices[0].position.Y, MathF.Min(vertices[1].position.Y, vertices[2].position.Y));
             return box;
         }
 
@@ -114,18 +136,35 @@ namespace GameTesting
             box.minX = MathF.Min(vertices[0].scrPos.X, MathF.Min(vertices[1].scrPos.X, vertices[2].scrPos.X));
             box.minY = MathF.Min(vertices[0].scrPos.Y, MathF.Min(vertices[1].scrPos.Y, vertices[2].scrPos.Y));
             box.maxX = MathF.Max(vertices[0].scrPos.X, MathF.Min(vertices[1].scrPos.X, vertices[2].scrPos.X));
-            box.maxY = MathF.Max(vertices[0].scrPos.X, MathF.Min(vertices[1].scrPos.X, vertices[2].scrPos.X));
+            box.maxY = MathF.Max(vertices[0].scrPos.Y, MathF.Min(vertices[1].scrPos.Y, vertices[2].scrPos.Y));
             return box;
+        }
+
+        public void FixWindingOrder()
+        {
+            Vector3 vertex0 = vertices[0].position;
+            Vector3 vertex1 = vertices[1].position;
+            Vector3 vertex2 = vertices[2].position;
+
+            Vector3 e1 = vertices[1].position - vertices[0].position;
+            Vector3 e2 = vertices[2].position - vertices[0].position;
+
+            Vector3 cross = Vector3.Cross(e1, e2);
+
+            if(cross.Z < 0)
+            {
+                Console.WriteLine(vertices[1].position);
+                vertices[2].position = vertex2;
+                vertices[1].position = vertex1;
+                Console.WriteLine(vertices[1].position);
+            }
         }
 
         public bool BackfaceCull(Vector3 cameraPos)
         {
-            Vector3 u = vertices[1].position - vertices[0].position;
-            Vector3 v = vertices[2].position - vertices[0].position;
-            Vector3 camDist = TriangleCenter() - cameraPos;
-            Vector3 triNorVec = Vector3.Cross(u,v);
-            float d = -Vector3.Dot(triNorVec, vertices[0].position);
-            float dist = Vector3.Dot(triNorVec, cameraPos) + d;
+            Vector3 camDist = cameraPos - TriangleCenter();
+            float d = -Vector3.Dot(normal, vertices[0].position);
+            float dist = Vector3.Dot(cameraPos, normal) + d;
             
 
             if(dist >= 0)
@@ -153,33 +192,54 @@ namespace GameTesting
                 throw new Exception("Indice length has to be 12");
             cube.indices = ind;
             //front
-            cube.tris[ind[0]] = new Triangle(new Vertex(new Vector3(-1, 1, -1) + pos), new Vertex(new Vector3(1, 1, 1) + pos), new Vertex(new Vector3(1, 1, -1) + pos), Color.Green);
-            cube.tris[ind[1]] = new Triangle(new Vertex(new Vector3(1, 1, 1) + pos), new Vertex(new Vector3(-1, -1, 1) + pos), new Vertex(new Vector3(1, -1, 1) + pos), Color.Green);
-            //
-            cube.tris[ind[2]] = new Triangle(new Vertex(new Vector3(-1, 1, 1) + pos), new Vertex(new Vector3(-1, -1, -1) + pos), new Vertex(new Vector3(-1, -1, 1) + pos), Color.Pink);
-            cube.tris[ind[3]] = new Triangle(new Vertex(new Vector3(1, -1, -1) + pos), new Vertex(new Vector3(-1, -1, 1) + pos), new Vertex(new Vector3(-1, -1, -1) + pos), Color.Pink);
-            //
-            cube.tris[ind[4]] = new Triangle(new Vertex(new Vector3(1, 1, -1) + pos), new Vertex(new Vector3(1, -1, 1) + pos), new Vertex(new Vector3(1, -1, -1) + pos), Color.Purple);
-            cube.tris[ind[5]] = new Triangle(new Vertex(new Vector3(-1, 1, 1) + pos), new Vertex(new Vector3(1, -1, -1) + pos), new Vertex(new Vector3(-1, -1, -1) + pos), Color.Purple);
-            cube.tris[ind[6]] = new Triangle(new Vertex(new Vector3(-1, 1, -1) + pos), new Vertex(new Vector3(-1, 1, 1) + pos), new Vertex(new Vector3(1, 1, 1) + pos), Color.Red);
-            cube.tris[ind[7]] = new Triangle(new Vertex(new Vector3(1, 1, 1) + pos), new Vertex(new Vector3(-1, 1, 1) + pos), new Vertex(new Vector3(-1, -1, 1) + pos), Color.Red);
-            cube.tris[ind[8]] = new Triangle(new Vertex(new Vector3(-1, 1, 1) + pos), new Vertex(new Vector3(-1, 1, -1) + pos), new Vertex(new Vector3(-1, -1, -1) + pos), Color.Aqua);
-            cube.tris[ind[9]] = new Triangle(new Vertex(new Vector3(1, 1, -1) + pos), new Vertex(new Vector3(1, 1, 1) + pos), new Vertex(new Vector3(1, -1, 1) + pos), Color.Aqua);
-            cube.tris[ind[10]] = new Triangle(new Vertex(new Vector3(1,1,1) + pos), new Vertex(new Vector3(-1, 1, -1) + pos), new Vertex(new Vector3(-1, 1, 1) + pos), Color.Black);
-            cube.tris[ind[11]] = new Triangle(new Vertex(new Vector3(1,1,1) + pos), new Vertex(new Vector3(-1, 1, 1) + pos), new Vertex(new Vector3(1, -1, 1) + pos), Color.Black);
+            cube.tris[ind[0]] = new Triangle(new Vertex(new Vector3(-1.0f, 1.0f, 1.0f) + pos), new Vertex(new Vector3(-1.0f, -1.0f, -1.0f) + pos), new Vertex(new Vector3(-1.0f, -1.0f, 1.0f) + pos), Color.Green, new Vector3(-1.0f, -0, -0), ind[0]);
+            cube.tris[ind[1]] = new Triangle(new Vertex(new Vector3(-1.0f, 1.0f, 1.0f) + pos), new Vertex(new Vector3(-1.0f, 1.0f, -1.0f) + pos), new Vertex(new Vector3(-1.0f, -1.0f, -1.0f) + pos), Color.Green, new Vector3(-1.0f, -0, -0), ind[1]);
+
+            cube.tris[ind[2]] = new Triangle(new Vertex(new Vector3(-1.0f, 1.0f, -1.0f) + pos), new Vertex(new Vector3(1.0f, -1.0f, -1.0f) + pos), new Vertex(new Vector3(-1.0f, -1.0f, -1.0f) + pos), Color.Red, new Vector3(-0, -0, -1.0f), ind[2]);
+            cube.tris[ind[3]] = new Triangle(new Vertex(new Vector3(-1.0f, 1.0f, -1.0f) + pos), new Vertex(new Vector3(1.0f, 1.0f, -1.0f) + pos), new Vertex(new Vector3(1.0f, -1.0f, -1.0f) + pos), Color.Red, new Vector3(-0, -0, -1.0f), ind[3]);
+
+            cube.tris[ind[4]] = new Triangle(new Vertex(new Vector3(1.0f, 1.0f, -1.0f) + pos), new Vertex(new Vector3(1.0f, -1.0f, 1.0f) + pos), new Vertex(new Vector3(1.0f, -1.0f, -1.0f) + pos), Color.Pink, new Vector3(1.0f, -0, -0), ind[4]);
+            cube.tris[ind[5]] = new Triangle(new Vertex(new Vector3(1.0f, 1.0f, -1.0f) + pos), new Vertex(new Vector3(1.0f, 1.0f, 1.0f) + pos), new Vertex(new Vector3(1.0f, -1.0f, 1.0f) + pos), Color.Pink, new Vector3(1.0f, -0, -0), ind[5]);
+
+            cube.tris[ind[6]] = new Triangle(new Vertex(new Vector3(1.0f, 1.0f, 1.0f) + pos), new Vertex(new Vector3(-1.0f, -1.0f, 1.0f) + pos), new Vertex(new Vector3(1.0f, -1.0f, 1.0f) + pos), Color.Aqua, new Vector3(-0, -0, 1.0f), ind[6]);
+            cube.tris[ind[7]] = new Triangle(new Vertex(new Vector3(1.0f, 1.0f, 1.0f) + pos), new Vertex(new Vector3(-1.0f, 1.0f, 1.0f) + pos), new Vertex(new Vector3(-1.0f, -1.0f, 1.0f) + pos), Color.Aqua, new Vector3(-0, -0, 1.0f), ind[7]);
+
+            cube.tris[ind[8]] = new Triangle(new Vertex(new Vector3(1.0f, -1.0f, -1.0f) + pos), new Vertex(new Vector3(-1.0f, -1.0f, 1.0f) + pos), new Vertex(new Vector3(-1.0f, -1.0f, -1.0f) + pos), Color.Purple, new Vector3(-0, -1.0f, -0), ind[8]);
+            cube.tris[ind[9]] = new Triangle(new Vertex(new Vector3(1.0f, -1.0f, -1.0f) + pos), new Vertex(new Vector3(1.0f, -1.0f, 1.0f) + pos), new Vertex(new Vector3(-1.0f, -1.0f, 1.0f) + pos), Color.Purple, new Vector3(-0, -1.0f, -0), ind[9]);
+
+            cube.tris[ind[10]] = new Triangle(new Vertex(new Vector3(-1.0f, 1.0f, -1.0f) + pos), new Vertex(new Vector3(1.0f, 1.0f, 1.0f) + pos), new Vertex(new Vector3(1.0f, 1.0f, -1.0f) + pos), Color.Black, new Vector3(-0, 1.0f, -0), ind[10]);
+            cube.tris[ind[11]] = new Triangle(new Vertex(new Vector3(-1.0f, 1.0f, -1.0f) + pos), new Vertex(new Vector3(-1.0f, 1.0f, 1.0f) + pos), new Vertex(new Vector3(1.0f, 1.0f, 1.0f) + pos), Color.Black, new Vector3(-0, 1.0f, -0), ind[11]);
             return cube;
-            Vector3[] verticesCubeBlender = new Vector3[]
+        }
+
+        public void SortIndices(Vector3 camPos)
+        {
+            if(tris.Length == 0)
+                throw new Exception("No triangles");
+            int[] indicesSorted = new int[tris.Length];
+            List<double> distList = new List<double>();
+            Vector3[] distsVec = new Vector3[tris.Length];
+            double[] dists = new double[tris.Length];
+            for (int v = 0; v < tris.Length; v++)
             {
-                new Vector3(1.000000f, 1.000000f, -1.000000f),
-                new Vector3(1.000000f, -1.000000f, -1.000000f),
-                new Vector3(1.000000f, 1.000000f, 1.000000f),
-                new Vector3(1.000000f, -1.000000f, 1.000000f),
-                new Vector3(-1.000000f, 1.000000f, -1.000000f),
-                new Vector3(-1.000000f, -1.000000f, -1.000000f),
-                new Vector3(-1.000000f, 1.000000f, 1.000000f),
-                new Vector3(-1.000000f, -1.000000f, 1.000000f)
-            };
-            return cube;
+                distsVec[v] = tris[v].TriangleCenter() - camPos;
+                dists[v] = distsVec[v].Length();
+                distList.Add(dists[v]);
+            }
+            distList.Sort();
+            for (int v = 0; v < tris.Length; v++)
+            {
+               int index = Array.IndexOf(dists, distList[v]);
+               indicesSorted[v] = index;
+            }
+
+            Triangle[] sortedTris = new Triangle[tris.Length];
+            for (int v = 0; v < tris.Length; v++)
+            {
+                sortedTris[v] = tris[indices[v]];
+            }
+
+            tris = sortedTris;
         }
     }
 }

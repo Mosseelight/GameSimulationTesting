@@ -86,7 +86,7 @@ namespace GameTesting
 
         public int GetIndexOnPos(Vector2 pos)
         {
-            return (int)(pos.Y + yTotal * pos.X);
+            return (int)((yTotal * pos.X) + pos.Y);
         }
     }
 }
