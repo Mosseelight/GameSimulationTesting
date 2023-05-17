@@ -118,43 +118,48 @@ namespace GameTesting
 
         void Rasterization()
         {
-
-            /*Parallel.For (0, meshes.Length, m =>
+            Parallel.For (0, meshes.Length, m =>
             {
                 //meshes[m].SortIndices(camera.Position);
                 for (int v = 0; v < meshes[m].tris.Length; v++)
                 {
-                    for (int x = (int)meshes[m].tris[v].TriangleBoundsProj().minX; x < (int)meshes[m].tris[v].TriangleBoundsProj().maxX; x++)
+                    if(!meshes[m].tris[v].BackfaceCull(camera.Position))
                     {
-                        for (int y = (int)meshes[m].tris[v].TriangleBoundsProj().minY; y < (int)meshes[m].tris[v].TriangleBoundsProj().maxY; y++)
+                        for (int x = (int)meshes[m].tris[v].TriangleBoundsProj().minX; x < (int)meshes[m].tris[v].TriangleBoundsProj().maxX; x++)
                         {
-                            Vector2 pos = new Vector2(x,y);
-                            if(meshes[m].tris[v].ContainsPoint(pos))
+                            for (int y = (int)meshes[m].tris[v].TriangleBoundsProj().minY; y < (int)meshes[m].tris[v].TriangleBoundsProj().maxY; y++)
                             {
-                                pixelDrawer.colors[pixelDrawer.GetIndexOnPos(pos)] = meshes[m].tris[v].color;
-                            }
-                        }
-                    }
-                }
-            });*/
-
-            Parallel.For (0, meshes.Length, m =>
-            {
-                for (int v = 0; v < meshes[m].tris.Length; v++)
-                {
-                    for (int x = 0; x < pixelDrawer.xTotal; x++)
-                    {
-                        for (int y = 0; y < pixelDrawer.yTotal; y++)
-                        {
-                            Vector2 pos = new Vector2(x,y);
-                            if(meshes[m].tris[v].ContainsPoint(pos))
-                            {
-                                pixelDrawer.colors[(pixelDrawer.yTotal * x) + y] = meshes[m].tris[v].color;
+                                Vector2 pos = new Vector2(x,y);
+                                if(meshes[m].tris[v].ContainsPoint(pos))
+                                {
+                                    pixelDrawer.colors[pixelDrawer.GetIndexOnPos(pos)] = meshes[m].tris[v].color;
+                                }
                             }
                         }
                     }
                 }
             });
+
+            /*Parallel.For (0, meshes.Length, m =>
+            {
+                for (int v = 0; v < meshes[m].tris.Length; v++)
+                {
+                    if(meshes[m].tris[v].BackfaceCull(camera.Position))
+                    {
+                        for (int x = 0; x < pixelDrawer.xTotal; x++)
+                        {
+                            for (int y = 0; y < pixelDrawer.yTotal; y++)
+                            {
+                                Vector2 pos = new Vector2(x,y);
+                                if(meshes[m].tris[v].ContainsPoint(pos))
+                                {
+                                    pixelDrawer.colors[(pixelDrawer.yTotal * x) + y] = meshes[m].tris[v].color;
+                                }
+                            }
+                        }
+                    }
+                }
+            });*/
         }
 
 
