@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
-using System.Formats.Asn1;
 
 namespace GameTesting
 {
@@ -22,7 +21,6 @@ namespace GameTesting
         ObjSimulation objSim = new ObjSimulation();
         VectorFieldSim vectorField = new VectorFieldSim();
         NeuralNetworkHandlerVisual neuralNetwork = new NeuralNetworkHandlerVisual();
-        NeuralNetworkHandlerWord nerualNetworkWords = new NeuralNetworkHandlerWord();
         MandelBrotHandler mandelBrot = new MandelBrotHandler();
         Grapher grapher = new Grapher();
         PathFinderHandler pathFinder = new PathFinderHandler();
@@ -39,7 +37,6 @@ namespace GameTesting
         bool runGravitySim = false;
         bool runVectorFieldSim = false;
         bool runNerualNetworkSim = false;
-        bool runNerualNetworkWordSim = false;
         bool runMandelBrotSim = false;
         bool runGraphSim = false;
         bool runPathSim = false;
@@ -105,12 +102,10 @@ namespace GameTesting
                     neuralNetwork.RunNerualNetwork();
                     Console.WriteLine("pressed 3");
                 }
-                if(Keyboard.GetState().IsKeyDown(Keys.D4) && !runNerualNetworkWordSim)
+                if(Keyboard.GetState().IsKeyDown(Keys.D4) && !)
                 {
-                    runNerualNetworkWordSim = true;
                     Initializer = true;
-                    nerualNetworkWords.InitNeuralNetwork(_graphics);
-                    nerualNetworkWords.RunNerualNetwork();
+                    
                     Console.WriteLine("pressed 4");
                 }
                 if(Keyboard.GetState().IsKeyDown(Keys.D5) && !runMandelBrotSim)
@@ -176,9 +171,9 @@ namespace GameTesting
             {
                 neuralNetwork.HandleInput();
             }
-            if(runNerualNetworkWordSim)
+            if()
             {
-                nerualNetworkWords.HandleInput();
+                
             }
 
             base.Update(gameTime);
@@ -203,9 +198,9 @@ namespace GameTesting
             {
                 neuralNetwork.DrawPixels(pixel, spriteBatch, _graphics);
             }
-            if(runNerualNetworkWordSim)
+            if()
             {
-                nerualNetworkWords.DrawPixels(pixel, spriteBatch, _graphics);
+                
             }
             if(runMandelBrotSim)
             {
