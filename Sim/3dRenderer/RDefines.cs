@@ -162,12 +162,11 @@ namespace GameTesting
 
         public bool BackfaceCull(Vector3 cameraPos)
         {
-            Vector3 camDist = cameraPos - TriangleCenter();
-            float d = -Vector3.Dot(normal, vertices[0].position);
-            float dist = Vector3.Dot(cameraPos, normal) + d;
-            
+            Vector3 camDist = TriangleCenter() - cameraPos;
+            float dist = Vector3.Dot(camDist, normal);
 
-            if(dist >= 0)
+
+            if(dist < 0)
                 return true;
 
             return false;
