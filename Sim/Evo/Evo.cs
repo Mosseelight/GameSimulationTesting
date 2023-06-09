@@ -8,15 +8,20 @@ namespace GameTesting
 {
     public class EvoSim
     {
-
-        List<Animal> animals = new List<Animal>();
-        int animalAmount = 1;
+        List<Entity> entities = new List<Entity>();
+        int animalAmount = 10;
+        int plantAmount = 10;
 
         public void InitEvoSim()
         {
             for (int i = 0; i < animalAmount; i++)
             {
-                animals.Add(new Animal(5, 5, 0, 100, 100, new Vector2(1000, 500), Color.White));
+                entities.Add(new Entity(new Animal(5, 100, 0, 100, 100, new Vector2(1000, 500), Color.White)));
+            }
+
+            for (int i = 0; i < plantAmount; i++)
+            {
+                entities.Add(new Entity(new Plant(new Vector2(900 - i, 400 + i))));
             }
         }
 
@@ -25,8 +30,10 @@ namespace GameTesting
             //run on a update tick? like 500ms then update
             for (int i = 0; i < animalAmount; i++)
             {
-                animals[i].UpdateAnimal();
+                if(entities[i].isAnimal)
+                    entities[i].animal.UpdateAnimal(entities);
             }
+            
         }
 
         public void DrawEvoSim(Texture2D circle, SpriteBatch spriteBatch, GraphicsDeviceManager graphics)
@@ -34,10 +41,38 @@ namespace GameTesting
             spriteBatch.Begin();
             for (int i = 0; i < animalAmount; i++)
             {
-                if(!animals[i].alive)
-                    spriteBatch.Draw(circle, animals[i].position, animals[i].color);
+                if(!entities[i].animal.alive)
+                    spriteBatch.Draw(circle, entities[i].animal.position, entities[i].animal.color);
+            }
+
+            for (int i = 0; i < plantAmount; i++)
+            {
+                if(entities[i].isPlant)
+                    spriteBatch.Draw(circle, entities[i].plant.position, Color.Green);
             }
             spriteBatch.End();
+        }
+    }
+
+    public class Entity
+    {
+        public Animal animal;
+        public bool isAnimal = false;
+        public Plant plant;
+        public bool isPlant = false;
+
+        public Entity(Animal animal)
+        {
+            this.animal = animal;
+            this.isAnimal = true;
+            this.plant = null;
+        }
+
+        public Entity(Plant plant)
+        {
+            this.plant = plant;
+            this.isPlant = true;
+            this.animal = null;
         }
     }
 
@@ -79,10 +114,11 @@ namespace GameTesting
             this.color = color;
         }
 
-        public void UpdateAnimal()
+        public void UpdateAnimal(List<Entity> entities)
         {
             UpdateStats();
             UpdateMovement();
+            UpdateVisual(entities);
         }
 
         void UpdateStats()
@@ -97,9 +133,41 @@ namespace GameTesting
 
         void UpdateMovement()
         {
-            moveDir = new Vector2(RandomNumber(-1, 1), RandomNumber(-1, 1));
             position += moveDir * speed;
         }
 
+        void UpdateVisual(List<Entity> entities)
+        {
+            for (int i = 0; i < entities.Count; i++)
+            {
+                if(entities[i].isPlant && Vector2.Distance(position, entities[i].plant.position) < visualRadius)
+                {
+                    moveDir = Vector2.Normalize(entities[i].plant.position - position);
+                }
+                else
+                {
+                    moveDir = new Vector2(RandomNumber(-1, 1), RandomNumber(-1, 1));
+                }
+
+                if(entities[i].isAnimal && entities[i].animal.preyLevel > preyLevel && Vector2.Distance(position, entities[i].animal.position) < visualRadius)
+                {
+                    moveDir = Vector2.Normalize(position - entities[i].animal.position);
+                }
+            }
+        }
+
+    }
+
+    public class Plant
+    {
+        public float nutrition;
+        public Vector2 position;
+
+        public Plant() {}
+
+        public Plant(Vector2 position)
+        {
+            this.position = position;
+        }
     }
 }
