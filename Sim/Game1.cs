@@ -27,6 +27,7 @@ namespace GameTesting
         RendererHandler renderer = new RendererHandler();
         RayTracerHandler rayTracer = new RayTracerHandler();
         ReflectorHandler reflector = new ReflectorHandler();
+        EvoSim evoSim = new EvoSim();
 
         Texture2D circle;
         Texture2D arrow;
@@ -43,6 +44,7 @@ namespace GameTesting
         bool runRendererSim = false;
         bool runRayTracerSim = false;
         bool runReflectorSim = false;
+        bool runEvoSim = false;
         bool Initializer = false;
 
 
@@ -102,10 +104,11 @@ namespace GameTesting
                     neuralNetwork.RunNerualNetwork();
                     Console.WriteLine("pressed 3");
                 }
-                if(Keyboard.GetState().IsKeyDown(Keys.D4) && !)
+                if(Keyboard.GetState().IsKeyDown(Keys.D4) && !runEvoSim)
                 {
                     Initializer = true;
-                    
+                    runEvoSim = true;
+                    evoSim.InitEvoSim();
                     Console.WriteLine("pressed 4");
                 }
                 if(Keyboard.GetState().IsKeyDown(Keys.D5) && !runMandelBrotSim)
@@ -171,9 +174,9 @@ namespace GameTesting
             {
                 neuralNetwork.HandleInput();
             }
-            if()
+            if(runEvoSim)
             {
-                
+                evoSim.UpdateEvoSim();
             }
 
             base.Update(gameTime);
@@ -198,10 +201,6 @@ namespace GameTesting
             {
                 neuralNetwork.DrawPixels(pixel, spriteBatch, _graphics);
             }
-            if()
-            {
-                
-            }
             if(runMandelBrotSim)
             {
                 mandelBrot.DrawPixels(pixel, spriteBatch, _graphics, camera);
@@ -225,6 +224,10 @@ namespace GameTesting
             if(runReflectorSim)
             {
                 reflector.Draw(pixel, spriteBatch, _graphics);
+            }
+            if(runEvoSim)
+            {
+                evoSim.DrawEvoSim(circle, spriteBatch, _graphics);
             }
 
             base.Draw(gameTime);
