@@ -118,7 +118,7 @@ namespace GameTesting
 
         void Rasterization()
         {
-            Parallel.For (0, meshes.Length, m =>
+            /*Parallel.For (0, meshes.Length, m =>
             {
                 //meshes[m].SortIndices(camera.Position);
                 for (int v = 0; v < meshes[m].tris.Length; v++)
@@ -138,9 +138,9 @@ namespace GameTesting
                         }
                     }
                 }
-            });
+            });*/
 
-            /*Parallel.For (0, meshes.Length, m =>
+            Parallel.For (0, meshes.Length, m =>
             {
                 for (int v = 0; v < meshes[m].tris.Length; v++)
                 {
@@ -159,7 +159,7 @@ namespace GameTesting
                         }
                     }
                 }
-            });*/
+            });
         }
 
 
