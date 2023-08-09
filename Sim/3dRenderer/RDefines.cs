@@ -154,8 +154,8 @@ namespace GameTesting
             if(cross.Z < 0)
             {
                 Console.WriteLine(vertices[1].position);
-                vertices[2].position = vertex2;
-                vertices[1].position = vertex1;
+                vertices[2].position = vertex1;
+                vertices[1].position = vertex2;
                 Console.WriteLine(vertices[1].position);
             }
         }
