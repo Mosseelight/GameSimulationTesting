@@ -180,13 +180,14 @@ namespace GameTesting
             }
 
             base.Update(gameTime);
-            time = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            time += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.DarkCyan);
+
 
             // TODO: Add your drawing code here
             if(runGravitySim)
@@ -211,19 +212,19 @@ namespace GameTesting
             }
             if(runPathSim)
             {
-                pathFinder.Draw(pixel, spriteBatch, _graphics);
+                pathFinder.Draw(ref pixel, spriteBatch, _graphics);
             }
             if(runRendererSim)
             {
-                renderer.Draw(pixel, spriteBatch, _graphics, gameTime.ElapsedGameTime.Milliseconds);
+                renderer.Draw(ref pixel, spriteBatch, _graphics, time);
             }
             if(runRayTracerSim)
             {
-                rayTracer.Draw(pixel, spriteBatch, _graphics);
+                rayTracer.Draw(ref pixel, spriteBatch, _graphics);
             }
             if(runReflectorSim)
             {
-                reflector.Draw(pixel, spriteBatch, _graphics);
+                reflector.Draw(ref pixel, spriteBatch, _graphics);
             }
             if(runEvoSim)
             {

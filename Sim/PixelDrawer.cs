@@ -58,7 +58,7 @@ namespace GameTesting
             }
         }
 
-        public void DrawPixels(Texture2D pixel, SpriteBatch spriteBatch, GraphicsDeviceManager graphics)
+        public void DrawPixels(ref Texture2D pixel, SpriteBatch spriteBatch, GraphicsDeviceManager graphics)
         {
             spriteBatch.Begin();
             for (int x = 0; x < visualX; x++)
@@ -73,9 +73,10 @@ namespace GameTesting
 
         /*public void NewDrawPixels(GraphicsDeviceManager graphics, SpriteBatch spriteBatch)
         {
-            screenTexture.SetData(colors);
+            screenTexture.SetData<Color>(colors, 0, colors.Length);
             spriteBatch.Begin();
-            spriteBatch.Draw(screenTexture, Vector2.Zero, null, Color.White, 0, Vector2.Zero, new Vector2(visualScale, visualScale), SpriteEffects.None, 0);
+            //spriteBatch.Draw(screenTexture, Vector2.Zero, null, Color.White, 0, Vector2.Zero, new Vector2(visualScale, visualScale), SpriteEffects.None, 0);
+            spriteBatch.Draw(screenTexture, new Rectangle(0, 0, xTotal, yTotal), Color.White);
             spriteBatch.End();
         }*/
 

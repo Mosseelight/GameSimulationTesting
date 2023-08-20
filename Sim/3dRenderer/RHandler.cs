@@ -48,7 +48,6 @@ namespace GameTesting
         float nearValue = 0.1f;
         float farValue = 100f;
         Matrix viewMat;
-        Matrix worldMat;
         Matrix projectMat;
 
         float[] zDepth;
@@ -58,7 +57,7 @@ namespace GameTesting
 
         public void InitRenderer(GraphicsDeviceManager graphics)
         {
-            pixelDrawer.visualScale = 3;
+            pixelDrawer.visualScale = 4;
             pixelDrawer.InitDrawer(graphics);
 
             zDepth = new float[pixelDrawer.xTotal * pixelDrawer.yTotal];
@@ -77,26 +76,30 @@ namespace GameTesting
             {
                 for (int v = 0; v < meshes[m].tris.Length; v++)
                 {
-                    meshes[m].tris[v].FixWindingOrder();
+                    //meshes[m].tris[v].FixWindingOrder();
+                    meshes[m].tris[v].CreateNormal();
                 }
             }
         }
 
-        public void Draw(Texture2D pixel, SpriteBatch spriteBatch, GraphicsDeviceManager graphics, float time)
+        public void Draw(ref Texture2D pixel, SpriteBatch spriteBatch, GraphicsDeviceManager graphics, float time)
         {
-            worldMat = Matrix.Identity;
-            perspectiveMat = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(fov), pixelDrawer.xTotal / pixelDrawer.yTotal, nearValue, farValue);
-            viewMat = Matrix.CreateLookAt(camera.Position -= new Vector3(0.1f, 0, 0.1f), camera.LookAt, Vector3.Up);
-            projectMat = worldMat * viewMat * perspectiveMat;
+            perspectiveMat = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(fov), 1.7777f, nearValue, farValue);
+            viewMat = Matrix.CreateLookAt(camera.Position = new Vector3(MathF.Sin(time) * 10,MathF.Sin(time) * 11,MathF.Cos(time) * 10), camera.LookAt, Vector3.Up);
+            projectMat = viewMat * perspectiveMat;
 
-
+            Stopwatch stopwatch = Stopwatch.StartNew();
             VertexShader(graphics);
             Rasterization();
-            pixelDrawer.DrawPixels(pixel, spriteBatch, graphics);
+            //stopwatch.Stop();
+            pixelDrawer.DrawPixels(ref pixel, spriteBatch, graphics);
             for (int i = 0; i < pixelDrawer.colors.Length; i++)
             {
-                pixelDrawer.colors[i] = Color.White;
+                pixelDrawer.colors[i] = Color.DarkCyan;
             }
+            stopwatch.Stop();
+            long elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
+            Console.WriteLine("Rendering took " + elapsedMilliseconds + " ms or " + 1000.0f / elapsedMilliseconds + "fps");
         }
 
         void VertexShader(GraphicsDeviceManager graphics)
@@ -107,10 +110,10 @@ namespace GameTesting
                 {
                     for (int vv = 0; vv < 3; vv++)
                     {
-                        Vector4 vertexPos = new Vector4(meshes[m].tris[v].vertices[vv].position, 1);
+                        Vector4 vertexPos = new Vector4(meshes[m].tris[v].vertices[vv].position, 1.0f);
                         vertexPos = Vector4.Transform(vertexPos, projectMat);
                         vertexPos = new Vector4(vertexPos.X / vertexPos.W, vertexPos.Y / vertexPos.W, vertexPos.Z / vertexPos.W, vertexPos.W);
-                        meshes[m].tris[v].vertices[vv].scrPos = new Vector3(((vertexPos.X + 1)/2)*pixelDrawer.xTotal, (((vertexPos.Y * -1) + 1)/2)*pixelDrawer.yTotal, vertexPos.Z);
+                        meshes[m].tris[v].vertices[vv].scrPos = new Vector3((vertexPos.X + 1)/2*pixelDrawer.xTotal, ((vertexPos.Y * -1) + 1)/2*pixelDrawer.yTotal, vertexPos.Z);
                     }
                 }
             }
@@ -118,16 +121,17 @@ namespace GameTesting
 
         void Rasterization()
         {
-            /*Parallel.For (0, meshes.Length, m =>
+            Parallel.For (0, meshes.Length, m =>
             {
                 //meshes[m].SortIndices(camera.Position);
                 for (int v = 0; v < meshes[m].tris.Length; v++)
                 {
                     if(!meshes[m].tris[v].BackfaceCull(camera.Position))
                     {
-                        for (int x = (int)meshes[m].tris[v].TriangleBoundsProj().minX; x < (int)meshes[m].tris[v].TriangleBoundsProj().maxX; x++)
+                        BoundBox box = meshes[m].tris[v].TriangleBoundsProj();
+                        for (int x = (int)box.minX; x < (int)box.maxX; x++)
                         {
-                            for (int y = (int)meshes[m].tris[v].TriangleBoundsProj().minY; y < (int)meshes[m].tris[v].TriangleBoundsProj().maxY; y++)
+                            for (int y = (int)box.minY; y < (int)box.maxY; y++)
                             {
                                 Vector2 pos = new Vector2(x,y);
                                 if(meshes[m].tris[v].ContainsPoint(pos))
@@ -138,32 +142,7 @@ namespace GameTesting
                         }
                     }
                 }
-            });*/
-
-            Parallel.For (0, meshes.Length, m =>
-            {
-                for (int v = 0; v < meshes[m].tris.Length; v++)
-                {
-                    if(meshes[m].tris[v].BackfaceCull(camera.Position))
-                    {
-                        for (int x = 0; x < pixelDrawer.xTotal; x++)
-                        {
-                            for (int y = 0; y < pixelDrawer.yTotal; y++)
-                            {
-                                Vector2 pos = new Vector2(x,y);
-                                if(meshes[m].tris[v].ContainsPoint(pos))
-                                {
-                                    pixelDrawer.colors[(pixelDrawer.yTotal * x) + y] = meshes[m].tris[v].color;
-                                }
-                            }
-                        }
-                    }
-                }
             });
         }
-
-
-
-
     }
 }

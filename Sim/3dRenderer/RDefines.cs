@@ -133,10 +133,29 @@ namespace GameTesting
         public BoundBox TriangleBoundsProj()
         {
             BoundBox box = new BoundBox();
-            box.minX = MathF.Min(vertices[0].scrPos.X, MathF.Min(vertices[1].scrPos.X, vertices[2].scrPos.X));
-            box.minY = MathF.Min(vertices[0].scrPos.Y, MathF.Min(vertices[1].scrPos.Y, vertices[2].scrPos.Y));
-            box.maxX = MathF.Max(vertices[0].scrPos.X, MathF.Min(vertices[1].scrPos.X, vertices[2].scrPos.X));
-            box.maxY = MathF.Max(vertices[0].scrPos.Y, MathF.Min(vertices[1].scrPos.Y, vertices[2].scrPos.Y));
+            box.minX = float.MaxValue;
+            box.minY = float.MaxValue;
+            box.maxX = float.MinValue;
+            box.maxY = float.MinValue;
+            float vertx = 0;
+            float verty = 0;
+            for (int i = 0; i < 3; i++)
+            {
+                vertx = vertices[i].scrPos.X;
+                verty = vertices[i].scrPos.Y;
+                if(vertx < box.minX)
+                    box.minX = vertx;
+                if(verty < box.minY)
+                    box.minY = verty;
+                if(vertx > box.maxX)
+                    box.maxX = vertx;
+                if(verty > box.maxY)
+                    box.maxY = verty;
+            }
+            //box.minX = MathF.Min(vertices[0].scrPos.X, MathF.Min(vertices[1].scrPos.X, vertices[2].scrPos.X));
+            //box.minY = MathF.Min(vertices[0].scrPos.Y, MathF.Min(vertices[1].scrPos.Y, vertices[2].scrPos.Y));
+            //box.maxX = MathF.Max(vertices[0].scrPos.X, MathF.Min(vertices[1].scrPos.X, vertices[2].scrPos.X));
+            //box.maxY = MathF.Max(vertices[0].scrPos.Y, MathF.Min(vertices[1].scrPos.Y, vertices[2].scrPos.Y));
             return box;
         }
 
@@ -154,10 +173,18 @@ namespace GameTesting
             if(cross.Z < 0)
             {
                 Console.WriteLine(vertices[1].position);
-                vertices[2].position = vertex1;
-                vertices[1].position = vertex2;
+                vertices[0].position = vertex2;
+                vertices[1].position = vertex1;
+                vertices[2].position = vertex0;
                 Console.WriteLine(vertices[1].position);
             }
+        }
+
+        public void CreateNormal()
+        {
+            Vector3 u = vertices[1].position - vertices[0].position;
+            Vector3 v = vertices[2].position - vertices[0].position;
+            normal = Vector3.Normalize(Vector3.Cross(u,v));
         }
 
         public bool BackfaceCull(Vector3 cameraPos)

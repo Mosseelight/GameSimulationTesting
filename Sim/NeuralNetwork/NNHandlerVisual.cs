@@ -22,9 +22,9 @@ public class NeuralNetworkHandlerVisual
     float[][] weights;
 
     int visualX;
-    int visualScaleX = 3;
+    int visualScaleX = 7;
     int visualY;
-    int visualScaleY = 3;
+    int visualScaleY = 7;
     Color[] colors;
     int saveCount = 1;
     int xyCount = 0;

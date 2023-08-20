@@ -38,9 +38,9 @@ namespace GameTesting
             }
         }
 
-        public void Draw(Texture2D pixel, SpriteBatch spriteBatch, GraphicsDeviceManager graphics)
+        public void Draw(ref Texture2D pixel, SpriteBatch spriteBatch, GraphicsDeviceManager graphics)
         {
-            pixelDrawer.DrawPixels(pixel, spriteBatch, graphics);
+            pixelDrawer.DrawPixels(ref pixel, spriteBatch, graphics);
         }
 
         Color getRayColor(Ray ray)
