@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace GameTesting
 {
@@ -21,7 +22,7 @@ namespace GameTesting
         ObjSimulation objSim = new ObjSimulation();
         VectorFieldSim vectorField = new VectorFieldSim();
         NeuralNetworkHandlerVisual neuralNetwork = new NeuralNetworkHandlerVisual();
-        MandelBrotHandler mandelBrot = new MandelBrotHandler();
+        PixelSim pixelSim = new PixelSim();
         Grapher grapher = new Grapher();
         PathFinderHandler pathFinder = new PathFinderHandler();
         RendererHandler renderer = new RendererHandler();
@@ -38,7 +39,7 @@ namespace GameTesting
         bool runGravitySim = false;
         bool runVectorFieldSim = false;
         bool runNerualNetworkSim = false;
-        bool runMandelBrotSim = false;
+        bool runPixelSim = false;
         bool runGraphSim = false;
         bool runPathSim = false;
         bool runRendererSim = false;
@@ -111,12 +112,11 @@ namespace GameTesting
                     evoSim.InitEvoSim();
                     Console.WriteLine("pressed 4");
                 }
-                if(Keyboard.GetState().IsKeyDown(Keys.D5) && !runMandelBrotSim)
+                if(Keyboard.GetState().IsKeyDown(Keys.D5) && !runPixelSim)
                 {
-                    runMandelBrotSim = true;
+                    runPixelSim = true;
                     Initializer = true;
-                    mandelBrot.InitMandel(_graphics);
-                    mandelBrot.RunMandel();
+                    pixelSim.InitPixelSim(_graphics);
                     Console.WriteLine("pressed 5");
                 }
                 if(Keyboard.GetState().IsKeyDown(Keys.D6) && !runGraphSim)
@@ -178,6 +178,10 @@ namespace GameTesting
             {
                 evoSim.UpdateEvoSim();
             }
+            if(runPixelSim)
+            {
+                pixelSim.RunPixelSim();
+            }
 
             base.Update(gameTime);
             time += (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -188,7 +192,7 @@ namespace GameTesting
         {
             GraphicsDevice.Clear(Color.DarkCyan);
 
-
+            //Stopwatch stopwatch = Stopwatch.StartNew();
             // TODO: Add your drawing code here
             if(runGravitySim)
             {
@@ -202,9 +206,9 @@ namespace GameTesting
             {
                 neuralNetwork.DrawPixels(pixel, spriteBatch, _graphics);
             }
-            if(runMandelBrotSim)
+            if(runPixelSim)
             {
-                mandelBrot.DrawPixels(pixel, spriteBatch, _graphics, camera);
+                pixelSim.DrawPixels(pixel, spriteBatch, _graphics);
             }
             if(runGraphSim)
             {
@@ -230,7 +234,9 @@ namespace GameTesting
             {
                 evoSim.DrawEvoSim(circle, spriteBatch, _graphics);
             }
-
+            //stopwatch.Stop();
+            //long elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
+            //Console.WriteLine("Rendering took " + elapsedMilliseconds + " ms or " + 1000.0f / elapsedMilliseconds + "fps");
             base.Draw(gameTime);
         }
     }

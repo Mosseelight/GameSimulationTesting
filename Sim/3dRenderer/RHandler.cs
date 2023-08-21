@@ -88,18 +88,13 @@ namespace GameTesting
             viewMat = Matrix.CreateLookAt(camera.Position = new Vector3(MathF.Sin(time) * 10,MathF.Sin(time) * 11,MathF.Cos(time) * 10), camera.LookAt, Vector3.Up);
             projectMat = viewMat * perspectiveMat;
 
-            Stopwatch stopwatch = Stopwatch.StartNew();
             VertexShader(graphics);
             Rasterization();
-            //stopwatch.Stop();
             pixelDrawer.DrawPixels(ref pixel, spriteBatch, graphics);
             for (int i = 0; i < pixelDrawer.colors.Length; i++)
             {
                 pixelDrawer.colors[i] = Color.DarkCyan;
             }
-            stopwatch.Stop();
-            long elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
-            Console.WriteLine("Rendering took " + elapsedMilliseconds + " ms or " + 1000.0f / elapsedMilliseconds + "fps");
         }
 
         void VertexShader(GraphicsDeviceManager graphics)
