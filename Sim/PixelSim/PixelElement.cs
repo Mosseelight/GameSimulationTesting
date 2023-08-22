@@ -13,6 +13,7 @@ namespace PixelSimElement
         public Color color {get; set;}
         public bool canMove {get; set;}
         public int id {get; set;}
+        public Vector2 oldpos {get; set;}
 
         /// <summary>
         /// Position check must be updated when pixel pos changed
@@ -43,16 +44,20 @@ namespace PixelSimElement
 
         public override void Update(ref List<Element> elements, ref int[] positionCheck, ref int[] idCheck, ref PixelDrawer drawer)
         {
+            bool grounded = positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y + 1))] == 0;
+            bool LUnder = positionCheck[drawer.GetIndexOnPos(new Vector2(position.X - 1, position.Y + 1))] == 0 && positionCheck[drawer.GetIndexOnPos(new Vector2(position.X - 1, position.Y))] == 0;
+            bool RUnder = positionCheck[drawer.GetIndexOnPos(new Vector2(position.X + 1, position.Y + 1))] == 0 && positionCheck[drawer.GetIndexOnPos(new Vector2(position.X + 1, position.Y))] == 0;
+
             int num = new Random().Next(0,2); // choose random size to pick to favor instead of always left
-            if(positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y + 1))] == 0)
+            if(grounded)
             {
                 positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 0;
                 idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = -1;
-                position += new Vector2(0,1);
+                position += new Vector2(0,1f);
                 positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 1;
                 idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = id;
             }
-            else if(positionCheck[drawer.GetIndexOnPos(new Vector2(position.X - 1, position.Y + 1))] == 0 && positionCheck[drawer.GetIndexOnPos(new Vector2(position.X - 1, position.Y))] == 0 && num == 0)
+            else if(LUnder && num == 0)
             {
                 positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 0;
                 idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = -1;
@@ -60,7 +65,7 @@ namespace PixelSimElement
                 positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 1;
                 idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = id;
             }
-            else if(positionCheck[drawer.GetIndexOnPos(new Vector2(position.X + 1, position.Y + 1))] == 0 && positionCheck[drawer.GetIndexOnPos(new Vector2(position.X + 1, position.Y))] == 0 && num == 1)
+            else if(RUnder && num == 1)
             {
                 positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 0;
                 idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = -1;
@@ -84,7 +89,8 @@ namespace PixelSimElement
 
         public override void Update(ref List<Element> elements, ref int[] positionCheck, ref int[] idCheck, ref PixelDrawer drawer)
         {
-            
+            positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 100;
+            idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = id;
         }
     }
 
@@ -93,6 +99,7 @@ namespace PixelSimElement
     /// </summary>
     public class WaterPE : Element
     {
+        int disp = 5;
         public WaterPE()
         {
             canMove = true;
@@ -101,8 +108,14 @@ namespace PixelSimElement
 
         public override void Update(ref List<Element> elements, ref int[] positionCheck, ref int[] idCheck, ref PixelDrawer drawer)
         {
-            int num = new Random().Next(0,4); // choose random size to pick to favor instead of always left
+            int num = new Random().Next(0,2); // choose random size to pick to favor instead of always left
+            bool ground = positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y + 1))] == 0;
+            bool LUnder = positionCheck[drawer.GetIndexOnPos(new Vector2(position.X - 1, position.Y + 1))] == 0 && positionCheck[drawer.GetIndexOnPos(new Vector2(position.X - 1, position.Y))] == 0;
+            bool RUnder = positionCheck[drawer.GetIndexOnPos(new Vector2(position.X + 1, position.Y + 1))] == 0 && positionCheck[drawer.GetIndexOnPos(new Vector2(position.X + 1, position.Y))] == 0;
+            bool Left = positionCheck[drawer.GetIndexOnPos(new Vector2(position.X - 1, position.Y))] == 0;
+            bool Right = positionCheck[drawer.GetIndexOnPos(new Vector2(position.X + 1, position.Y))] == 0;
 
+            oldpos = position;
             //displacement
             if(positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y - 1))] == 1)
             {
@@ -116,23 +129,23 @@ namespace PixelSimElement
             }
 
             //gravity stuff
-            if(positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y + 1))] == 0)
+            if(ground)
             {
                 positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 0;
                 idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = -1;
-                position += new Vector2(0,1);
+                position += new Vector2(0,1f);
                 positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 2;
                 idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = id;
             }
-            else if(positionCheck[drawer.GetIndexOnPos(new Vector2(position.X - 1, position.Y + 1))] == 0 && positionCheck[drawer.GetIndexOnPos(new Vector2(position.X - 1, position.Y))] == 0 && num == 0)
+            if(!ground && LUnder && num == 0)
             {
                 positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 0;
                 idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = -1;
                 position += new Vector2(-1,1);
-                positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 2;
+                positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 1;
                 idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = id;
             }
-            else if(positionCheck[drawer.GetIndexOnPos(new Vector2(position.X + 1, position.Y + 1))] == 0 && positionCheck[drawer.GetIndexOnPos(new Vector2(position.X + 1, position.Y))] == 0 && num == 1)
+            if(!ground && RUnder && num == 1)
             {
                 positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 0;
                 idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = -1;
@@ -140,19 +153,43 @@ namespace PixelSimElement
                 positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 2;
                 idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = id;
             }
-            else if(positionCheck[drawer.GetIndexOnPos(new Vector2(position.X - 1, position.Y))] == 0 && num == 2)
+            if(!ground && Left && num == 0)
             {
+                int count = 0;
+                for (int i = 0; i < disp; i++)
+                {
+                    if(positionCheck[drawer.GetIndexOnPos(new Vector2(position.X - (i + 1), position.Y))] == 0 && positionCheck[drawer.GetIndexOnPos(new Vector2(position.X - (i + 1), position.Y + 1))] != 0)
+                    {
+                        count++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
                 positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 0;
                 idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = -1;
-                position += new Vector2(-1,0);
+                position += new Vector2(-count,0);
                 positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 2;
                 idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = id;
             }
-            else if(positionCheck[drawer.GetIndexOnPos(new Vector2(position.X + 1, position.Y))] == 0  && num == 3)
+            if(!ground && Right && num == 1)
             {
+                int count = 0;
+                for (int i = 0; i < disp; i++)
+                {
+                    if(positionCheck[drawer.GetIndexOnPos(new Vector2(position.X + (i + 1), position.Y))] == 0 && positionCheck[drawer.GetIndexOnPos(new Vector2(position.X + (i + 1), position.Y + 1))] != 0)
+                    {
+                        count++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
                 positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 0;
                 idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = -1;
-                position += new Vector2(1,0);
+                position += new Vector2(count,0);
                 positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 2;
                 idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = id;
             }

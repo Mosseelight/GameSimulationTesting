@@ -37,27 +37,19 @@ namespace GameTesting
             {
                 pixelDrawer.colors[i] = Color.DarkGray;
             }
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 1000; i++)
             {
                 elements.Add(new WallPE());
                 elements[i].id = i;
-                elements[i].position = new Vector2((int)(660 / pixelDrawer.visualScale + i), (int)(600 / pixelDrawer.visualScale + i / 3));
+                elements[i].position = new Vector2((int)(100 + i / pixelDrawer.visualScale), (int)(600 / pixelDrawer.visualScale));
                 positionCheck[pixelDrawer.GetIndexOnPos(elements[i].position)] = 100;
-                idCheck[pixelDrawer.GetIndexOnPos(elements[i].position)] = elements[i].id;
-            }
-            for (int i = 100; i < 1000; i++)
-            {
-                elements.Add(new SandPE());
-                elements[i].id = i;
-                elements[i].position = new Vector2((int)(850 / pixelDrawer.visualScale), (int)(200 / pixelDrawer.visualScale));
-                positionCheck[pixelDrawer.GetIndexOnPos(elements[i].position)] = 1;
                 idCheck[pixelDrawer.GetIndexOnPos(elements[i].position)] = elements[i].id;
             }
             for (int i = 1000; i < 2000; i++)
             {
                 elements.Add(new WaterPE());
                 elements[i].id = i;
-                elements[i].position = new Vector2((int)(900 / pixelDrawer.visualScale), (int)(200 / pixelDrawer.visualScale));
+                elements[i].position = new Vector2((int)(850 / pixelDrawer.visualScale), (int)(10 / pixelDrawer.visualScale));
                 positionCheck[pixelDrawer.GetIndexOnPos(elements[i].position)] = 2;
                 idCheck[pixelDrawer.GetIndexOnPos(elements[i].position)] = elements[i].id;
             }
