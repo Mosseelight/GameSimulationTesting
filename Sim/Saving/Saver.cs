@@ -52,18 +52,6 @@ namespace GameTesting
             }
         }
 
-        public void SaveNeuralNetworkSimSettings()
-        {
-            DataToSave dataToSave = new DataToSave();
-
-            dataToSave.nerualNetworkSettings = SaverDataToSet.nerualNetworkVisualSettings;
-
-            IFormatter formatter = new BinaryFormatter();
-            Stream stream = new FileStream(nueralNetworkSettings + dataToSave.nerualNetworkSettings.saveCount + ".save", FileMode.Create, FileAccess.Write);
-            formatter.Serialize(stream, dataToSave);
-            stream.Close();
-        }
-
         //Save so can see the values
         public void SaveNeuralNetworkSimSettingsJSON()
         {
@@ -98,19 +86,6 @@ namespace GameTesting
                 string jsonSaveCount = File.ReadAllText(neuralNetworkSimPath + @"\SaveFileCount.json");
                 SaverDataToSet.nerualNetworkVisualSettings.saveCount = int.Parse(jsonSaveCount);
             }
-        }
-
-        public void ReadNerualNetworkSimSettings()
-        {
-            if(File.Exists(nueralNetworkSettings + SaverDataToSet.nerualNetworkVisualSettings.saveCount + ".save"))
-            {
-                Stream stream = new FileStream(nueralNetworkSettings + SaverDataToSet.nerualNetworkVisualSettings.saveCount + ".save", FileMode.Open, FileAccess.Read);
-                IFormatter formatter = new BinaryFormatter();
-                DataToSave settings = (DataToSave)formatter.Deserialize(stream);
-                SaverDataToSet.nerualNetworkVisualSettings = settings.nerualNetworkSettings;
-                stream.Close();
-            }
-            
         }
 
     }

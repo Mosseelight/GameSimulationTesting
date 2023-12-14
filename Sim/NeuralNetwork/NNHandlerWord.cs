@@ -284,14 +284,12 @@ public class NeuralNetworkHandlerWord
         SaverDataToSet.nerualNetworkWordSettings.saveCount = saveCount;
         saver.SaveNeuralNetworkSimSettingsJSON();
         saver.SaveNeuralNetworkSimCount();
-        saver.SaveNeuralNetworkSimSettings();
     }
 
     public void ReadSaveData()
     {
         Saver saver = new Saver();
         saver.ReadNerualNetworkSimCount();
-        saver.ReadNerualNetworkSimSettings();
         weights = SaverDataToSet.nerualNetworkWordSettings.weights;
         hiddenBias = SaverDataToSet.nerualNetworkWordSettings.hiddenBias;
         inputBias = SaverDataToSet.nerualNetworkWordSettings.inputBias;

@@ -283,14 +283,12 @@ public class NeuralNetworkHandlerVisual
         SaverDataToSet.nerualNetworkVisualSettings.saveCount = saveCount;
         saver.SaveNeuralNetworkSimSettingsJSON();
         saver.SaveNeuralNetworkSimCount();
-        saver.SaveNeuralNetworkSimSettings();
     }
 
     public void ReadSaveData()
     {
         Saver saver = new Saver();
         saver.ReadNerualNetworkSimCount();
-        saver.ReadNerualNetworkSimSettings();
         weights = SaverDataToSet.nerualNetworkVisualSettings.weights;
         hiddenBias = SaverDataToSet.nerualNetworkVisualSettings.hiddenBias;
         inputBias = SaverDataToSet.nerualNetworkVisualSettings.inputBias;
