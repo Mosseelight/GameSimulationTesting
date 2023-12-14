@@ -52,7 +52,6 @@ namespace GameTesting
 
         float[] zDepth;
 
-        Triangle[] triangle = new Triangle[4];
         Mesh[] meshes = new Mesh[1];
 
         public void InitRenderer(GraphicsDeviceManager graphics)
@@ -123,10 +122,9 @@ namespace GameTesting
                 {
                     if(!meshes[m].tris[v].BackfaceCull(camera.Position))
                     {
-                        BoundBox box = meshes[m].tris[v].TriangleBoundsProj();
-                        for (int x = (int)box.minX; x < (int)box.maxX; x++)
+                        for (int x = 0; x < pixelDrawer.xTotal; x++)
                         {
-                            for (int y = (int)box.minY; y < (int)box.maxY; y++)
+                            for (int y = 0; y < pixelDrawer.yTotal; y++)
                             {
                                 Vector2 pos = new Vector2(x,y);
                                 if(meshes[m].tris[v].ContainsPoint(pos))

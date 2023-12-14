@@ -53,6 +53,14 @@ namespace GameTesting
                 positionCheck[pixelDrawer.GetIndexOnPos(elements[i].position)] = 2;
                 idCheck[pixelDrawer.GetIndexOnPos(elements[i].position)] = elements[i].id;
             }
+            for (int i = 2000; i < 3000; i++)
+            {
+                elements.Add(new SandPE());
+                elements[i].id = i;
+                elements[i].position = new Vector2((int)(850 / pixelDrawer.visualScale), (int)(10 / pixelDrawer.visualScale));
+                positionCheck[pixelDrawer.GetIndexOnPos(elements[i].position)] = 2;
+                idCheck[pixelDrawer.GetIndexOnPos(elements[i].position)] = elements[i].id;
+            }
         }
 
         public void RunPixelSim()

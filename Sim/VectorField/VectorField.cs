@@ -69,17 +69,17 @@ public class VectorFieldSim
         Parallel.For (0, objects.Count, b =>
         {
             List<float> distances = new List<float>();
-            float minDist;
-            minDist = 0;
-            for (int i = 0; i < vectorsPos.Length; i++)
+            float minDist = float.MaxValue;
+            int index = 0;
+            Parallel.For (0, vectorsPos.Length, i =>
             {
-                distances.Add(Vector2.Distance(vectorsPos[i], objects[b].pos));
-                if(distances.Count == vectorsPos.Length)
+                float dist = Vector2.Distance(vectorsPos[i], objects[b].pos);
+                if(dist < minDist)
                 {
-                    minDist = distances.Min();
+                    minDist = dist;
+                    index = i;
                 }
-            }
-            int index = distances.IndexOf(minDist);
+            });
             objects[b].UpdateDir(Vector2.Normalize(vectorsDirs[index]) * speed);
             objects[b].UpdatePos();
             distances.Clear();
@@ -153,7 +153,7 @@ public class VectorFieldSim
             for (int i = 0; i < vectorsPos.Length; i++)
             {
                 Vector2 origin = new Vector2(arrow.Width / 2f, arrow.Height / 2f);
-                float angle = (float)Math.Atan2(vectorsDirs[i].Y, vectorsDirs[i].X);
+                float angle = MathF.Atan2(vectorsDirs[i].Y, vectorsDirs[i].X);
                 spriteBatch.Draw(arrow, vectorsPos[i], null, Color.White, angle, origin, Vector2.One, SpriteEffects.None, 0f);
                 if(i == vectorsPos.Length - 1)
                 {
@@ -167,7 +167,7 @@ public class VectorFieldSim
 
     public Vector2 CalculateVectorValue(float x, float y)
     {
-        Vector2 result = new Vector2(x,y);
+        Vector2 result = new Vector2(-y,x);
         return result;
     }
 }
