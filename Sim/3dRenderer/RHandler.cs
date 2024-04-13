@@ -69,7 +69,7 @@ namespace GameTesting
             }
 
             camera = new Camera(new Vector3(0, 0, 10), Vector3.Zero, 1);
-            meshes[0] = new Mesh().CreateCube(new Vector3(0, 0, 0));
+            meshes[0] = new Mesh().CreateCube(new Vector3(10, 0, 0));
 
             for (int m = 0; m < meshes.Length; m++)
             {
@@ -115,6 +115,7 @@ namespace GameTesting
 
         void Rasterization()
         {
+
             Parallel.For (0, meshes.Length, m =>
             {
                 //meshes[m].SortIndices(camera.Position);
@@ -122,10 +123,12 @@ namespace GameTesting
                 {
                     if(!meshes[m].tris[v].BackfaceCull(camera.Position))
                     {
-                        for (int x = 0; x < pixelDrawer.xTotal; x++)
+                        for (int x = (int)meshes[m].tris[v].TriangleBoundsProj().minX; x < (int)meshes[m].tris[v].TriangleBoundsProj().maxX; x++)
                         {
-                            for (int y = 0; y < pixelDrawer.yTotal; y++)
+                            for (int y = (int)meshes[m].tris[v].TriangleBoundsProj().minY; y < (int)meshes[m].tris[v].TriangleBoundsProj().maxY; y++)
                             {
+                                if(v < 0 || v >= meshes[m].tris.Length)
+                                    continue;
                                 Vector2 pos = new Vector2(x,y);
                                 if(meshes[m].tris[v].ContainsPoint(pos))
                                 {

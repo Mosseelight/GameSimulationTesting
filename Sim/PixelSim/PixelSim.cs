@@ -18,7 +18,8 @@ namespace GameTesting
         /// 0 is no pixel at position,
         /// 1 is movable solid at position,
         /// 2 is movable liquid at position,
-        /// 100 is a unmovable wall at position
+        /// 3 is movable gas at position,
+        /// 100 is a unmovable at position
         /// </summary>
         int[] positionCheck;
         /// <summary>
@@ -58,6 +59,38 @@ namespace GameTesting
                 elements.Add(new SandPE());
                 elements[i].id = i;
                 elements[i].position = new Vector2((int)(850 / pixelDrawer.visualScale), (int)(10 / pixelDrawer.visualScale));
+                positionCheck[pixelDrawer.GetIndexOnPos(elements[i].position)] = 1;
+                idCheck[pixelDrawer.GetIndexOnPos(elements[i].position)] = elements[i].id;
+            }
+            for (int i = 3000; i < 4000; i++)
+            {
+                elements.Add(new StonePE());
+                elements[i].id = i;
+                elements[i].position = new Vector2((int)(850 / pixelDrawer.visualScale), (int)(10 / pixelDrawer.visualScale));
+                positionCheck[pixelDrawer.GetIndexOnPos(elements[i].position)] = 1;
+                idCheck[pixelDrawer.GetIndexOnPos(elements[i].position)] = elements[i].id;
+            }
+            for (int i = 4000; i < 5000; i++)
+            {
+                elements.Add(new SandPE());
+                elements[i].id = i;
+                elements[i].position = new Vector2((int)(450 / pixelDrawer.visualScale), (int)(10 / pixelDrawer.visualScale));
+                positionCheck[pixelDrawer.GetIndexOnPos(elements[i].position)] = 1;
+                idCheck[pixelDrawer.GetIndexOnPos(elements[i].position)] = elements[i].id;
+            }
+            for (int i = 5000; i < 6000; i++)
+            {
+                elements.Add(new WaterPE());
+                elements[i].id = i;
+                elements[i].position = new Vector2((int)(650 / pixelDrawer.visualScale), (int)(10 / pixelDrawer.visualScale));
+                positionCheck[pixelDrawer.GetIndexOnPos(elements[i].position)] = 2;
+                idCheck[pixelDrawer.GetIndexOnPos(elements[i].position)] = elements[i].id;
+            }
+            for (int i = 6000; i < 7000; i++)
+            {
+                elements.Add(new WaterPE());
+                elements[i].id = i;
+                elements[i].position = new Vector2((int)(1050 / pixelDrawer.visualScale), (int)(10 / pixelDrawer.visualScale));
                 positionCheck[pixelDrawer.GetIndexOnPos(elements[i].position)] = 2;
                 idCheck[pixelDrawer.GetIndexOnPos(elements[i].position)] = elements[i].id;
             }

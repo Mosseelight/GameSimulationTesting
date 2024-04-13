@@ -26,67 +26,12 @@ namespace PixelSimElement
             return false;
         }
     }
-
-    //----Elements----
-    //Can only run things using stuff from element
-    //----------------
     
-    /// <summary>
-    /// Reacts to gravity
-    /// </summary>
-    public class SandPE : Element
+
+    //movement defines
+
+    public abstract class Unmoveable : Element
     {
-        public SandPE()
-        {
-            color = Color.Yellow;
-            canMove = true;
-        }
-
-        public override void Update(ref List<Element> elements, ref int[] positionCheck, ref int[] idCheck, ref PixelDrawer drawer)
-        {
-            bool grounded = positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y + 1))] == 0;
-            bool LUnder = positionCheck[drawer.GetIndexOnPos(new Vector2(position.X - 1, position.Y + 1))] == 0 && positionCheck[drawer.GetIndexOnPos(new Vector2(position.X - 1, position.Y))] == 0;
-            bool RUnder = positionCheck[drawer.GetIndexOnPos(new Vector2(position.X + 1, position.Y + 1))] == 0 && positionCheck[drawer.GetIndexOnPos(new Vector2(position.X + 1, position.Y))] == 0;
-
-            int num = new Random().Next(0,2); // choose random size to pick to favor instead of always left
-            if(grounded)
-            {
-                positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 0;
-                idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = -1;
-                position += new Vector2(0,1f);
-                positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 1;
-                idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = id;
-            }
-            else if(LUnder && num == 0)
-            {
-                positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 0;
-                idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = -1;
-                position += new Vector2(-1,1);
-                positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 1;
-                idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = id;
-            }
-            else if(RUnder && num == 1)
-            {
-                positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 0;
-                idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = -1;
-                position += new Vector2(1,1);
-                positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 1;
-                idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = id;
-            }
-        }
-    }
-
-    /// <summary>
-    /// Unmoveable pixel
-    /// </summary>
-    public class WallPE : Element
-    {
-        public WallPE()
-        {
-            canMove = false;
-            color = Color.Black;
-        }
-
         public override void Update(ref List<Element> elements, ref int[] positionCheck, ref int[] idCheck, ref PixelDrawer drawer)
         {
             positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 100;
@@ -95,40 +40,107 @@ namespace PixelSimElement
     }
 
     /// <summary>
-    /// Reacts to gravity and solids
+    /// Swaps places with gas and liquid movable
     /// </summary>
-    public class WaterPE : Element
+    public abstract class Solid : Element
     {
-        int disp = 5;
-        public WaterPE()
+        public override void Update(ref List<Element> elements, ref int[] positionCheck, ref int[] idCheck, ref PixelDrawer drawer)
         {
-            canMove = true;
-            color = Color.MediumBlue;
+
+            int num = new Random().Next(0,2); // choose random size to pick to favor instead of always left
+            bool displaceLiq = positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y + 1))] == 2;
+            if(displaceLiq)
+            {
+                positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 2;
+                int aboveid = idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y + 1))];
+                elements[aboveid].position = new Vector2(position.X, position.Y);
+                idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = aboveid;
+                
+                positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y + 1))] = 1;
+                idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y + 1))] = id;
+                elements[id].position = new Vector2(position.X, position.Y + 1);
+                return;
+            }
+            bool displaceLiqLU = positionCheck[drawer.GetIndexOnPos(new Vector2(position.X - 1, position.Y + 1))] == 2;
+            if(displaceLiqLU && num == 0)
+            {
+                positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 2;
+                int aboveid = idCheck[drawer.GetIndexOnPos(new Vector2(position.X - 1, position.Y + 1))];
+                elements[aboveid].position = new Vector2(position.X, position.Y);
+                idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = aboveid;
+
+                positionCheck[drawer.GetIndexOnPos(new Vector2(position.X - 1, position.Y + 1))] = 1;
+                idCheck[drawer.GetIndexOnPos(new Vector2(position.X - 1, position.Y + 1))] = id;
+                elements[id].position = new Vector2(position.X - 1, position.Y + 1);
+                return;
+            }
+            bool displaceLiqRU = positionCheck[drawer.GetIndexOnPos(new Vector2(position.X + 1, position.Y + 1))] == 2;
+            if(displaceLiqRU && num == 1)
+            {
+                positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 2;
+                int aboveid = idCheck[drawer.GetIndexOnPos(new Vector2(position.X + 1, position.Y + 1))];
+                elements[aboveid].position = new Vector2(position.X, position.Y);
+                idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = aboveid;
+
+                positionCheck[drawer.GetIndexOnPos(new Vector2(position.X + 1, position.Y + 1))] = 1;
+                idCheck[drawer.GetIndexOnPos(new Vector2(position.X + 1, position.Y + 1))] = id;
+                elements[id].position = new Vector2(position.X + 1, position.Y + 1);
+                return;
+            }
+            bool grounded = positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y + 1))] == 0;
+            if(grounded)
+            {
+                positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 0;
+                idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = -1;
+
+                positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y + 1))] = 1;
+                idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y + 1))] = id;
+                elements[id].position = new Vector2(position.X, position.Y + 1);
+                return;
+            }
+            bool LUnder = positionCheck[drawer.GetIndexOnPos(new Vector2(position.X - 1, position.Y + 1))] == 0;
+            if(LUnder && num == 0)
+            {
+                positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 0;
+                idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = -1;
+
+                positionCheck[drawer.GetIndexOnPos(new Vector2(position.X - 1, position.Y + 1))] = 1;
+                idCheck[drawer.GetIndexOnPos(new Vector2(position.X - 1, position.Y + 1))] = id;
+                elements[id].position = new Vector2(position.X - 1, position.Y + 1);
+                return;
+            }
+            bool RUnder = positionCheck[drawer.GetIndexOnPos(new Vector2(position.X + 1, position.Y + 1))] == 0;
+            if(RUnder && num == 1)
+            {
+                positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 0;
+                idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = -1;
+
+                positionCheck[drawer.GetIndexOnPos(new Vector2(position.X + 1, position.Y + 1))] = 1;
+                idCheck[drawer.GetIndexOnPos(new Vector2(position.X + 1, position.Y + 1))] = id;
+                elements[id].position = new Vector2(position.X + 1, position.Y + 1);
+                return;
+            }
         }
+    }
+
+    /// <summary>
+    /// Swaps places with solid and gas
+    /// </summary>
+    public abstract class Liquid : Element
+    {
+
+        public int disp {get; set;} // viscosity
+        public int level {get; set;} // bouyency
 
         public override void Update(ref List<Element> elements, ref int[] positionCheck, ref int[] idCheck, ref PixelDrawer drawer)
         {
             int num = new Random().Next(0,2); // choose random size to pick to favor instead of always left
-            bool ground = positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y + 1))] == 0;
-            bool LUnder = positionCheck[drawer.GetIndexOnPos(new Vector2(position.X - 1, position.Y + 1))] == 0 && positionCheck[drawer.GetIndexOnPos(new Vector2(position.X - 1, position.Y))] == 0;
-            bool RUnder = positionCheck[drawer.GetIndexOnPos(new Vector2(position.X + 1, position.Y + 1))] == 0 && positionCheck[drawer.GetIndexOnPos(new Vector2(position.X + 1, position.Y))] == 0;
-            bool Left = positionCheck[drawer.GetIndexOnPos(new Vector2(position.X - 1, position.Y))] == 0;
-            bool Right = positionCheck[drawer.GetIndexOnPos(new Vector2(position.X + 1, position.Y))] == 0;
 
             oldpos = position;
             //displacement
-            if(positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y - 1))] == 1)
-            {
-                positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 1;
-                int aboveid = idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y - 1))];
-                elements[aboveid].position = new Vector2(position.X, position.Y);
-                idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = aboveid;
-                position += new Vector2(0,-1);
-                positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 2;
-                idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = id;
-            }
 
             //gravity stuff
+            bool ground = positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y + 1))] == 0;
             if(ground)
             {
                 positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 0;
@@ -136,7 +148,9 @@ namespace PixelSimElement
                 position += new Vector2(0,1f);
                 positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 2;
                 idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = id;
+                return;
             }
+            bool LUnder = positionCheck[drawer.GetIndexOnPos(new Vector2(position.X - 1, position.Y + 1))] == 0 && positionCheck[drawer.GetIndexOnPos(new Vector2(position.X - 1, position.Y))] == 0;
             if(!ground && LUnder && num == 0)
             {
                 positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 0;
@@ -144,7 +158,9 @@ namespace PixelSimElement
                 position += new Vector2(-1,1);
                 positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 1;
                 idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = id;
+                return;
             }
+            bool RUnder = positionCheck[drawer.GetIndexOnPos(new Vector2(position.X + 1, position.Y + 1))] == 0 && positionCheck[drawer.GetIndexOnPos(new Vector2(position.X + 1, position.Y))] == 0;
             if(!ground && RUnder && num == 1)
             {
                 positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 0;
@@ -152,7 +168,9 @@ namespace PixelSimElement
                 position += new Vector2(1,1);
                 positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 2;
                 idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = id;
+                return;
             }
+            bool Left = positionCheck[drawer.GetIndexOnPos(new Vector2(position.X - 1, position.Y))] == 0;
             if(!ground && Left && num == 0)
             {
                 int count = 0;
@@ -172,7 +190,9 @@ namespace PixelSimElement
                 position += new Vector2(-count,0);
                 positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 2;
                 idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = id;
+                return;
             }
+            bool Right = positionCheck[drawer.GetIndexOnPos(new Vector2(position.X + 1, position.Y))] == 0;
             if(!ground && Right && num == 1)
             {
                 int count = 0;
@@ -192,7 +212,67 @@ namespace PixelSimElement
                 position += new Vector2(count,0);
                 positionCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = 2;
                 idCheck[drawer.GetIndexOnPos(new Vector2(position.X, position.Y))] = id;
+                return;
             }
+        }
+    }
+
+    public abstract class Gas : Element
+    {
+
+    }
+
+    //----Elements----
+    //Can only run things using stuff from element
+    //----------------
+    
+
+    //more specific implements
+
+    /// <summary>
+    /// Reacts to gravity
+    /// </summary>
+    public class SandPE : Solid
+    {
+        public SandPE()
+        {
+            color = Color.LightGoldenrodYellow;
+            canMove = true;
+        }
+    }
+
+    public class StonePE : Solid
+    {
+        public StonePE()
+        {
+            color = Color.LightGray;
+            canMove = true;
+        }
+    }
+
+    /// <summary>
+    /// Unmoveable pixel
+    /// </summary>
+    public class WallPE : Unmoveable
+    {
+        public WallPE()
+        {
+            canMove = false;
+            color = Color.Black;
+        }
+    }
+
+    /// <summary>
+    /// Reacts to gravity and solids
+    /// </summary>
+    public class WaterPE : Liquid
+    {
+
+        public WaterPE()
+        {
+            disp = 5;
+            canMove = true;
+            color = Color.MediumBlue;
         }
 
     }
